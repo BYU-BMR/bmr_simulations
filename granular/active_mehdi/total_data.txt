@@ -1,0 +1,6 @@
+delta  1.1
+Kn	(*10^-3	Pa)	2.00E+03	£Fn	0	xmu	0.001				
+Kt	(*10^-3	Pa)	2.72E+03	£Ft	0	Pressure	(bar)	1			
+ea	(K)	5.245E_11  ec	(K)	1.45E+10  sigma_C	1.1							
+dc	length_x  d/sigma   length_z  LJ_density  viscosity(Cp)	viscosity(Pa*s)	pressure(10^3Pa)	pressure(Bar)	elasticity_in_xx(Gpa)	elasticity_in_yy(Gpa)	elasticity_in_zz(Gpa)
+ 

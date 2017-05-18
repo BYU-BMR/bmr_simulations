@@ -1,0 +1,147 @@
+# This file read particles' coordinates from restart.viscosity_calculation file,
+# then use nemd method to calculate the viscosity of the model.
+
+#---------------set up initial values of simulated box and read particles' coordinates from other file------>>>>>>>>>>>>>>>>>>
+units		micro
+atom_style	sphere
+dimension	3
+
+newton off
+neighbor	0.2 bin
+neigh_modify	delay 0
+
+comm_modify  vel yes 
+#communicate multi vel yes 
+
+
+variable       T equal 300.0
+
+variable     pxy_sphere equal c_pressure_sphere[4]
+variable     pxz_sphere equal c_pressure_sphere[5]
+variable     pyz_sphere equal c_pressure_sphere[6]
+
+
+#%%%%%%%%%%% read equilibrium_step file %%%%%%%%%%%%%%%%%%%%%%
+read_restart 	restart.viscosity_elasticity_calculation
+
+include potential.mod
+ 
+
+#------------------------------------------------------------------------------------------------<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+
+#----------------------------------------------------------------------------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+#--------set up specific parameters that can be calculated through "compute" command---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+#%%%%%%%%%calculates rotational kinetic energy%%%%%%%%%%%%%%%
+compute erot_1 all erotate/sphere
+
+#%%%%%%%%%calculate temp for sphere particles%%%%%%%%%%%%%%%%
+compute temp_sphere all temp/sphere
+
+#%%%%%%%%%calculate pressure for sphere particles%%%%%%%%%%%%%%%%
+compute pressure_sphere all pressure temp_sphere
+#----------------------------------------------------------------------------------------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+#--------------------------------------------------------------------------------------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+#reset initial situation--------------------------------------------------------------------------->>>>>>>>>>>>>>>>>>>>>>>
+reset_timestep  0
+
+neigh_modify page 5000000
+neigh_modify one 100000
+
+
+#--------------------------
+undump 2  # undump image-output command in potential.mod file
+
+dump	     3 all image 200000 image.*.jpg type type size 600 600 &
+	     zoom 1.3 
+
+#%%%%%%%%% set up the diameter for each type of particle %%%%%%%%%%%%%%%%%%%%%%%%%%
+dump_modify  3  adiam 1 ${diac} adiam 2  0.724  adiam 3 2.147 adiam 4 4.207 adiam 5 6.171 adiam 6 8.074 adiam 7 9.952 adiam 8 11.563 adiam 9 15.264 adiam 10 0.72 adiam 11 0.065
+
+#%%%%%%%%% set up the color uesd for each type of particle
+dump_modify  3   acolor 1 yellow acolor 2 orange acolor 3 lightgreen acolor 4 cyan acolor 5 red acolor 6 darkgreen acolor 7 yellow acolor 8 blue acolor 9 orange acolor 10 yellow acolor 11 yellow
+
+
+# run few times
+fix npt_method all npt temp $T $T 100.0 iso 100.0 100.0 1000.0 tloop 20
+
+timestep	${dt}
+thermo        20000
+
+run 1000000
+
+
+
+unfix npt_method 
+
+
+
+
+#----------------------------------------------------------------------------------------------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+
+# turn on NEMD shear and equilibrate some more
+
+
+
+# change here
+variable	xyrate equal 0.001
+variable	srate equal ${xyrate}*lx
+
+
+
+fix		1 all nvt/sllod temp $T $T 100
+fix		2 all deform 1 xy erate ${xyrate} remap v
+fix		4 all ave/spatial 20 250 5000 y center 0.05 vx &
+		  units reduced file profile.nemd.3d
+
+compute		usual all temp
+compute		tilt all temp/deform
+
+thermo          40000
+thermo_style	custom step temp c_usual c_temp_sphere press pxy v_pxy_sphere c_erot_1 fmax pe ke etotal
+thermo_modify	temp tilt
+
+
+run		8000000
+
+
+# data gathering run
+
+
+
+variable	visc equal -pxy/(v_srate/ly)
+variable     pressure equal press
+fix		vave all ave/time 10 100 1000 v_visc ave running start 1000
+fix		pave all ave/time 10 100 1000 v_pressure ave running start 1000
+
+thermo_style	custom step temp c_temp_sphere press pxy v_pxy_sphere v_visc f_vave f_pave v_xyrate pe ke etotal
+thermo_modify	temp tilt
+
+# only need to run for 5400 steps to make a good 100-frame movie
+# set 54K steps above in equil and 5400 here simply to make good movie
+# 54K and 5400 are multiples of box-swap periodicity = 2700 steps
+
+
+
+run		4000000
+
+
+variable v_ave equal  f_vave          # cp unit
+variable v_ave1 equal ${v_ave}/(1000) # Pa*s unit 
+variable p_ave equal f_pave	      # pg/(£gs^2*£gm)=10^3*Pa
+variable p_ave1 equal ${p_ave}/(100) # Bar
+
+print "average viscosity  ${v_ave} cp=10^-3*Pa*s " append data.txt screen yes
+print "average viscosity  ${v_ave1} Pa*s " append data.txt screen yes
+print "average pressure   ${p_ave} pg/(£gs^2*£gm)=10^3*Pa   " append data.txt screen yes
+print "average pressure   ${p_ave1} Bar   " append data.txt screen yes
+
+
+
+

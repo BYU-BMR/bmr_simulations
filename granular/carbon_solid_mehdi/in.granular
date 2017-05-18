@@ -1,0 +1,193 @@
+# This file read particles' coordinates from the in.dpp_pressure_change_equilibrium_step file,
+# then compress the box to desired box length by setting up constant pressure(npt method) in enough time(femtoseconds). 
+
+
+#---------------set up initial values of simulated box and read particles' coordinates from other file------>>>>>>>>>>>>>>>>>>
+units		micro
+atom_style	sphere
+dimension	3
+
+newton off
+neighbor	0.2 bin
+neigh_modify	delay 0
+
+comm_modify  vel yes 
+#communicate single vel yes 
+
+variable       T equal 300.0
+
+variable     pxy_sphere equal c_pressure_sphere[4]
+variable     pxz_sphere equal c_pressure_sphere[5]
+variable     pyz_sphere equal c_pressure_sphere[6]
+
+#%%%%%%%%%%% read equilibrium_step file %%%%%%%%%%%%%%%%%%%%%%
+read_restart restart.viscosity_elasticity_calculation
+
+
+#--------set up specific parameters that can be calculated through "compute" command---->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+#%%%%%%%%%calculate mean-squared displacement (MSD) %%%%%%%%%%%%%%%
+compute MSD all msd
+
+#%%%%%%%%%calculates rotational kinetic energy%%%%%%%%%%%%%%%
+compute erot_1 all erotate/sphere
+
+#%%%%%%%%%calculate temp for sphere particles%%%%%%%%%%%%%%%%
+compute temp_sphere all temp/sphere
+
+#%%%%%%%%%calculate pressure for sphere particles%%%%%%%%%%%%%%%%
+compute pressure_sphere all pressure temp_sphere
+
+#----------------------------------------------------------------------------------------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+include potential.mod
+
+timestep	${dt}
+thermo_style	custom step temp c_temp_sphere press pxx pyy pzz pxy v_pxy_sphere lx ly lz time c_erot_1 fmax pe ke etotal
+thermo        100
+fix npt_method all npt temp $T $T 100.0 z 100 100 1000.0
+variable y2 equal stride(16090000,16100000,1000)
+dump data9 all custom 1000 dppdata_large_length_vol_change_0.0089_16090000_16100000.txt id type x y z
+dump_modify data9 every v_y2 first no
+
+run 20000
+
+
+thermo        20000
+run 8980000
+
+
+
+
+variable length_x equal lx
+variable length_z equal lz
+variable sigmac equal 1.1
+variable dc_over_sigmac equal ${diac}/${sigmac}
+variable density_c equal (5500*3.14159/6)*${diac}^3/${length_x}^3
+variable LJ_density_c equal (5500)*${sigmac}^3/${length_x}^3
+
+
+print "This file gather important output data such as particle size, box length, d/sigma, density, LJ density, viscosity and pressure during NEMD, elasticity in three directions." file data.txt screen no
+
+print "dc ${diac} £gm" append data.txt screen no
+print "length_x ${length_x} £gm" append  data.txt screen no
+print "dc/sigmac ${dc_over_sigmac} " append data.txt screen no
+print "length_z ${length_z} £gm " append data.txt screen no
+print "LJ_density_c  ${LJ_density_c} " append data.txt screen no
+
+
+#%%%%%%%%% write restart files for viscosity calculation %%%%%%%%%%%%%%%%%
+
+write_restart restart.viscosity_elasticity_calculation
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

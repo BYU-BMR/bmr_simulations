@@ -33,7 +33,7 @@ then
 	echo "Adding $PWD/.local/bin to PATH"
 	echo -e '\nexport PATH="'$PWD'/.local/bin:$PATH"' >> $HOME/.bash_profile
 	source $HOME/.bash_profile
-else
+fi
 
 
 

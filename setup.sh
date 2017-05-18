@@ -24,7 +24,7 @@ cp lmp_mpi ../../.local/bin
 
 # Make a symbolic link
 cd ../../.local/bin
-ln -s lmp_mpi lammpz
+ln -s lmp_mpi lammps
 
 # Check if the .local/bin/ directory is not on your path
 if [[ $PATH != ?(*:)$PWD/.local/bin?(:*) ]]

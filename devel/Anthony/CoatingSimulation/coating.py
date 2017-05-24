@@ -4,7 +4,7 @@ from PIL import Image
 import random, math, copy
 
 class DatafileGenerator():
-    newFileName = "test.data"
+    newFileName = "coating.data"
     positionLines = []
 
     # data string containing molecule ID, type, dia, rho, x, y, z, 0 0 0 

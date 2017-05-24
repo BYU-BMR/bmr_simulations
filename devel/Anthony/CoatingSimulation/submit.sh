@@ -19,4 +19,4 @@ export OMP_NUM_THREADS=1
 module load python/3/4
 
 # LOAD MODULES, INSERT CODE, AND RUN YOUR PROGRAMS HERE
-time python test.py && mpirun -np $SLURM_NTASKS lammps -in test.in
+time python coating.py && mpirun -np $SLURM_NTASKS lammps -in coating.in

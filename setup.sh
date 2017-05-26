@@ -10,28 +10,20 @@ git submodule update --init --recursive
 # Make a .local/bin/ directory
 mkdir -p .local/bin/
 
-# Build LAMMPS
-cd lammps/src/
-make yes-misc
-make yes-molecule
-make yes-rigid
-make yes-user-sph
-make yes-user-byu
-nice make -j8 mpi
-
-# Copy the executable
-cp lmp_mpi ../../.local/bin
+# Call another script to install LAMMPS
+# This script can be run separately to reinstall LAMMPS
+bash reinstall_lammps.sh
 
 # Make a symbolic link
 cd ../../.local/bin
 ln -s lmp_mpi lammps
 
 # Check if the .local/bin/ directory is not on your path
-if [[ $PATH != ?(*:)$PWD/.local/bin?(:*) ]]
+if [[ $PATH != ?(*:)$PWD?(:*) ]]
 then
 	# Add the .local/bin/ directory to your path
-	echo "Adding $PWD/.local/bin to PATH"
-	echo -e '\nexport PATH="'$PWD'/.local/bin:$PATH"' >> $HOME/.bash_profile
+	echo "Adding $PWD to PATH"
+	echo -e '\nexport PATH="'$PWD':$PATH"' >> $HOME/.bash_profile
 	source $HOME/.bash_profile
 fi
 

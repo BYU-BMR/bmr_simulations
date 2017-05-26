@@ -1,0 +1,4 @@
+Coating speed: 1 cm/s
+Drying: 35 cm/min
+Thickness: 30 microns - real thickness ~ 175 microns
+Depth: 7 active particles thick

@@ -116,9 +116,10 @@ print ${run_length}
 run ${run_length}
 unfix push_piston
 delete_atoms group piston_wall
+delete_atoms group hopper
 write_data coatedsolvent.data
 # Run with piston stopped
-run ${run_length}
-run ${run_length}
+# run ${run_length}
+# run ${run_length}
 
 

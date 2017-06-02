@@ -8,7 +8,7 @@ variable           h        	 equal 2.0
 variable           h_act    	 equal 3.0
 variable 		   h_mix	     equal (${h}+${h_act})/2.0
 variable           c     	     equal 100.0             # soundspeed for Tait's EOS
-variable           dt            equal 0.0001
+variable           dt            equal 0.00001
 variable		   visc_CBD      equal 6000			 # viscosity in g/m*s (avg visc should be 2.3578 kg/m*s)
 variable 		   visc_active   equal 6000
 variable 		   visc_solvent  equal 1.6

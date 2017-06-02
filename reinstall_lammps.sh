@@ -15,3 +15,6 @@ make no-user-byu
 
 # Copy the executable
 cp lmp_mpi ../../.local/bin
+
+# Go back to original directory
+cd ../..

@@ -103,7 +103,7 @@ unfix stir
 
 # Apply extra gravity
 fix extra_gravity slurry addforce 0.0 0.0 -8.0
-run 400000
+run 10000
 #fall down little more
 
 unfix extra_gravity
@@ -114,19 +114,22 @@ unfix extra_gravity
 
 
 # Expansion step
-run 50000
+#run 10000
 
 # Cooling step
-#fix cool slurry langevin 300 300 10 234
 variable tdamp equal 100*${dt}
+variable tdamp2 equal 10000*${tdamp}
 group		cbd_solvent type 1 3
 fix cool cbd_solvent nvt temp 3000 3000 ${tdamp}    #damp temperature is how fast it tries to correct the temp
+run 10000
 unfix make_rigid  
-fix make_rigid active rigid/nvt molecule temp 3000 3000 ${tdamp}  
+fix make_rigid active rigid/nvt molecule temp 3000 3000 ${tdamp2}  
+#variable  dt1 equal 0.000001
+#timestep ${dt1}
 run 50000
 
-variable  dt1 equal 0.0001
-timestep ${dt1}
+variable  dt2 equal 0.0001
+timestep ${dt2}
 #unfix cool
 
 # Start moving piston wall and hopper

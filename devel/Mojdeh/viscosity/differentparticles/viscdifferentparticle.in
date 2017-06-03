@@ -1,4 +1,4 @@
-atom_style         meso
+atom_style         meso-molecular
 dimension          3
 newton             on
 units              micro
@@ -6,24 +6,18 @@ read_data          viscdifferentparticle.data
 
 #the shape of the box changed
 change_box		   all triclinic 
-
-variable           h         equal 2.0
-variable           c     equal 100.0             # soundspeed for Tait's EOS
+            # soundspeed for Tait's EOS
 variable           dt    equal 0.0001
-variable		   visc  equal 2357.8  #we want to verifty that our code returns the same value for viscosity as the one that we passed in
+
 
 variable			T equal 300.0
 
-pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater/morris
-pair_coeff         * * sph/taitwater/morris 0.93 ${c} ${visc} ${h}
-pair_coeff         * * sph/rhosum ${h}
-
-
+include 			mixInterRef.in
 timestep    ${dt}
 
 ### Dump the position
 
-dump               dump_id all custom 100 visc.lammpstrj xs ys zs # we don't need type and id they are all the same
+dump               dump_id all custom 10000 viscdifferentparticlecolor-sc.lammpstrj xs ys zs # we don't need type and id they are all the same
 dump_modify        dump_id first yes
 
 
@@ -38,10 +32,17 @@ thermo_modify      norm no
 
 
 
-# it's better to let the system equlibrate so that it's done with all the wierd behaviors
+group 			   rigids type 2
+group 			   nonrigid subtract all rigids
+
 
 # run few times- thermostat 
-fix npt_method all npt temp $T $T 100.0 iso 100.0 100.0 1000.0 tloop 20
+fix rigid_npt_method all rigid molecule 
+fix npt_method nonrigid npt temp $T $T 100.0 iso 100.0 100.0 1000.0 tloop 20
+
+#now we are just applying thermostat to everything except active particles and it should 
+
+
 
 
 timestep	${dt}
@@ -50,13 +51,13 @@ thermo        1000
 run 50000
 
 unfix npt_method  # we are going to use another fix command
-
+unfix rigid_npt_method
 ##########################
 
 variable	xyrate equal 0.001     # 1000 s-1 
 variable	srate equal ${xyrate}*lx
 
-fix		1 all nvt/sllod temp $T $T 100
+fix		1 all nvt/sllod temp $T $T 100 # can we apply this to all of it? try.
 fix		2 all deform 1 xy erate ${xyrate} remap v
 
 

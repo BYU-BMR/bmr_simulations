@@ -1,0 +1,33 @@
+variable           h        	 equal 2.0
+variable           h_act    	 equal 3.0
+variable 		   h_mix	     equal (${h}+${h_act})/2.0
+variable           c     	     equal 100.0             # soundspeed for Tait's EOS
+variable           dt            equal 0.00001
+variable		   visc_CBD      equal 6000			 # viscosity in g/m*s (avg visc should be 2.3578 kg/m*s)
+variable 		   visc_active   equal 6000
+variable 		   visc_solvent  equal 1.6
+
+variable		   visc_mix1     equal (${visc_CBD}+${visc_active})/2.0
+variable 		   visc_mix2     equal (${visc_active}+${visc_solvent})/2.0
+variable 		   visc_mix3     equal (${visc_CBD}+${visc_solvent})/2.0
+
+group              cbd type 1 
+group			   active type 2
+group			   solvent type 3
+group              slurry type 1 2 3
+group              bc type 4
+
+
+pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater/morris
+pair_coeff         * * sph/taitwater/morris 0.93 ${c} ${visc_CBD} ${h}
+#pair_coeff         1 1 sph/taitwater/morris 0.93 ${c} ${visc_CBD} ${h}
+pair_coeff         2 2 sph/taitwater/morris 0.93 ${c} ${visc_active} ${h}
+pair_coeff         3 3 sph/taitwater/morris 0.93 ${c} ${visc_solvent} ${h}
+
+pair_coeff         1 2 sph/taitwater/morris 0.93 ${c} ${visc_mix1} ${h_mix}
+pair_coeff         2 3 sph/taitwater/morris 0.93 ${c} ${visc_mix2} ${h_mix}
+pair_coeff         1 3 sph/taitwater/morris 0.93 ${c} ${visc_mix3} ${h_mix}
+
+pair_coeff         * * sph/rhosum ${h}
+#pair_coeff         2 * sph/rhosum ${h_act}
+#pair_coeff         2 2 sph/rhosum ${h_act}

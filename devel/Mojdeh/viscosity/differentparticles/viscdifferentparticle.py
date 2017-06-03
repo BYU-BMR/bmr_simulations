@@ -4,7 +4,7 @@ import numpy as np
 import random, math, copy
 
 class DatafileGenerator():
-    newFileName = "evapsolv.data"
+    newFileName = "viscdifferentparticle.data"
     positionLines = []
 
     # data string containing molecule ID, type, dia, rho, x, y, z, 0 0 0 
@@ -31,14 +31,14 @@ class DatafileGenerator():
 
     cbd_type,active_type, solvent_type, wall_type = 1,2,3,4
 
-    scale = 0.2
+    scale = 1
 
     x0 = 0.0
-    x1 = scale*50.0*dia
+    x1 = scale*20*dia
     y0 = 0.0
-    y1 = scale*50*dia
+    y1 = scale*20*dia
     z0 = 0
-    z1 = scale*150*dia
+    z1 = scale*20*dia
 
     ID = 0
     molID = 0
@@ -48,17 +48,25 @@ class DatafileGenerator():
         self.writeFile()
 
     def setUpSimulation(self):
-        vertex1 = (self.x0,self.z0+self.dia)
-        vertex2 = (self.x1,self.z0+self.dia) # we don't want the overlap between the particles and wall
-        self.drawWallFromVtxs(vertex1,vertex2) # drawing a botom wall for drying, we don't need self because they are defined in the same function
-        self.fillCubeWithRandomMix(self.x0,self.y0,self.z0+self.dia*2,self.x1,self.y1,self.z1/2) # we don't want the whole box to be filled with particles only half of the box
+         
+        self.fillCubeWithRandomMix(self.x0,self.y0,self.z0,self.x1,self.y1,self.z1) # we don't want the whole box to be filled with particles only half of the box
         
     def fillCubeWithRandomMixVtxs(self,v1,v2):
         (x1,z1) = v1
         (x2,z2) = v2
         self.fillCubeWithRandomMix(x1,self.y0,z1,x2,self.y1,z2)
 
+        
+
     def fillCubeWithRandomMix(self,x,y,z,x2,y2,z2):
+        #defining volume fraction in order to be easier to change
+        vol_frac = {}
+        vol_frac['active'] = 30
+        vol_frac['cbd'] = 40
+        vol_frac['solvent'] = 100 - vol_frac['active'] - vol_frac['cbd']
+
+        print ("desired volume fraction:", vol_frac)
+
         xl = min(x,x2)
         xh = max(x,x2)
         yl = min(y,y2)
@@ -69,18 +77,35 @@ class DatafileGenerator():
             for zi in np.arange(zl,zh-self.dia,self.dia):
                 for xi in np.arange(xl,xh-self.dia*2,self.dia*2):
                     val = random.randint(0,99)
-                    if val >= 0 and val < 18:
+                    if val < vol_frac['active']:
                         atom_type = self.active_type
                         self.molID += 1
-                    elif val >= 18 and val < 32:
+                    elif val >= vol_frac['active'] and val < vol_frac['active'] + vol_frac['cbd']:
                         atom_type = self.cbd_type
-                        self.appendLine(atom_type,xi+self.dia*1/2,yi+self.dia/2,zi+self.dia/2)
-                        self.appendLine(atom_type,xi+self.dia*3/2,yi+self.dia/2,zi+self.dia/2)
                     else:
                         atom_type = self.solvent_type
-                    self.appendLine(atom_type,xi+self.dia*1/2,yi+self.dia/2,zi+self.dia/2)
+                    self.appendLine(atom_type,xi+self.dia*1/2,yi+self.dia/2,zi+self.dia/2)  #always have two particles near
                     self.appendLine(atom_type,xi+self.dia*3/2,yi+self.dia/2,zi+self.dia/2)
+        
+        vol_frac_actual = {}
+        vol_frac_actual['active'] = 0
+        vol_frac_actual['cbd'] = 0
+        vol_frac_actual['solvent'] = 0 
+        for line in self.positionLines:
+            atom_type = int(line.split()[2]) #to extract single value before it was string [1] is not the same as 1
+            if atom_type == self.active_type:
+                vol_frac_actual['active'] += 1
+            elif atom_type == self.cbd_type:
+                vol_frac_actual['cbd'] += 1
+            elif atom_type == self.solvent_type:
+                vol_frac_actual['solvent'] += 1
 
+        total = vol_frac_actual['active'] + vol_frac_actual['cbd'] + vol_frac_actual['solvent'] 
+        vol_frac_actual['active']  *= 100.0/total
+        vol_frac_actual['cbd']  *= 100.0/ total
+        vol_frac_actual['solvent']  *= 100.0/total
+
+        print ("actual volume fraction:", vol_frac_actual)
 
 
 

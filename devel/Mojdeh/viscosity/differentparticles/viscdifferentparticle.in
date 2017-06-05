@@ -4,9 +4,8 @@ newton             on
 units              micro
 read_data          viscdifferentparticle.data
 
-#the shape of the box changed
-change_box		   all triclinic 
-            # soundspeed for Tait's EOS
+
+            
 variable           dt    equal 0.0001
 
 
@@ -15,9 +14,14 @@ variable			T equal 300.0
 include 			mixInterRef.in
 timestep    ${dt}
 
+
+#the shape of the box changed
+change_box		   all triclinic 
+
+
 ### Dump the position
 
-dump               dump_id all custom 10000 viscdifferentparticlecolor-sc.lammpstrj xs ys zs # we don't need type and id they are all the same
+dump               dump_id all custom 10000 viscdifferentparticlecolor-sc.lammpstrj id type xs ys zs # we don't need type and id they are all the same
 dump_modify        dump_id first yes
 
 

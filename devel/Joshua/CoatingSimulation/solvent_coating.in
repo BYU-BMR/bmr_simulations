@@ -2,7 +2,7 @@ atom_style         meso-molecular
 dimension          3
 newton             on
 units              micro
-read_data          coating.data
+read_data          solvent_coating.data
 
 variable           h         equal 2.0
 variable           h_act     equal 3.0
@@ -12,9 +12,11 @@ variable           dt    equal 0.0001
 variable		   visc  equal 2357.8			 # viscosity in g/m*s (avg visc should be 2.3578 kg/m*s)
 
 group              cbd type 1 
-group			   active type 2
-group              slurry type 1 2
-group              bc type 3
+group			   solvent type 2
+group  			   cbd_solvent type 1 2
+group			   active type 3
+group              slurry type 1 2 3
+group              bc type 4
 
 pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater/morris
 pair_coeff         * * sph/taitwater/morris 0.93 ${c} ${visc} ${h}
@@ -32,7 +34,7 @@ fix                integrate_slurry_fix slurry meso
 # time-integrate only internal energy and density of boundary particles
 fix                integrate_bc_fix bc meso/stationary
 
-dump               dump_id all custom 10000 evaporating.lammpstrj id type mol xs ys zs
+dump               dump_id all custom 10000 solvent_coating.lammpstrj id type mol xs ys zs
 dump_modify        dump_id first yes
 dump_modify 	   dump_id sort 3
 
@@ -48,8 +50,6 @@ neigh_modify       every 5 delay 0 check no
 variable           skin equal 0.3*${h}
 neighbor           ${skin} bin # set Verlet list skin distance
 
-region evap_region block 0 EDGE 0 EDGE 0 EDGE
-fix evap cbd evaporate 10000 1 evap_region 2343
 fix make_rigid active rigid/nvt molecule temp 30000 3000 30
 variable g equal 9.8/1000000
 fix add_gravity slurry gravity ${g} vector 0 0 -1  # Acceleration is micrometers/(microseconds)^2
@@ -64,8 +64,8 @@ fix stir slurry langevin 10000000000 10000000000 10 234
 group moving_surface molecule 1
 #fix move_surface moving_surface move linear 0.09 0 0 # Speed is in m/s (coating speeds vary from 1/60 m/s to 10/60 m/s)
 
-group bottom_wall type 5
-group piston_wall type 4
+group bottom_wall type 6
+group piston_wall type 5
 
 variable piston_speed equal -0.04
 variable surface_speed equal abs(${piston_speed}*3)
@@ -95,7 +95,7 @@ run 50000
 
 # Cooling step
 #fix cool slurry langevin 300 300 10 234
-fix cool cbd nvt temp 3000 3000 30
+fix cool cbd_solvent nvt temp 3000 3000 30
 run 50000
 #unfix cool
 
@@ -113,9 +113,11 @@ fix move_hopper hopper move linear ${surface_speed} 0.0 0.0
 print ${run_length}
 run ${run_length}
 unfix push_piston
+
 delete_atoms group piston_wall
 delete_atoms group hopper
-write_data full_coat.data
+write_data solvent_coat.data
+
 # Run with piston stopped
 #run ${run_length}
 #run ${run_length}

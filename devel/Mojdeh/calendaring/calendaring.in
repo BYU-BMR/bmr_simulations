@@ -46,6 +46,7 @@ fix                integrate_slurry_fix slurry meso
 # time-integrate only internal energy and density of boundary particles
 fix                integrate_bc_fix bc meso/stationary
 
+fix fixed_temp slurry langevin 50 50 10 234 
 dump               dump_id all custom 1000 calendaring.lammpstrj id type xs ys zs
 dump_modify        dump_id first yes
 dump_modify 	   dump_id sort 3
@@ -62,8 +63,13 @@ neigh_modify       every 5 delay 0 check no
 variable           skin equal 0.3*${h}
 neighbor           ${skin} bin # set Verlet list skin distance
 
-run 10000
+
 group moving_wall type 4
+
+fix rigidwall moving_wall rigid single
+run 10000
+
+
 variable dz equal bound(slurry,zmax)-bound(moving_wall,zmin)+0.2
 displace_atoms moving_wall move 0 0 ${dz}
 
@@ -71,6 +77,6 @@ run 30000
 
 
 
-fix pushing_wall moving_wall addforce 0 0 -100000
+fix pushing_wall moving_wall addforce 0 0 -1000000
 
 run 50000

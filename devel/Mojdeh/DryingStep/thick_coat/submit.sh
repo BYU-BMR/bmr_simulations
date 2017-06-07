@@ -4,7 +4,7 @@
 #SBATCH --ntasks=12   # number of processor cores (i.e. tasks)
 #SBATCH --nodes=1   # number of nodes
 #SBATCH --mem=4096M   # memory per CPU core
-#SBATCH -J "thick_coating"   # job name
+#SBATCH -J "highdens"   # job name
 #MACHINEFILE=`/fslapps/fslutils/generate_pbs_nodefile`
 
 # Compatibility variables for PBS. Delete if not needed.

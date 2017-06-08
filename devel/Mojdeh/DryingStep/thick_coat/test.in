@@ -29,11 +29,11 @@ pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater/morris
 pair_coeff         * * sph/taitwater/morris 1.865 ${c} ${visc_CBD} ${h}
 #pair_coeff         1 1 sph/taitwater/morris 0.93 ${c} ${visc_CBD} ${h}
 pair_coeff         2 2 sph/taitwater/morris 1.865 ${c} ${visc_active} ${h}
-pair_coeff         3 3 sph/taitwater/morris 1.865 ${c} ${visc_solvent} ${h}
+pair_coeff         3 3 sph/taitwater/morris 1.03 ${c} ${visc_solvent} ${h}
 
 pair_coeff         1 2 sph/taitwater/morris 1.865 ${c} ${visc_mix1} ${h_mix}
-pair_coeff         2 3 sph/taitwater/morris 1.865 ${c} ${visc_mix2} ${h_mix}
-pair_coeff         1 3 sph/taitwater/morris 1.865 ${c} ${visc_mix3} ${h_mix}
+pair_coeff         2 3 sph/taitwater/morris 1.4475 ${c} ${visc_mix2} ${h_mix}
+pair_coeff         1 3 sph/taitwater/morris 1.4475 ${c} ${visc_mix3} ${h_mix}
 
 pair_coeff         * * sph/rhosum ${h}
 #pair_coeff         2 * sph/rhosum ${h_act}

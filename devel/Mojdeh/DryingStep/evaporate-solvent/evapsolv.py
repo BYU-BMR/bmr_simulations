@@ -38,7 +38,7 @@ class DatafileGenerator():
     y0 = 0.0
     y1 = scale*50*dia
     z0 = 0
-    z1 = scale*150*dia
+    z1 = scale*300*dia
 
     ID = 0
     molID = 0

@@ -153,8 +153,6 @@ class DatafileGenerator():
                         self.molID += 1
                     elif val >= 18 and val < 32:
                         atom_type = self.cbd_type
-                        self.appendLine(atom_type,xi+self.dia*1/2,yi+self.dia/2,zi+self.dia/2)
-                        self.appendLine(atom_type,xi+self.dia*3/2,yi+self.dia/2,zi+self.dia/2)
                     else:
                         atom_type = self.solvent_type
                     self.appendLine(atom_type,xi+self.dia*1/2,yi+self.dia/2,zi+self.dia/2)

@@ -107,7 +107,7 @@ class DatafileGenerator():
         zh = max(z,z2)
         zh = (zh-zl)/2.29+zl
 
-        rx, ry, rz = 5*self.dia, 5*self.dia, 5*self.dia
+        rx, ry, rz = 2*self.dia, 2*self.dia, 2*self.dia
         for xi in np.arange(xl+rx,xh-rx,2*rx):
             for yi in np.arange(yl+ry,yh-ry,2*ry):
                 for zi in np.arange(zl+rz,zh-rz,2*rz):

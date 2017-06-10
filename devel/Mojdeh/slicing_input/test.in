@@ -116,6 +116,7 @@ print ${run_length}
 variable new_run_length equal 0.5*${run_length}
 run ${new_run_length}
 unfix push_piston
+
 delete_atoms group piston_wall
 
 delete_atoms group	hopper

@@ -21,7 +21,7 @@ variable 		   visc_mix3     equal (${visc_CBD}+${visc_solvent})/2.0
 group              cbd type 1 
 group			   active type 2
 group              slurry type 1 2 
-group              bc type 3
+#group              bc type 3
 
 
 pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater/morris
@@ -44,10 +44,10 @@ timestep    ${dt}
 # time-integrate position, velocities, internal energy and density of cbd particles
 fix                integrate_slurry_fix slurry meso
 # time-integrate only internal energy and density of boundary particles
-fix                integrate_bc_fix bc meso/stationary
+#fix                integrate_bc_fix bc meso/stationary
 
 fix fixed_temp slurry langevin 50 50 10 234 
-dump               dump_id all custom 1000 calendaring-doubleforce-separaterigid_gap.lammpstrj id type x y z 
+dump               dump_id all custom 1000 calendaring-no_wall_1000.lammpstrj id type x y z 
 dump_modify        dump_id first yes
 dump_modify 	   dump_id sort 3
 
@@ -64,7 +64,7 @@ variable           skin equal 0.3*${h}
 neighbor           ${skin} bin # set Verlet list skin distance
 
 
-group moving_wall type 4
+#group moving_wall type 4
 
 #fix rigidwall moving_wall rigid single # this will take into account all the chnges that the wall goes through
 
@@ -72,24 +72,27 @@ run 10000
 
 
 variable dz equal bound(slurry,zmax)-bound(moving_wall,zmin)+2
-displace_atoms moving_wall move 0 0 ${dz}
+#displace_atoms moving_wall move 0 0 ${dz}
 
 run 30000
 
 #region   bottom block 0 EDGE 0 EDGE 2 20
 
-group rigids type 1 2 4
+#group rigids type 1 2 4
 
-fix rigidall rigids rigid single # this will take into account all the chnges that the wall goes through
+#fix rigidall rigids rigid single # this will take into account all the chnges that the wall goes through
 
-fix pishing_wall moving_wall aveforce 0 0 -720 #region bottom
+#fix pishing_wall moving_wall aveforce 0 0 -720 #region bottom
+
+
+
+fix pushing slurry addforce 0 0 -1000
+
+
 
 run 50000
 
-fix pushing_wall slurry addforce 0 0 -720
-
-
-
+unfix pushing
 run 50000
 
-delete_atoms group	moving_wall
+#delete_atoms group	moving_wall

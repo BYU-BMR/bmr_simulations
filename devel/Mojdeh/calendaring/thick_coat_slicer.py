@@ -7,8 +7,8 @@ xlo = 20
 xhigh = 30
 dia = 2
 
-readinFile = "thick_finished_coat.data"
-slicedFile = "slicedNew.data"
+readinFile = "thick_coat.data"
+slicedFile = "thick_sliced.data"
 
 copyfile(readinFile,slicedFile)
 

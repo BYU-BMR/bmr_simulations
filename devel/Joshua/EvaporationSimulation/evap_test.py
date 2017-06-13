@@ -4,7 +4,7 @@ import numpy as np
 import random, math, copy
 
 class DatafileGenerator():
-    newFileName = "zs_coating_50.data"
+    newFileName = "evap_test.data"
     positionLines = []
 
     # data string containing molecule ID, type, dia, rho, x, y, z, 0 0 0 
@@ -30,14 +30,14 @@ class DatafileGenerator():
 
     cbd_type,solvent_type,active_type,wall_type = 1,2,3,4
 
-    scale = 0.4
+    scale = 0.2
 
     x0 = 0.0
-    x1 = scale*4*50.0*dia
+    x1 = scale*2*8.0*dia
     y0 = 0.0
-    y1 = scale*3*5.0*dia
+    y1 = scale*2*8.0*dia
     z0 = 0
-    z1 = scale*5*50.0*dia
+    z1 = scale*4*50.0*dia
 
     ID = 0
     molID = 0
@@ -51,43 +51,16 @@ class DatafileGenerator():
         ylen = abs(self.y1-self.y0)
         zlen = abs(self.z1-self.z0)
 
-        # Set up walls
-        # vertex1 = (xlen*0.20,zlen*0.95)
-        # vertex2 = (xlen*0.20,zlen*0.40)
-        # vertex3 = (xlen*0.40,zlen*0.20)
-        # vertex4 = (xlen*0.40,zlen*0.10)
-        
-        # vertex5 = (xlen*(1.0-0.20),zlen*0.95)
-        # vertex6 = (xlen*(1.0-0.20),zlen*0.40)
-        # vertex7 = (xlen*(1.0-0.40),zlen*0.20)
-        # vertex8 = (xlen*(1.0-0.40),zlen*0.10)
-
-        opening_width = zlen*0.2
-        print("opening_width:",opening_width)
-        side_thickness = xlen*0.04
-        xi = xlen*0.04
-        xf = xi + side_thickness
-        vertex1 = (xi,zlen*0.95)
-        vertex2 = (xi,zlen*0.65/2)
-        vertex3 = (xf,zlen*0.55/2)
-        vertex4 = (xf,zlen*0.05/2+opening_width)
-        
-        xi = xf + opening_width
-        xf = xi + side_thickness
-        vertex5 = (xf,zlen*0.95)
-        vertex6 = (xf,zlen*0.65/2)
-        vertex7 = (xi,zlen*0.55/2)
-        vertex8 = (xi,zlen*0.05/2+opening_width)
-
-        vertex9 = (0,zlen*0.05/2)
-        vertex10 = (xlen,zlen*0.05/2)
-
+        vertex1 = (0,zlen*0.05/2)
+        vertex2 = (xlen,zlen*0.05/2)
+        vertexA = (0,zlen*0.05/2 + self.dia/2)
+        vertexB = (xlen,zlen*.5)
         
         # Draw moving wall on bottom
-        self.drawWallFromVtxs(vertex9,vertex10)
+        self.drawWallFromVtxs(vertex1,vertex2)
 
         # Only include the active particles if the opening_width is wide enough
-        self.fillCubeWithRandomMixVtxs(vertex1,vertex6)
+        self.fillCubeWithRandomMixVtxs(vertexA,vertexB)
         # if opening_width > self.active_dia:
         #     self.fillCubeWithMixVtxs(vertex1,vertex6)
         # else:
@@ -104,18 +77,18 @@ class DatafileGenerator():
         # self.fillCubeWithCBDVtxs(vertex6,middle_z_vertex,checkForOverlap=False)
 
          # Draw top wall
-        self.drawWallFromVtxs(vertex1,vertex5,atomType=5)
+        #self.drawWallFromVtxs(vertex1,vertex5,atomType=5)
         # Draw bottom wall
-        self.drawWallFromVtxs(vertex4,(vertex8[0]+self.dia,vertex8[1]),atomType=6)
+        #self.drawWallFromVtxs(vertex4,(vertex8[0]+self.dia,vertex8[1]),atomType=6)
 
         # Draw left walls
-        self.drawWallFromVtxs(vertex1,vertex2)
-        self.drawWallFromVtxs(vertex2,vertex3)
-        self.drawWallFromVtxs(vertex3,vertex4)
+        #self.drawWallFromVtxs(vertex1,vertex2)
+        #self.drawWallFromVtxs(vertex2,vertex3)
+        #self.drawWallFromVtxs(vertex3,vertex4)
         # Draw right walls
-        self.drawWallFromVtxs(vertex5,vertex6)
-        self.drawWallFromVtxs(vertex6,vertex7)
-        self.drawWallFromVtxs(vertex7,vertex8)
+        #self.drawWallFromVtxs(vertex5,vertex6)
+        #self.drawWallFromVtxs(vertex6,vertex7)
+        #self.drawWallFromVtxs(vertex7,vertex8)
         
         # self.fillCubeWithCBDVtxs(vertex1,vertex6)
 
@@ -153,12 +126,11 @@ class DatafileGenerator():
                         self.molID += 1
                     elif val >= 18 and val < 32:
                         atom_type = self.cbd_type
-                        self.appendLine(atom_type,xi+self.dia*1/2,yi+self.dia/2,zi+self.dia/2)
-                        self.appendLine(atom_type,xi+self.dia*3/2,yi+self.dia/2,zi+self.dia/2)
                     else:
                         atom_type = self.solvent_type
                     self.appendLine(atom_type,xi+self.dia*1/2,yi+self.dia/2,zi+self.dia/2)
                     self.appendLine(atom_type,xi+self.dia*3/2,yi+self.dia/2,zi+self.dia/2)
+
 
 
 

@@ -22,7 +22,7 @@ with open(readinFile,"r") as inFile:
 		for line in inFile:
 			if re.match('ITEM: TIMESTEP.*',line):
 				NumFrame += 1
-		print (NumFrame)
+		#print (NumFrame)
 
 		# go to the last frame
 		CurrentFrame = 0
@@ -77,7 +77,7 @@ with open(readinFile,"r") as inFile:
 
 		# Defining the size of the grid
 
-		resolution = 1 #each voxel is 1 micrometer cubed, we need to decrease that late
+		resolution = 0.4 #each voxel is 1 micrometer cubed, we need to decrease that late
 		radius = 1
 		def CheckVoxelType(x,y,z,Type):
 			for atom in atomList: # we are checking if it's active
@@ -91,17 +91,50 @@ with open(readinFile,"r") as inFile:
 							return True
 			return False
 
-		
 
-		for x in np.arange(xmin+0.5*resolution,xmax,resolution):
-			for y in np.arange(ymin+0.5*resolution,ymax,resolution):
-				for z in np.arange(zmin+0.5*resolution,zmax,resolution):
+		LinesToWrite = []
+		atomCount = 0
+		activeCounter = 0
+
+
+		for x in np.arange(xmin+0.5*resolution-radius,xmax+radius,resolution):
+			for y in np.arange(ymin+0.5*resolution-radius,ymax+radius,resolution):
+				for z in np.arange(zmin+0.5*resolution-radius,zmax+radius,resolution):
 					if CheckVoxelType(x,y,z,active_type):
-						print ('found active voxel')
+						#print ('found active voxel')
+						atomline = "%d %f %f %f %f \n" % (active_type,x,y,z,resolution/2)
+						LinesToWrite.append(atomline)
+						atomCount += 1
+						activeCounter += 1
 					elif CheckVoxelType(x,y,z,cbd_type):
-						print ('found cbd voxel')
+						#print ('found cbd voxel')
+						atomline = "%d %f %f %f %f \n" % (cbd_type,x,y,z, resolution/2)
+						LinesToWrite.append(atomline)
+						atomCount += 1
 					else:
-						print ('found pore voxel')
+						pass
+						#print ('found pore voxel')
+		print ("active voxels are", activeCounter, "voxels")
+		#wrtie lammps trajectory file
+		outFile.write("ITEM: TIMESTEP\n")
+		outFile.write("0\n")
+		outFile.write("ITEM: NUMBER OF ATOMS\n")
+		outFile.write("%d\n" % (atomCount))
+		outFile.write("ITEM: BOX BOUNDS pp pp pp\n")
+		outFile.write("%f %f\n" % (xmin-radius, xmax+radius))
+		outFile.write("%f %f\n" % (ymin-radius, ymax+radius))
+		outFile.write("%f %f\n" % (zmin-radius, zmax+radius))
+		outFile.write("ITEM: ATOMS type x y z radius\n")
+
+		for line in LinesToWrite:
+			outFile.write(line)
+			
+
+
+
+
+
+
 					
 
 

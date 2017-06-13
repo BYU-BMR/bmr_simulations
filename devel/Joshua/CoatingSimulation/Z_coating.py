@@ -4,7 +4,7 @@ import numpy as np
 import random, math, copy
 
 class DatafileGenerator():
-    newFileName = "zs_coating_50.data"
+    newFileName = "z_coating_50_small.data"
     positionLines = []
 
     # data string containing molecule ID, type, dia, rho, x, y, z, 0 0 0 
@@ -28,16 +28,18 @@ class DatafileGenerator():
         active_dia = 4.0
 
 
-    cbd_type,solvent_type,active_type,wall_type = 1,2,3,4
+    cbd_type,active_type,wall_type = 1,2,3
 
-    scale = 0.4
+    scale = 0.33
+
+    shrink = .40
 
     x0 = 0.0
-    x1 = scale*4*50.0*dia
+    x1 = scale*3*50.0*dia
     y0 = 0.0
-    y1 = scale*3*5.0*dia
+    y1 = scale*1*8.0*dia
     z0 = 0
-    z1 = scale*5*50.0*dia
+    z1 = scale*4*50.0*dia*shrink
 
     ID = 0
     molID = 0
@@ -49,7 +51,7 @@ class DatafileGenerator():
     def setUpSimulation(self):
         xlen = abs(self.x1-self.x0)
         ylen = abs(self.y1-self.y0)
-        zlen = abs(self.z1-self.z0)
+        zlen = abs((self.z1-self.z0)/self.shrink)
 
         # Set up walls
         # vertex1 = (xlen*0.20,zlen*0.95)
@@ -62,21 +64,21 @@ class DatafileGenerator():
         # vertex7 = (xlen*(1.0-0.40),zlen*0.20)
         # vertex8 = (xlen*(1.0-0.40),zlen*0.10)
 
-        opening_width = zlen*0.2
+        opening_width = zlen*0.075
         print("opening_width:",opening_width)
-        side_thickness = xlen*0.04
-        xi = xlen*0.04
+        side_thickness = zlen*(7/4)*0.04
+        xi = zlen*(7/4)*0.04
         xf = xi + side_thickness
-        vertex1 = (xi,zlen*0.95)
-        vertex2 = (xi,zlen*0.65/2)
-        vertex3 = (xf,zlen*0.55/2)
+        vertex1 = (xi,zlen*(self.shrink - .05))
+        vertex2 = (xi,zlen*0.35/2)
+        vertex3 = (xf,zlen*0.25/2)
         vertex4 = (xf,zlen*0.05/2+opening_width)
         
         xi = xf + opening_width
         xf = xi + side_thickness
-        vertex5 = (xf,zlen*0.95)
-        vertex6 = (xf,zlen*0.65/2)
-        vertex7 = (xi,zlen*0.55/2)
+        vertex5 = (xf,zlen*(self.shrink - .05))
+        vertex6 = (xf,zlen*0.35/2)
+        vertex7 = (xi,zlen*0.25/2)
         vertex8 = (xi,zlen*0.05/2+opening_width)
 
         vertex9 = (0,zlen*0.05/2)
@@ -104,9 +106,9 @@ class DatafileGenerator():
         # self.fillCubeWithCBDVtxs(vertex6,middle_z_vertex,checkForOverlap=False)
 
          # Draw top wall
-        self.drawWallFromVtxs(vertex1,vertex5,atomType=5)
+        self.drawWallFromVtxs(vertex1,vertex5,atomType=4)
         # Draw bottom wall
-        self.drawWallFromVtxs(vertex4,(vertex8[0]+self.dia,vertex8[1]),atomType=6)
+        self.drawWallFromVtxs(vertex4,(vertex8[0]+self.dia,vertex8[1]),atomType=5)
 
         # Draw left walls
         self.drawWallFromVtxs(vertex1,vertex2)
@@ -147,16 +149,14 @@ class DatafileGenerator():
         for yi in np.arange(yl,yh-self.dia,self.dia):
             for zi in np.arange(zl,zh-self.dia,self.dia):
                 for xi in np.arange(xl,xh-self.dia*2,self.dia*2):
-                    val = random.randint(0,99)
+                    val = random.randint(0,31)
                     if val >= 0 and val < 18:
                         atom_type = self.active_type
                         self.molID += 1
                     elif val >= 18 and val < 32:
                         atom_type = self.cbd_type
-                        self.appendLine(atom_type,xi+self.dia*1/2,yi+self.dia/2,zi+self.dia/2)
-                        self.appendLine(atom_type,xi+self.dia*3/2,yi+self.dia/2,zi+self.dia/2)
-                    else:
-                        atom_type = self.solvent_type
+                    #else:
+                        #atom_type = self.solvent_type
                     self.appendLine(atom_type,xi+self.dia*1/2,yi+self.dia/2,zi+self.dia/2)
                     self.appendLine(atom_type,xi+self.dia*3/2,yi+self.dia/2,zi+self.dia/2)
 

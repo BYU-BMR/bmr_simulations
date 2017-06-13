@@ -2,7 +2,7 @@ atom_style         meso-molecular
 dimension          3
 newton             on
 units              micro
-read_data          z_coating_50_small.data
+read_data          z_coating_50.data
 
 variable           h         equal 2.0
 variable           h_act     equal 3.0
@@ -32,7 +32,7 @@ fix                integrate_slurry_fix slurry meso
 # time-integrate only internal energy and density of boundary particles
 fix                integrate_bc_fix bc meso/stationary
 
-dump               dump_id all custom 10000 z_coating_50_small.lammpstrj id type mol xs ys zs
+dump               dump_id all custom 10000 evaporating.lammpstrj id type mol xs ys zs
 dump_modify        dump_id first yes
 dump_modify 	   dump_id sort 3
 
@@ -49,7 +49,7 @@ variable           skin equal 0.3*${h}
 neighbor           ${skin} bin # set Verlet list skin distance
 
 region evap_region block 0 EDGE 0 EDGE 0 EDGE
-#fix evap cbd evaporate 10000 1 evap_region 2343
+fix evap cbd evaporate 10000 1 evap_region 2343
 fix make_rigid active rigid/nvt molecule temp 30000 3000 30
 variable g equal 9.8/1000000
 fix add_gravity slurry gravity ${g} vector 0 0 -1  # Acceleration is micrometers/(microseconds)^2

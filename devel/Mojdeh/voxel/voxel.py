@@ -36,6 +36,27 @@ with open(readinFile,"r") as inFile:
 		for line in inFile:
 			if re.match('ITEM: TIMESTEP.*',line):
 				CurrentFrame += 1
+			if CurrentFrame == NumFrame:
+				if re.match('ITEM: BOX.*',line):
+					xedge = next(inFile).split()
+					xmin = float(xedge[0])
+					xmax = float(xedge[1])
+					#print (xmin)
+					#print (xmax)
+					yedge = next(inFile).split()
+
+					ymin = float(yedge [0])
+					ymax = float(yedge [1])
+					#print (ymin)
+					#print (ymax)
+
+					zedge = next(inFile).split()
+					zmin = float(zedge [0])
+					zmax = float(zedge [1])
+
+					#print (zmin)
+					#print (zmax)
+
 
 			if CurrentFrame == NumFrame:
 				if re.match('ITEM: ATOMS.*',line):
@@ -57,9 +78,8 @@ with open(readinFile,"r") as inFile:
 						atomList.append(atom)
 
 
-
 		# Find the limits of what we need to convrt to voxels
-		xmin = float('inf')
+		'''xmin = float('inf')
 		xmax = float('-inf')
 		ymin = float('inf')
 		ymax = float('-inf')
@@ -73,7 +93,7 @@ with open(readinFile,"r") as inFile:
 
 			xmax = max(atom.x,xmax)
 			ymax = max(atom.y,ymax)
-			zmax = max(atom.z,zmax)
+			zmax = max(atom.z,zmax)'''
 
 		# Defining the size of the grid
 
@@ -97,9 +117,9 @@ with open(readinFile,"r") as inFile:
 		activeCounter = 0
 
 
-		for x in np.arange(xmin+0.5*resolution-radius,xmax+radius,resolution):
-			for y in np.arange(ymin+0.5*resolution-radius,ymax+radius,resolution):
-				for z in np.arange(zmin+0.5*resolution-radius,zmax+radius,resolution):
+		for x in np.arange(xmin+0.5*resolution,xmax,resolution):
+			for y in np.arange(ymin+0.5*resolution,ymax,resolution):
+				for z in np.arange(zmin+0.5*resolution,zmax,resolution):
 					if CheckVoxelType(x,y,z,active_type):
 						#print ('found active voxel')
 						atomline = "%d %f %f %f %f \n" % (active_type,x,y,z,resolution/2)

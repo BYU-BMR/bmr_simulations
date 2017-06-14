@@ -21,7 +21,7 @@ variable 		   visc_mix3     equal (${visc_CBD}+${visc_solvent})/2.0
 group              cbd type 1 
 group			   active type 2
 group              slurry type 1 2 
-group              bc type 3
+group              bc type 4
 group			   moving_wall type 4
 
 pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater/morris
@@ -97,6 +97,11 @@ fix calendering moving_wall move linear  0.0 0.0 -10
 
 
 run 50000
+unfix calendering 
+
+fix rest moving_wall move linear  0.0 0.0 15
+
+run 10000
 
 #unfix pushing
 

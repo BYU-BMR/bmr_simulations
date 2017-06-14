@@ -6,7 +6,7 @@ from shutil import copyfile
 wallStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
 
 
-walldia = 2
+walldia = 1
 ID = 0
 wallmolID = 2
 wall_type = 4

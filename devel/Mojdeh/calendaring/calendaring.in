@@ -42,16 +42,18 @@ pair_coeff         * * sph/rhosum ${h}
 timestep    ${dt}
 
 variable g equal 9.8/1000000
-fix add_gravity slurry gravity ${g} vector 0 0 -1  # Acceleration is micrometers/(microseconds)^2
+
 
 # time-integrate position, velocities, internal energy and density of cbd particles
-fix                integrate_slurry_fix slurry meso
+
 # time-integrate only internal energy and density of boundary particles
 fix                integrate_bc_fix bc meso/stationary
 
+fix                integrate_slurry_fix slurry meso
 
-fix fixed_temp slurry langevin 50 50 10 234 
-dump               dump_id all custom 1000 calendering-moving_wall.lammpstrj id type x y z 
+fix add_gravity slurry gravity ${g} vector 0 0 -1  # Acceleration is micrometers/(microseconds)^2
+#fix fixed_temp slurry langevin 50 50 10 234 
+dump               dump_id all custom 1000 calendering-moving_wall_no_langevin.lammpstrj id type x y z 
 dump_modify        dump_id first yes
 dump_modify 	   dump_id sort 3
 

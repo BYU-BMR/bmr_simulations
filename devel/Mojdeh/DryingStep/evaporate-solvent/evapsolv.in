@@ -49,7 +49,7 @@ fix                integrate_slurry_fix slurry meso
 # time-integrate only internal energy and density of boundary particles
 #fix                integrate_bc_fix bc meso/stationary
 
-dump               dump_id all custom 10000 tempdecreased_nopairco_samefix.lammpstrj id mol type xs ys zs
+dump               dump_id all custom 10000 tempdecreased_nopairco_samefix_less_run_whole_end_evap.lammpstrj id mol type xs ys zs
 dump_modify        dump_id first yes
 dump_modify 	   dump_id sort 3
 
@@ -171,4 +171,10 @@ fix evap solvent evaporate 100000 1 bottom 1234
 #run ${run_length}
 #run ${run_length}
 
-run 1000000000
+run 1000000
+
+region		whole block	INF INF INF INF INF INF  
+
+fix evap1 solvent evaporate 10000 1 whole  1234
+
+run 1000000

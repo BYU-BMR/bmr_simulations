@@ -106,7 +106,7 @@ unfix calendering
 #fix rest moving_wall move linear  0.0 0.0 15
 delete_atoms group	moving_wall	
 
-run 1000
+run 10000
 
 #unfix pushing
 

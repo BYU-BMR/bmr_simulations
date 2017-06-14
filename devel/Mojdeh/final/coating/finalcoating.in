@@ -8,7 +8,7 @@ variable           h        	 equal 2.0
 variable           h_act    	 equal 3.0
 variable 		   h_mix	     equal (${h}+${h_act})/2.0
 variable           c     	     equal 100.0             # soundspeed for Tait's EOS
-variable           dt            equal 0.001
+variable           dt            equal 0.0001
 variable		   visc_CBD      equal 2357.8			 # viscosity in g/m*s (avg visc should be 2.3578 kg/m*s)
 variable 		   visc_active   equal 2357.8
 variable 		   visc_solvent  equal 2357.8
@@ -47,7 +47,7 @@ fix                integrate_slurry_fix slurry meso
 # time-integrate only internal energy and density of boundary particles
 fix                integrate_bc_fix bc meso/stationary
 
-dump               dump_id all custom 10000 finalcoating.lammpstrj id type xs ys zs
+dump               dump_id all custom 10000 finalcoatingtest.lammpstrj id type xs ys zs
 dump_modify        dump_id first yes
 dump_modify 	   dump_id sort 3
 
@@ -72,7 +72,7 @@ variable g equal 9.8/1000000
 fix add_gravity slurry gravity ${g} vector 0 0 -1  # Acceleration is micrometers/(microseconds)^2
 
 #variable wiggle_s equal swiggle(0,2000,10)
-print             your
+
 variable wiggle_c equal cwiggle(0,-2000,10)
 
 #fix strong_gravity slurry addforce 0.0 0.0 -0.05
@@ -91,7 +91,7 @@ variable piston_speed equal -0.04
 variable surface_speed equal abs(${piston_speed}*3)
 
 # Stir
-run 300000
+run 3000000
 unfix stir
 #unfix stir_the_bar
 
@@ -102,13 +102,13 @@ unfix stir
 
 # Apply extra gravity
 fix extra_gravity slurry addforce 0.0 0.0 -8.0
-run 300000
+run 3000000
 unfix extra_gravity
 
 # Move piston wall to starting position
 variable dz equal bound(slurry,zmax)-bound(piston_wall,zmin)+0.2
 displace_atoms piston_wall move 0 0 ${dz}
-run 1000
+run 10000
 
 # Expansion step
 run 50000

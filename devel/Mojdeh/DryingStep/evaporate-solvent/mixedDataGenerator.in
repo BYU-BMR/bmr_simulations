@@ -2,17 +2,17 @@ atom_style         meso-molecular
 dimension          3
 newton             on
 units              micro
-              
-read_data          calendaring.data
+read_data          evapsolv.data
 
 variable           h        	 equal 2.0
 variable           h_act    	 equal 3.0
 variable 		   h_mix	     equal (${h}+${h_act})/2.0
 variable           c     	     equal 100.0             # soundspeed for Tait's EOS
-variable           dt            equal 0.00001
+variable           dt            equal 0.0001 
 variable		   visc_CBD      equal 2357.8			 # viscosity in g/m*s (avg visc should be 2.3578 kg/m*s)
 variable 		   visc_active   equal 2357.8
 variable 		   visc_solvent  equal 2357.8
+
 
 variable		   visc_mix1     equal (${visc_CBD}+${visc_active})/2.0
 variable 		   visc_mix2     equal (${visc_active}+${visc_solvent})/2.0
@@ -20,9 +20,11 @@ variable 		   visc_mix3     equal (${visc_CBD}+${visc_solvent})/2.0
 
 group              cbd type 1 
 group			   active type 2
-group              slurry type 1 2 
-group              bc type 4
-group			   moving_wall type 4
+group			   solvent type 3
+group              slurry type 1 2 3
+#group              bc type 4
+
+#print              hello
 
 pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater/morris
 pair_coeff         * * sph/taitwater/morris 0.93 ${c} ${visc_CBD} ${h}
@@ -37,23 +39,17 @@ pair_coeff         * * sph/taitwater/morris 0.93 ${c} ${visc_CBD} ${h}
 pair_coeff         * * sph/rhosum ${h}
 #pair_coeff         2 * sph/rhosum ${h_act}
 #pair_coeff         2 2 sph/rhosum ${h_act}
-
+#print				I
 
 timestep    ${dt}
 
-variable g equal 9.8/1000000
-
-
+			
 # time-integrate position, velocities, internal energy and density of cbd particles
-
-# time-integrate only internal energy and density of boundary particles
-fix                integrate_bc_fix bc meso/stationary
-
 fix                integrate_slurry_fix slurry meso
+# time-integrate only internal energy and density of boundary particles
+#fix                integrate_bc_fix bc meso/stationary
 
-fix add_gravity slurry gravity ${g} vector 0 0 -1  # Acceleration is micrometers/(microseconds)^2
-#fix fixed_temp slurry langevin 50 50 10 234 
-dump               dump_id all custom 1000 calendering-moving_wall_no_langevin.lammpstrj id type x y z 
+dump               dump_id all custom 10000 mixed.lammpstrj id mol type xs ys zs
 dump_modify        dump_id first yes
 dump_modify 	   dump_id sort 3
 
@@ -69,55 +65,54 @@ neigh_modify       every 5 delay 0 check no
 variable           skin equal 0.3*${h}
 neighbor           ${skin} bin # set Verlet list skin distance
 
+#print              am
+fix make_rigid active rigid molecule   # make active come together
+#fix make_rigid1 bc rigid molecule
 
+variable g equal 9.8/1000000
+fix add_gravity slurry gravity ${g} vector 0 0 -1  # Acceleration is micrometers/(microseconds)^2
 
-fix                integrate_moving_wall_fix moving_wall meso/stationary
+#variable wiggle_s equal swiggle(0,2000,10)
+#print             your
+#variable wiggle_c equal cwiggle(0,-2000,10)
 
+#fix strong_gravity slurry addforce 0.0 0.0 -0.05
+#group stir_bar molecule 2
+#fix stir_the_bar stir_bar addforce v_wiggle_s 0.0 v_wiggle_c
+#fix stir cbd addforce v_wiggle_s 0.0 v_wiggle_c
+fix stir slurry langevin 10000000000 3000 10 234 
+#fix stir slurry nvt temp 10000000000 10000000000 10
+#group moving_surface molecule 1 # when we want the wall to move bottom wall instead of the hopper
+#fix move_surface moving_surface move linear 0.09 0 0 # Speed is in m/s (coating speeds vary from 1/60 m/s to 10/60 m/s)
+
+#group bottom_wall type 6
+#group piston_wall type 5
+
+#variable piston_speed equal -0.04
+#variable surface_speed equal abs(${piston_speed}*3)
+
+# Stir
+run 10000 #number of timesteps
+unfix stir
+#unfix stir_the_bar
+
+# Cool
+fix cool slurry langevin 300 300 10 234
+#run 10000
+#unfix cool
+
+# Apply extra gravity
+fix extra_gravity slurry addforce 0.0 0.0 -1
+run 300000
+#fall down little more
+write_data mixed.data
+#unfix extra_gravity
 
 # Move piston wall to starting position
-variable dz equal bound(slurry,zmax)-bound(moving_wall,zmin)+0.2
-displace_atoms moving_wall move 0 0 ${dz}
-
-#fix rigidwall moving_wall rigid single # this will take into account all the chnges that the wall goes through
+#variable dz equal bound(slurry,zmax)-bound(piston_wall,zmin)+0.2
+#displace_atoms piston_wall move 0 0 ${dz}
 
 
-
-run 30000
-
-#region   bottom block 0 EDGE 0 EDGE 2 20
-
-#group rigids type 1 2 4
-
-#fix rigidall rigids rigid single # this will take into account all the chnges that the wall goes through
-
-#fix pishing_wall moving_wall aveforce 0 0 -720 #region bottom
-
-
-
-
-variable wall_speed equal 0.04
-variable surface_speed equal abs(${wall_speed}*3)
-fix calendering moving_wall move linear  0.0 0.0 -10
-#fix pushing slurry addforce 0 0 -1000
-
-
-
-run 50000
-unfix calendering 
-
-#fix rest moving_wall move linear  0.0 0.0 15
-delete_atoms group	moving_wall	
-
-run 10000
-
-#unfix pushing
-
-
-#delete_atoms group	moving_wall
-
-write_data calendered_piece.data
-
-
-
-
+# Expansion step
+#run 10000
 

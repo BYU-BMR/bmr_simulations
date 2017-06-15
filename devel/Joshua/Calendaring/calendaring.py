@@ -3,9 +3,10 @@ import math, random, copy, re
 from shutil import copyfile 
 
 #data string containing molecule ID, type, walldia, rho, x, y, z, 0 0 0
-wallStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
+#wallStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
+wallStr = "%d %d %d %f %f %f\n"
 
-
+atomsline = 1
 walldia = 2
 ID = 0
 wallmolID = 2
@@ -14,8 +15,8 @@ wall_type = 4
 def appendLine(wallid,atomType,x,y,z):
 	linesToWrite.append(wallStr % (wallid,molID,atomType,x,y,z))
 
-readinFile = "sliced_coat.data"
-preparedFile = "calendaring.data"
+readinFile = "sliced.data"
+preparedFile = "calendaring_test.data"
 
 copyfile(readinFile,preparedFile)
 
@@ -32,10 +33,8 @@ with open(readinFile,"r") as inFile:
 			linesToWrite.append(line)
 			buildwall = True
 					
-		atoms = linesToWrite[2]
+		atoms = linesToWrite[atomsline]
 		ID = float(atoms.split()[0])
-		#lastline = linesToWrite[-1]
-		#linesToWrite.remove(lastline)
 
 		if buildwall == True:
 			xline = linesToWrite[5]
@@ -70,7 +69,7 @@ with open(readinFile,"r") as inFile:
 					buildwall = False
 
 		# Go back and correct number of atoms
-		linesToWrite[2] = str(int(ID)) + " atoms\n"
+		linesToWrite[atomsline] = str(int(ID)) + " atoms\n"
 
 		for line in linesToWrite:
 			outFile.write(line)

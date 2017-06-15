@@ -14,7 +14,7 @@ wall_type = 4
 def appendLine(wallid,atomType,x,y,z):
 	linesToWrite.append(wallStr % (wallid,molID,atomType,x,y,z))
 
-readinFile = "sliced_coat.data"
+readinFile = "evap_mixed_3h.data"
 preparedFile = "calendaring.data"
 
 copyfile(readinFile,preparedFile)

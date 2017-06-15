@@ -12,10 +12,9 @@ variable           dt    equal 0.0001
 variable		   visc  equal 2357.8			 # viscosity in g/m*s (avg visc should be 2.3578 kg/m*s)
 
 group              cbd type 1 
-group			   solvent type 2
-group			   active type 3
-group              slurry type 1 2 3
-group              bc type 4
+group			   active type 2
+group              slurry type 1 2 
+group              bc type 3
 
 pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater/morris
 pair_coeff         * * sph/taitwater/morris 0.93 ${c} ${visc} ${h}
@@ -50,10 +49,10 @@ variable           skin equal 0.3*${h}
 neighbor           ${skin} bin # set Verlet list skin distance
 
 
-fix make_rigid active rigid molecule
-variable g equal 0.0098
-#fix add_gravity slurry gravity ${g} vector 0 0 -1  # Acceleration is micrometers/(microseconds)^2
+
+variable g equal .98
+fix add_gravity slurry gravity ${g} vector 0 0 -1  # Acceleration is micrometers/(microseconds)^2
 region all block 0 EDGE 0 EDGE 0 EDGE
-fix evaporate solvent evaporate 100 1 all 13
+fix evaporate cbd evaporate 100 1 all 13
 
 run 100000

@@ -2,14 +2,19 @@ atom_style         meso-molecular
 dimension          3
 newton             on
 units              micro
-read_data          solvent.data
+read_data          finished_coat.data
 
 variable           h         equal 2.0
 variable           h_act     equal 3.0
 variable 		   h_mix	 equal (${h}+${h_act})/2.0
 variable           c     equal 100.0             # soundspeed for Tait's EOS
 variable           dt    equal 0.0001
-variable		   visc  equal 2357.8			 # viscosity in g/m*s (avg visc should be 2.3578 kg/m*s)
+variable		   visc_cbd      equal 6000
+variable 		   visc_active   equal 6000
+variable 		   visc_solvent  equal 1.6
+variable		   visc_mix1     equal (${visc_cbd}+${visc_active})/2.0
+variable 		   visc_mix2     equal (${visc_active}+${visc_solvent})/2.0
+variable 		   visc_mix3     equal (${visc_cbd}+${visc_solvent})/2.0			 # viscosity in g/m*s (avg visc should be 2.3578 kg/m*s)
 
 group              cbd type 1 
 group			   solvent type 2
@@ -18,10 +23,14 @@ group			   active type 3
 group              slurry type 1 2 3
 group              bc type 4
 
-pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater/morris
-pair_coeff         * * sph/taitwater/morris 0.93 ${c} ${visc} ${h}
-#pair_coeff         2 * sph/taitwater/morris 0.93 ${c} ${visc} ${h_act}
-#pair_coeff         2 2 sph/taitwater/morris 0.93 ${c} ${visc} ${h_act}
+pair_coeff		   4 * sph/taitwater/morris 0.93 ${c} ${visc_cbd} ${h}
+pair_coeff         * 4 sph/taitwater/morris 0.93 ${c} ${visc_cbd} ${h}
+pair_coeff         1 1 sph/taitwater/morris 0.93 ${c} ${visc_cbd} ${h}
+pair_coeff         2 2 sph/taitwater/morris 0.93 ${c} ${visc_solvent} ${h}
+pair_coeff		   3 3 sph/taitwater/morris 0.93 ${c} ${visc_active} ${h_act}
+pair_coeff         1 2 sph/taitwater/morris 0.93 ${c} ${visc_mix3} ${h}
+pair_coeff         2 3 sph/taitwater/morris 0.93 ${c} ${visc_mix2} ${h_mix}
+pair_coeff         1 3 sph/taitwater/morris 0.93 ${c} ${visc_mix1} ${h_mix}
 pair_coeff         * * sph/rhosum ${h}
 #pair_coeff         2 * sph/rhosum ${h_act}
 #pair_coeff         2 2 sph/rhosum ${h_act}
@@ -51,7 +60,7 @@ variable           skin equal 0.3*${h}
 neighbor           ${skin} bin # set Verlet list skin distance
 
 region evap_region block 0 EDGE 0 EDGE 0 EDGE
-#fix evap solvent evaporate 10000 1 evap_region 2343
+fix evap solvent evaporate 10000 1 evap_region 2343
 fix make_rigid active rigid/nvt molecule temp 30000 3000 30
 variable g equal 9.8/1000000
 fix add_gravity slurry gravity ${g} vector 0 0 -1  # Acceleration is micrometers/(microseconds)^2

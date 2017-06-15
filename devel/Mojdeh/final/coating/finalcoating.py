@@ -35,7 +35,7 @@ class DatafileGenerator():
     x0 = 0.0
     x1 = scale*5*50.0*dia
     y0 = 0.0
-    y1 = scale*3*8.0*dia
+    y1 = scale*1*8.0*dia
     z0 = 0
     z1 = scale*4*50.0*dia
 

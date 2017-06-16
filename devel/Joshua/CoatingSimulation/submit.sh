@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --time=24:00:00   # walltime
+#SBATCH --time=72:00:00   # walltime
 #SBATCH --ntasks=12   # number of processor cores (i.e. tasks)
 #SBATCH --nodes=1   # number of nodes
 #SBATCH --mem=4096M   # memory per CPU core

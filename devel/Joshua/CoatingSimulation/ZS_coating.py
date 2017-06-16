@@ -4,7 +4,7 @@ import numpy as np
 import random, math, copy
 
 class DatafileGenerator():
-    newFileName = "zs_coating_50_1.50.data"
+    newFileName = "zs_coating_40_0.33.data"
     positionLines = []
 
     # data string containing molecule ID, type, dia, rho, x, y, z, 0 0 0 
@@ -30,7 +30,7 @@ class DatafileGenerator():
 
     cbd_type,solvent_type,active_type,wall_type = 1,2,3,4
 
-    scale = 1.50
+    scale = 0.33
 
     shrink = .40
 

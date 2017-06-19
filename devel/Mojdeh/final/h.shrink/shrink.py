@@ -1,11 +1,10 @@
-
 # Python code to extract equilibrium drop coordinates and add the dr blade
 import numpy as np
 #from PIL import Image
 import random, math, copy
 
 class DatafileGenerator():
-    newFileName = "zs_coating_40_0.33.data"
+    newFileName = "zs_coating_60_1.50.data"
     positionLines = []
 
     # data string containing molecule ID, type, dia, rho, x, y, z, 0 0 0 
@@ -31,9 +30,9 @@ class DatafileGenerator():
 
     cbd_type,solvent_type,active_type,wall_type = 1,2,3,4
 
-    scale = 0.33
+    scale = 1.50
 
-    shrink = .40
+    shrink = .60
 
     x0 = 0.0
     x1 = scale*3*50.0*dia

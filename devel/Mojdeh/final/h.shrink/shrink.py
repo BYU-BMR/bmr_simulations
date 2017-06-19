@@ -4,14 +4,20 @@ import numpy as np
 import random, math, copy
 
 class DatafileGenerator():
-    newFileName = "zs_coating_60_1.50.data"
+    newFileName = "diffmass_coating_40_0.33.data"
     positionLines = []
 
     # data string containing molecule ID, type, dia, rho, x, y, z, 0 0 0 
     cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
+    #actStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for active particles
+    #solvStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for solvent particles
     #cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
 
     m_cbd = 3.72
+    m_act = .71
+    m_solv = .79
+    m_wall = 3.72
+
     dia = 2.0
 
     activeShapes = ['sphere','ellipsoid','rod','single','diparticle']
@@ -28,11 +34,11 @@ class DatafileGenerator():
         active_dia = 4.0
 
 
-    cbd_type,solvent_type,active_type,wall_type = 1,2,3,4
+    cbd_type,active_type,solvent_type,wall_type = 1,2,3,4
 
-    scale = 1.50
+    scale = 0.33
 
-    shrink = .60
+    shrink = .40
 
     x0 = 0.0
     x1 = scale*3*50.0*dia
@@ -390,9 +396,9 @@ class DatafileGenerator():
             outFile.write("Masses\n")
             outFile.write("\n")
             outFile.write("1 %f\n" % self.m_cbd)
-            outFile.write("2 %f\n" % self.m_cbd)
-            outFile.write("3 %f\n" % self.m_cbd)
-            outFile.write("4 %f\n" % self.m_cbd)
+            outFile.write("2 %f\n" % self.m_act)
+            outFile.write("3 %f\n" % self.m_solv)
+            outFile.write("4 %f\n" % self.m_wall)
             outFile.write("5 %f\n" % self.m_cbd)
             outFile.write("6 %f\n" % self.m_cbd)
             outFile.write("7 %f\n" % self.m_cbd)

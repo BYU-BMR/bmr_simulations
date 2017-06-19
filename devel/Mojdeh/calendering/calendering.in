@@ -53,7 +53,7 @@ fix                integrate_slurry_fix slurry meso
 
 fix add_gravity slurry gravity ${g} vector 0 0 -1  # Acceleration is micrometers/(microseconds)^2
 #fix fixed_temp slurry langevin 50 50 10 234 
-dump               dump_id all custom 1000 cal_highvisc25000_evap_mixed_3h.lammpstrj id type x y z 
+dump               dump_id all custom 1000 test.lammpstrj id type x y z 
 dump_modify        dump_id first yes
 dump_modify 	   dump_id sort 3
 
@@ -98,12 +98,18 @@ run 30000
 
 variable wall_speed equal 0.04
 variable surface_speed equal abs(${wall_speed}*3)
-fix calendering moving_wall move linear  0.0 0.0 -10
+#fix calendering moving_wall move linear  0.0 0.0 -10
+
+
+variable zdisplace equal 50
+variable zvelocity equal -10
+fix calendering moving_wall move variable NULL NULL zdisplace NULL NULL zvelocity
 #fix pushing slurry addforce 0 0 -1000
 
 
 
 run 50000
+
 unfix calendering 
 
 #fix rest moving_wall move linear  0.0 0.0 15

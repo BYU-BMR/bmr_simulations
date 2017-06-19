@@ -22,25 +22,25 @@ group              bc type 4
 #print				I
 pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater/morris
 #print 				will
-pair_coeff         * * sph/taitwater/morris 0.93 ${c} ${visc} ${ha}
+pair_coeff         * * sph/taitwater/morris 0.93 ${c} ${visc} ${hc}
 #print 				find
-pair_coeff         1 * sph/taitwater/morris 0.93 ${c} ${visc} ${hc}
+pair_coeff         1 1 sph/taitwater/morris 0.93 ${c} ${visc} ${hc}
 #print 				you
-pair_coeff         2 * sph/taitwater/morris 0.93 ${c} ${visc} ${ha}
+pair_coeff         2 2 sph/taitwater/morris 0.93 ${c} ${visc} ${ha}
 
 #print 				!!
-pair_coeff         3 * sph/taitwater/morris 0.93 ${c} ${visc} ${hs}
-pair_coeff         * * sph/taitwater/morris 0.93 ${c} ${visc} ${ha}
+pair_coeff         3 3 sph/taitwater/morris 0.93 ${c} ${visc} ${hs}
+
 #print 				where
-pair_coeff         * * sph/rhosum ${ha}
+pair_coeff         * * sph/rhosum ${hc}
 #print 				are
-pair_coeff         1 * sph/rhosum ${hc}
+pair_coeff         1 1 sph/rhosum ${hc}
 #print 				you
-pair_coeff         2 * sph/rhosum ${ha}
+pair_coeff         2 2 sph/rhosum ${ha}
 #print 				??
 
-pair_coeff         3 * sph/rhosum ${hs}
-pair_coeff         * * sph/rhosum ${ha}
+pair_coeff         3 3 sph/rhosum ${hs}
+
 
 
 

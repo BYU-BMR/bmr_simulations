@@ -154,7 +154,7 @@ run 50000
 #unfix cool
 # Start moving piston wall and hopper
 
-fix more_gravity slurry addforce 0 0 -1
+
 
 dump_modify        dump_id every 25000
 #fix push_piston piston_wall move linear 0.0 0.0 ${piston_speed}

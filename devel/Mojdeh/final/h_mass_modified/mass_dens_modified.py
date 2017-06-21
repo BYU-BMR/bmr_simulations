@@ -1,27 +1,35 @@
 # Python code to extract equilibrium drop coordinates and add the dr blade
 import numpy as np
-#from PIL import Image
 import random, math, copy
 
 class DatafileGenerator():
-    newFileName = "diffmass_coating_40_0.33.data"
+    newFileName = "massdenshtest.data"
     positionLines = []
 
     # data string containing molecule ID, type, dia, rho, x, y, z, 0 0 0 
-    cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
-    actStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for active particles
-    solvStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for solvent particles
-    #cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
+    #cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
+    #solvStr = "%d %d %d 1.028 0.0 1.0 %f %f %f\n" #string for solvent particles
+    #actStr = "%d %d %d 4.79 0.0 1.0 %f %f %f\n" #string for active particles
+    #wallStr = "%d %d %d 5.00 0.0 1.0 %f %f %f\n" #string for wall particles
+    cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
+    solvStr = "%d %d %d %f %f %f\n" #string for solvent particles
+    actStr = "%d %d %d %f %f %f\n" #string for active particles
+    wallStr = "%d %d %d %f %f %f\n" #string for wall particles
 
-    m_cbd = 3.72
-    m_act = .71
-    m_solv = .79
-    m_wall = 3.72
+    m_cbd = .195
+    m_solv = .215
+    m_act = 3.01
+    m_wall = 2.09
 
-    dia = 2.0
+    cbd_dia = 1.0
+    solv_dia = 1.0
+    act_dia = 3.0
+    wall_dia = 2.0
+
+    distribution = 2
 
     activeShapes = ['sphere','ellipsoid','rod','single','diparticle']
-    activeShape = activeShapes[4]
+    activeShape = activeShapes[3]
     if activeShape == 'sphere':
         active_dia = 8.0
     elif activeShape == 'ellipsoid':
@@ -38,14 +46,14 @@ class DatafileGenerator():
 
     scale = 0.33
 
-    shrink = .40
+    shrink = .30
 
     x0 = 0.0
-    x1 = scale*3*50.0*dia
+    x1 = scale*3*50.0*2
     y0 = 0.0
-    y1 = scale*1*8.0*dia
+    y1 = scale*3*8.0*2
     z0 = 0
-    z1 = scale*4*50.0*dia*shrink
+    z1 = scale*4*50.0*2*shrink
 
     ID = 0
     molID = 0
@@ -92,10 +100,10 @@ class DatafileGenerator():
 
         
         # Draw moving wall on bottom
-        self.drawWallFromVtxs(vertex9,vertex10)
+        ##self.drawWallFromVtxs(vertex9,vertex10)
 
         # Only include the active particles if the opening_width is wide enough
-        self.fillCubeWithRandomMixVtxs(vertex1,vertex6)
+        ##self.fillCubeWithRandomMixVtxs(vertex1,vertex6)
         # if opening_width > self.active_dia:
         #     self.fillCubeWithMixVtxs(vertex1,vertex6)
         # else:
@@ -108,22 +116,22 @@ class DatafileGenerator():
         
         # # Fill top half of box with Active and the bottom half with CBD
         # middle_z_vertex = (vertex1[0],(vertex1[1]+vertex2[1])/2)
-        # self.fillCubeWithActiveVtxs(vertex5,middle_z_vertex)
-        # self.fillCubeWithCBDVtxs(vertex6,middle_z_vertex,checkForOverlap=False)
+        ##self.fillCubeWithActiveVtxs(vertex1,vertex6)
+        self.fillCubeWithCBDVtxs(vertex1,vertex6,checkForOverlap=True)
 
          # Draw top wall
-        self.drawWallFromVtxs(vertex1,vertex5,atomType=5)
+        ##self.drawWallFromVtxs(vertex1,vertex5,atomType=5)
         # Draw bottom wall
-        self.drawWallFromVtxs(vertex4,(vertex8[0]+self.dia,vertex8[1]),atomType=6)
+        ##self.drawWallFromVtxs(vertex4,(vertex8[0]+self.wall_dia,vertex8[1]),atomType=6)
 
         # Draw left walls
-        self.drawWallFromVtxs(vertex1,vertex2)
-        self.drawWallFromVtxs(vertex2,vertex3)
-        self.drawWallFromVtxs(vertex3,vertex4)
+        ##self.drawWallFromVtxs(vertex1,vertex2)
+        ##self.drawWallFromVtxs(vertex2,vertex3)
+        ##self.drawWallFromVtxs(vertex3,vertex4)
         # Draw right walls
-        self.drawWallFromVtxs(vertex5,vertex6)
-        self.drawWallFromVtxs(vertex6,vertex7)
-        self.drawWallFromVtxs(vertex7,vertex8)
+        ##self.drawWallFromVtxs(vertex5,vertex6)
+        ##self.drawWallFromVtxs(vertex6,vertex7)
+        ##self.drawWallFromVtxs(vertex7,vertex8)
         
         # self.fillCubeWithCBDVtxs(vertex1,vertex6)
 
@@ -152,74 +160,20 @@ class DatafileGenerator():
         yh = max(y,y2)
         zl = min(z,z2)
         zh = max(z,z2)
-        for yi in np.arange(yl,yh-self.dia,self.dia):
-            for zi in np.arange(zl,zh-self.dia,self.dia):
-                for xi in np.arange(xl,xh-self.dia*2,self.dia*2):
+        for yi in np.arange(yl,yh-self.distribution*2,self.distribution):
+            for zi in np.arange(zl,zh-self.distribution,self.distribution):
+                for xi in np.arange(xl,xh-self.distribution*2,self.distribution*2):
                     val = random.randint(0,99)
                     if val >= 0 and val < 18:
                         atom_type = self.active_type
                         self.molID += 1
+                        self.appendLineAct(atom_type,xi+self.distribution*1/2,yi+self.distribution/2,zi+self.distribution/2)
                     elif val >= 18 and val < 32:
                         atom_type = self.cbd_type
+                        self.appendLineCBD(atom_type,xi+self.distribution*1/2,yi+self.distribution/2,zi+self.distribution/2)
                     else:
                         atom_type = self.solvent_type
-                    self.appendLine(atom_type,xi+self.dia*1/2,yi+self.dia/2,zi+self.dia/2)
-                    self.appendLine(atom_type,xi+self.dia*3/2,yi+self.dia/2,zi+self.dia/2)
-
-
-
-    def fillCubeWithMixVtxs(self,v1,v2):
-        (x1,z1) = v1
-        (x2,z2) = v2
-        self.fillCubeWithMix(x1,self.y0,z1,x2,self.y1,z2)
-
-    def fillCubeWithMix(self,x,y,z,x2,y2,z2):
-        xl = min(x,x2)
-        xh = max(x,x2)
-        yl = min(y,y2)
-        yh = max(y,y2)
-        zl = min(z,z2)
-        zh = max(z,z2)
-        radius = self.active_dia/2.0
-        spacing = 2.0*radius
-        x_act_range = math.floor((xh-xl)/spacing)
-        y_act_range = math.floor((yh-yl)/(spacing/2))
-        z_act_range = math.floor((zh-zl)/(spacing/2))
-        x_cbd_range = math.floor((spacing)/self.dia)
-        y_cbd_range = math.floor((yh-yl)/self.dia)
-        z_cbd_range = math.floor((zh-zl)/self.dia)
-        x_act_spacing = (xh-xl)/x_act_range
-        y_act_spacing = (yh-yl)/y_act_range
-        z_act_spacing = (zh-zl)/z_act_range
-        x_cbd_spacing = (spacing)/x_cbd_range
-        y_cbd_spacing = (yh-yl)/y_cbd_range
-        z_cbd_spacing = (zh-zl)/z_cbd_range
-        for i in range(int(x_act_range)):
-            if (i % 2) == 1:
-                for j in range(int(y_act_range)):
-                    for k in range(int(z_act_range)):
-                        x = xl+x_act_spacing*(i+0.5)
-                        y = yl+y_act_spacing*(j+0.5)
-                        z = zl+z_act_spacing*(int(z_act_range-1)-k+0.5)
-                        if self.activeShape == 'sphere':
-                            self.drawSphere(x,y,z,radius)
-                        elif self.activeShape == 'ellipsoid':
-                            self.drawEllipsoid(x,y,z,radius/2,radius,radius)  
-                        elif self.activeShape == 'rod':
-                            self.drawRod(x,y,z,radius/2,radius,radius/2)  
-                        elif self.activeShape == 'single':
-                            self.appendLine(self.active_type,x,y,z)
-                        elif self.activeShape == 'diparticle':
-                            self.drawDiParticle(x,y,z)    
-            else:
-                xi = xl+x_act_spacing*(i)
-                for i_cbd in range(int(x_cbd_range)):
-                    for j in range(int(y_cbd_range)):
-                        for k in range(int(z_cbd_range)):
-                            x = xi+x_cbd_spacing*(i_cbd+0.5)
-                            y = yl+y_cbd_spacing*(j+0.5)
-                            z = zl+z_cbd_spacing*(k+0.5)
-                            self.appendLine(self.cbd_type,x,y,z)
+                        self.appendLineSolv(atom_type,xi+self.distribution*1/2,yi+self.distribution/2,zi+self.distribution/2)
 
 
     def fillCubeWithActiveVtxs(self,v1,v2):
@@ -234,7 +188,7 @@ class DatafileGenerator():
         yh = max(y,y2)
         zl = min(z,z2)
         zh = max(z,z2)
-        radius = 4
+        radius = self.act_dia/2
         spacing = 2*radius
         x_range = math.floor((xh-xl)/spacing)
         y_range = math.floor((yh-yl)/spacing)
@@ -248,7 +202,10 @@ class DatafileGenerator():
                     x = xl+x_spacing*(i+0.5)
                     y = yl+y_spacing*(j+0.5)
                     z = zl+z_spacing*(int(z_range-1)-k+0.5)
-                    self.drawSphere(x,y,z,radius)
+                    #self.drawSphere(x,y,z,radius)
+                    atom_type = self.active_type
+                    self.molID += 1
+                    self.appendLineAct(atom_type,x+self.active_dia*1/2,y+self.active_dia/2,z+self.active_dia/2)
 
     def fillCubeWithCBDVtxs(self,v1,v2,checkForOverlap=True):
         (x1,z1) = v1
@@ -263,7 +220,7 @@ class DatafileGenerator():
         yh = max(y,y2)
         zl = min(z,z2)
         zh = max(z,z2)
-        spacing = self.dia
+        spacing = self.cbd_dia
         x_range = math.floor((xh-xl)/spacing)
         y_range = math.floor((yh-yl)/spacing)
         z_range = math.floor((zh-zl)/spacing)
@@ -277,7 +234,7 @@ class DatafileGenerator():
                 if line.split()[2] == str(self.active_type):
                     activeParticleLines.append(line)
             print("Active particles:", len(activeParticleLines))
-            minDistance = self.dia**2
+            minDistance = (self.act_dia/2)**2
             for i in range(int(x_range)):
                 for j in range(int(y_range)):
                     for k in range(int(z_range)):
@@ -291,7 +248,7 @@ class DatafileGenerator():
                             if distance_sq < minDistance:
                                 placeParticle = False
                                 break
-                        if (placeParticle): self.appendLine(self.cbd_type,xi,yi,zi)
+                        if (placeParticle): self.appendLineCBD(self.cbd_type,xi,yi,zi)
         else:
            for i in range(int(x_range)):
                 for j in range(int(y_range)):
@@ -299,11 +256,30 @@ class DatafileGenerator():
                         xi = xl+x_spacing*(i+0.5)
                         yi = yl+y_spacing*(j+0.5)
                         zi = zl+z_spacing*(k+0.5)
-                        self.appendLine(self.cbd_type,xi,yi,zi)
+                        self.appendLineCBD(self.cbd_type,xi,yi,zi)
+                    
 
-    def appendLine(self,atomType,x,y,z):
+
+     # Appending Line with different particles                   
+
+    def appendLineCBD(self,atomType,x,y,z):
         self.ID += 1
         self.positionLines.append(self.cbdStr % (self.ID, self.molID, atomType, x, y, z))
+
+    def appendLineSolv(self,atomType,x,y,z):
+        self.ID += 1
+        self.positionLines.append(self.solvStr % (self.ID, self.molID, atomType, x, y, z))
+
+    def appendLineAct(self,atomType,x,y,z):
+        self.ID += 1
+        self.positionLines.append(self.actStr % (self.ID, self.molID, atomType, x, y, z))
+
+    def appendLineWall(self,atomType,x,y,z):
+        self.ID += 1
+        self.positionLines.append(self.wallStr % (self.ID, self.molID, atomType, x, y, z))
+
+
+
 
     def drawWallFromVtxs(self,vtx1,vtx2,atomType=wall_type):
         (x,z)   = vtx1
@@ -314,14 +290,14 @@ class DatafileGenerator():
         self.molID += 1
         print("molID for wall is:", self.molID)
         length = math.sqrt((x2-x)**2 + (z2-z)**2)
-        numPoints = math.ceil(length/(self.dia*1))
+        numPoints = math.ceil(length/(self.wall_dia*1))
         delta_x = (x2-x)/numPoints
         delta_z = (z2-z)/numPoints
         for i in range(numPoints):
             xi = x+i*delta_x
             zi = z+i*delta_z
-            for yi in np.arange(self.y0,self.y1,self.dia*1):
-                self.appendLine(atomType,xi,yi,zi)
+            for yi in np.arange(self.y0,self.y1,self.wall_dia*1):
+                self.appendLineWall(atomType,xi,yi,zi)
 
 
     def drawChickenNugget(self,x,y,z,rx,ry,rz,file):
@@ -396,13 +372,13 @@ class DatafileGenerator():
             outFile.write("Masses\n")
             outFile.write("\n")
             outFile.write("1 %f\n" % self.m_cbd)
-            outFile.write("2 %f\n" % self.m_act)
-            outFile.write("3 %f\n" % self.m_solv)
+            outFile.write("2 %f\n" % self.m_solv)
+            outFile.write("3 %f\n" % self.m_act)
             outFile.write("4 %f\n" % self.m_wall)
-            outFile.write("5 %f\n" % self.m_cbd)
-            outFile.write("6 %f\n" % self.m_cbd)
-            outFile.write("7 %f\n" % self.m_cbd)
-            outFile.write("8 %f\n" % self.m_cbd)
+            outFile.write("5 %f\n" % self.m_wall)
+            outFile.write("6 %f\n" % self.m_wall)
+            outFile.write("7 %f\n" % self.m_wall)
+            outFile.write("8 %f\n" % self.m_wall)
 
             outFile.write("\n")
             outFile.write("Atoms\n")

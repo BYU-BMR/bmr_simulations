@@ -9,11 +9,25 @@ class DatafileGenerator():
 
     # data string containing molecule ID, type, dia, rho, x, y, z, 0 0 0 
     cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
-    
+    actStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for active particles
+    solvStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for solvent particles
+    wallStr = "%d %d %d 5.00 0.0 1.0 %f %f %f\n" #string for wall particles
     #cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
+    #solvStr = "%d %d %d %f %f %f\n" #string for solvent particles
+    #actStr = "%d %d %d %f %f %f\n" #string for active particles
+    #wallStr = "%d %d %d %f %f %f\n" #string for wall particles
 
-    m_cbd = 3.72
-    dia = 2.0
+    m_cbd = .195
+    m_solv = .215
+    m_act = 3.01
+    m_wall = 2.09
+
+    cbd_dia = 1.0
+    solv_dia = 1.0
+    act_dia = 3.0
+    wall_dia = 2.0
+
+    distribution = 2
 
     activeShapes = ['sphere','ellipsoid','rod','single','diparticle']
     activeShape = activeShapes[4]
@@ -29,16 +43,18 @@ class DatafileGenerator():
         active_dia = 4.0
 
 
-    cbd_type,active_type, solvent_type, wall_type = 1,2,3,4
+    cbd_type,solvent_type,active_type,wall_type = 1,2,3,4
 
-    scale = 0.2
+    scale = 0.33
+
+    shrink = .40
 
     x0 = 0.0
-    x1 = scale*50.0*dia
+    x1 = scale*3*50.0*distribution
     y0 = 0.0
-    y1 = scale*50*dia
+    y1 = scale*1*8.0*distribution
     z0 = 0
-    z1 = scale*300*dia
+    z1 = scale*4*50.0*distribution*shrink
 
     ID = 0
     molID = 0
@@ -48,11 +64,91 @@ class DatafileGenerator():
         self.writeFile()
 
     def setUpSimulation(self):
-        vertex1 = (self.x0,self.z0+self.dia)
-        vertex2 = (self.x1,self.z0+self.dia) # we don't want the overlap between the particles and wall
-        self.drawWallFromVtxs(vertex1,vertex2) # drawing a botom wall for drying, we don't need self because they are defined in the same function
-        self.fillCubeWithRandomMix(self.x0,self.y0,self.z0+self.dia*2,self.x1,self.y1,self.z1/2) # we don't want the whole box to be filled with particles only half of the box
+        xlen = abs(self.x1-self.x0)
+        ylen = abs(self.y1-self.y0)
+        zlen = abs((self.z1-self.z0)/self.shrink)
+
+        # Set up walls
+        # vertex1 = (xlen*0.20,zlen*0.95)
+        # vertex2 = (xlen*0.20,zlen*0.40)
+        # vertex3 = (xlen*0.40,zlen*0.20)
+        # vertex4 = (xlen*0.40,zlen*0.10)
         
+        # vertex5 = (xlen*(1.0-0.20),zlen*0.95)
+        # vertex6 = (xlen*(1.0-0.20),zlen*0.40)
+        # vertex7 = (xlen*(1.0-0.40),zlen*0.20)
+        # vertex8 = (xlen*(1.0-0.40),zlen*0.10)
+
+        opening_width = zlen*0.075
+        print("opening_width:",opening_width)
+        side_thickness = zlen*(7/4)*0.04
+        xi = zlen*(7/4)*0.04
+        xf = xi + side_thickness
+        vertex1 = (xi,zlen*(self.shrink - .05))
+        vertex2 = (xi,zlen*0.35/2)
+        vertex3 = (xf,zlen*0.25/2)
+        vertex4 = (xf,zlen*0.05/2+opening_width)
+        
+        xi = xf + opening_width
+        xf = xi + side_thickness
+        vertex5 = (xf,zlen*(self.shrink - .05))
+        vertex6 = (xf,zlen*0.35/2)
+        vertex7 = (xi,zlen*0.25/2)
+        vertex8 = (xi,zlen*0.05/2+opening_width)
+
+        vertex9 = (0,zlen*0.05/2)
+        vertex10 = (xlen,zlen*0.05/2)
+
+        
+        # Draw moving wall on bottom
+        self.drawWallFromVtxs(vertex9,vertex10)
+
+        # Only include the active particles if the opening_width is wide enough
+        self.fillCubeWithRandomMixVtxs(vertex1,vertex6)
+        # if opening_width > self.active_dia:
+        #     self.fillCubeWithMixVtxs(vertex1,vertex6)
+        # else:
+        #     self.fillCubeWithCBDVtxs(vertex1,vertex6,checkForOverlap=False)
+
+        # Fill the left half of the box with Active and the right side with CBD
+        # middle_x_vertex = ((vertex1[0]+vertex5[0])/2,vertex1[1])
+        # self.fillCubeWithActiveVtxs(middle_x_vertex,vertex2)
+        # self.fillCubeWithCBDVtxs(middle_x_vertex,vertex6,checkForOverlap=False)
+        
+        # # Fill top half of box with Active and the bottom half with CBD
+        # middle_z_vertex = (vertex1[0],(vertex1[1]+vertex2[1])/2)
+        # self.fillCubeWithActiveVtxs(vertex5,middle_z_vertex)
+        # self.fillCubeWithCBDVtxs(vertex6,middle_z_vertex,checkForOverlap=False)
+
+         # Draw top wall
+        self.drawWallFromVtxs(vertex1,vertex5,atomType=5)
+        # Draw bottom wall
+        self.drawWallFromVtxs(vertex4,(vertex8[0]+self.distribution,vertex8[1]),atomType=6)
+
+        # Draw left walls
+        self.drawWallFromVtxs(vertex1,vertex2)
+        self.drawWallFromVtxs(vertex2,vertex3)
+        self.drawWallFromVtxs(vertex3,vertex4)
+        # Draw right walls
+        self.drawWallFromVtxs(vertex5,vertex6)
+        self.drawWallFromVtxs(vertex6,vertex7)
+        self.drawWallFromVtxs(vertex7,vertex8)
+        
+        # self.fillCubeWithCBDVtxs(vertex1,vertex6)
+
+
+        #self.drawWall(xlen*0.20,zlen*0.95,xlen*0.20,zlen*0.40)
+        #self.drawWall(xlen*0.80,zlen*0.95,xlen*0.80,zlen*0.40)
+        
+
+        # self.drawSphere(xlen*0.45,ylen*0.5,zlen*0.45,ylen*0.45)
+
+        # self.drawSphere(80,100,100,10)
+        # self.drawSphere(120,100,100,10)
+        # self.drawEllipsoid(100,100,120,40,40,10)
+        # self.drawChickenNugget(50,50,50,40,1,40,"test.jpg")
+        # self.drawWall(150,150,150,50)
+
     def fillCubeWithRandomMixVtxs(self,v1,v2):
         (x1,z1) = v1
         (x2,z2) = v2
@@ -65,22 +161,19 @@ class DatafileGenerator():
         yh = max(y,y2)
         zl = min(z,z2)
         zh = max(z,z2)
-        for yi in np.arange(yl,yh-self.dia,self.dia):
-            for zi in np.arange(zl,zh-self.dia,self.dia):
-                for xi in np.arange(xl,xh-self.dia*2,self.dia*2):
+        for yi in np.arange(yl,yh-self.distribution,self.distribution):
+            for zi in np.arange(zl,zh-self.distribution,self.distribution):
+                for xi in np.arange(xl,xh-self.distribution*2,self.distribution*2):
                     val = random.randint(0,99)
                     if val >= 0 and val < 18:
                         atom_type = self.active_type
                         self.molID += 1
                     elif val >= 18 and val < 32:
                         atom_type = self.cbd_type
-                        self.appendLine(atom_type,xi+self.dia*1/2,yi+self.dia/2,zi+self.dia/2)
-                        self.appendLine(atom_type,xi+self.dia*3/2,yi+self.dia/2,zi+self.dia/2)
                     else:
                         atom_type = self.solvent_type
-                    self.appendLine(atom_type,xi+self.dia*1/2,yi+self.dia/2,zi+self.dia/2)
-                    self.appendLine(atom_type,xi+self.dia*3/2,yi+self.dia/2,zi+self.dia/2)
-
+                    self.appendLine(atom_type,xi+self.distribution*1/2,yi+self.distribution/2,zi+self.distribution/2)
+                    self.appendLine(atom_type,xi+self.distribution*3/2,yi+self.distribution/2,zi+self.distribution/2)
 
 
 
@@ -96,20 +189,21 @@ class DatafileGenerator():
         yh = max(y,y2)
         zl = min(z,z2)
         zh = max(z,z2)
-        radius = self.active_dia/2.0
+        radius = self.act_dia/2.0
         spacing = 2.0*radius
         x_act_range = math.floor((xh-xl)/spacing)
         y_act_range = math.floor((yh-yl)/(spacing/2))
         z_act_range = math.floor((zh-zl)/(spacing/2))
-        x_cbd_range = math.floor((spacing)/self.dia)
-        y_cbd_range = math.floor((yh-yl)/self.dia)
-        z_cbd_range = math.floor((zh-zl)/self.dia)
+        x_cbd_range = math.floor((spacing)/self.distribution)
+        y_cbd_range = math.floor((yh-yl)/self.distribution)
+        z_cbd_range = math.floor((zh-zl)/self.distribution)
         x_act_spacing = (xh-xl)/x_act_range
         y_act_spacing = (yh-yl)/y_act_range
         z_act_spacing = (zh-zl)/z_act_range
         x_cbd_spacing = (spacing)/x_cbd_range
         y_cbd_spacing = (yh-yl)/y_cbd_range
         z_cbd_spacing = (zh-zl)/z_cbd_range
+
         for i in range(int(x_act_range)):
             if (i % 2) == 1:
                 for j in range(int(y_act_range)):
@@ -179,7 +273,7 @@ class DatafileGenerator():
         yh = max(y,y2)
         zl = min(z,z2)
         zh = max(z,z2)
-        spacing = self.dia
+        spacing = self.distribution
         x_range = math.floor((xh-xl)/spacing)
         y_range = math.floor((yh-yl)/spacing)
         z_range = math.floor((zh-zl)/spacing)
@@ -193,7 +287,7 @@ class DatafileGenerator():
                 if line.split()[2] == str(self.active_type):
                     activeParticleLines.append(line)
             print("Active particles:", len(activeParticleLines))
-            minDistance = self.dia**2
+            minDistance = self.distribution**2
             for i in range(int(x_range)):
                 for j in range(int(y_range)):
                     for k in range(int(z_range)):
@@ -230,62 +324,62 @@ class DatafileGenerator():
         self.molID += 1
         print("molID for wall is:", self.molID)
         length = math.sqrt((x2-x)**2 + (z2-z)**2)
-        numPoints = math.ceil(length/(self.dia*1))
+        numPoints = math.ceil(length/(self.distribution*1))
         delta_x = (x2-x)/numPoints
         delta_z = (z2-z)/numPoints
         for i in range(numPoints):
             xi = x+i*delta_x
             zi = z+i*delta_z
-            for yi in np.arange(self.y0,self.y1,self.dia*1):
+            for yi in np.arange(self.y0,self.y1,self.distribution*1):
                 self.appendLine(atomType,xi,yi,zi)
 
 
     def drawChickenNugget(self,x,y,z,rx,ry,rz,file):
         self.molID += 1
-        width = int(math.ceil(2*rx/self.dia))
-        height = int(math.ceil(2*rz/self.dia))
+        width = int(math.ceil(2*rx/self.distribution))
+        height = int(math.ceil(2*rz/self.distribution))
         image = Image.open(file) #Can be many different formats.
         image = image.resize((width,height)) # Resize image
         image = image.convert("1") # Convert to bilevel image (only black and white)
         pix = image.load()
         #image.save("out.jpg")
-        for i,xi in enumerate(np.arange(x-rx,x+rx,self.dia)):
-            for j,zi in enumerate(np.arange(z-rz,z+rz,self.dia)):
+        for i,xi in enumerate(np.arange(x-rx,x+rx,self.distribution)):
+            for j,zi in enumerate(np.arange(z-rz,z+rz,self.distribution)):
                 if not pix[i,height-1-j]:
-                    for yi in np.arange(y-ry,y+ry,self.dia):
+                    for yi in np.arange(y-ry,y+ry,self.distribution):
                         self.appendLine(self.active_type,xi,yi,zi)
 
 
     def drawSphere(self,x,y,z,radius):
         self.molID += 1
-        for xi in np.arange(x-radius,x+radius,self.dia):
-            for yi in np.arange(y-radius,y+radius,self.dia):
-                for zi in np.arange(z-radius,z+radius,self.dia):
+        for xi in np.arange(x-radius,x+radius,self.distribution):
+            for yi in np.arange(y-radius,y+radius,self.distribution):
+                for zi in np.arange(z-radius,z+radius,self.distribution):
                     if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) < radius**2:
                         self.appendLine(self.active_type,xi,yi,zi)
 
     def drawEllipsoid(self,x,y,z,rx,ry,rz):
         self.molID += 1
-        thk = self.dia*2
-        for xi in np.arange(x-rx,x+rx,self.dia):
-            for yi in np.arange(y-ry,y+ry,self.dia):
-                for zi in np.arange(z-rz,z+rz,self.dia):
+        thk = self.distribution*2
+        for xi in np.arange(x-rx,x+rx,self.distribution):
+            for yi in np.arange(y-ry,y+ry,self.distribution):
+                for zi in np.arange(z-rz,z+rz,self.distribution):
                     if ((xi-x)**2/(rx**2) + (yi-y)**2/(ry**2) + (zi-z)**2/(rz**2)) < 1.0:
                        # if ((xi-x)**2/((rx-thk)**2) + (yi-y)**2/((ry-thk)**2) + (zi-z)**2/((rz-thk)**2)) > 1.0: 
                             self.appendLine(self.active_type,xi,yi,zi)
 
     def drawRod(self,x,y,z,rx,ry,rz):
         self.molID += 1
-        for xi in np.arange(x-rx,x+rx,self.dia):
-            for yi in np.arange(y-ry,y+ry,self.dia):
-                for zi in np.arange(z-rz,z+rz,self.dia):
+        for xi in np.arange(x-rx,x+rx,self.distribution):
+            for yi in np.arange(y-ry,y+ry,self.distribution):
+                for zi in np.arange(z-rz,z+rz,self.distribution):
                     if ((xi-x)**2/(rx**2) + (zi-z)**2/(rz**2)) < 1.0:
                         self.appendLine(self.active_type,xi,yi,zi)
 
     def drawDiParticle(self,x,y,z):
         self.molID += 1
-        self.appendLine(self.active_type,x-self.dia/2,y,z)
-        self.appendLine(self.active_type,x+self.dia/2,y,z)
+        self.appendLine(self.active_type,x-self.distribution/2,y,z)
+        self.appendLine(self.active_type,x+self.distribution/2,y,z)
 
     def writeFile(self):
         print("Writing new file: %s" % self.newFileName)
@@ -312,13 +406,13 @@ class DatafileGenerator():
             outFile.write("Masses\n")
             outFile.write("\n")
             outFile.write("1 %f\n" % self.m_cbd)
-            outFile.write("2 %f\n" % self.m_cbd)
-            outFile.write("3 %f\n" % self.m_cbd)
-            outFile.write("4 %f\n" % self.m_cbd)
-            outFile.write("5 %f\n" % self.m_cbd)
-            outFile.write("6 %f\n" % self.m_cbd)
-            outFile.write("7 %f\n" % self.m_cbd)
-            outFile.write("8 %f\n" % self.m_cbd)
+            outFile.write("2 %f\n" % self.m_solv)
+            outFile.write("3 %f\n" % self.m_act)
+            outFile.write("4 %f\n" % self.m_wall)
+            outFile.write("5 %f\n" % self.m_wall)
+            outFile.write("6 %f\n" % self.m_wall)
+            outFile.write("7 %f\n" % self.m_wall)
+            outFile.write("8 %f\n" % self.m_wall)
 
             outFile.write("\n")
             outFile.write("Atoms\n")

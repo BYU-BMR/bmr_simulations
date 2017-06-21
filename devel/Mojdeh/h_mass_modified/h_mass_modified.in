@@ -92,7 +92,7 @@ neigh_modify       every 5 delay 0 check no
 variable           skin equal 0.3*${ha}
 neighbor           ${skin} bin # set Verlet list skin distance
 
-fix make_rigid active rigid/nvt molecule temp 30000 30000 30
+fix make_rigid active rigid/nvt molecule temp 30000 3000 30
 
 variable g equal 9.8/1000000
 fix add_gravity slurry gravity ${g} vector 0 0 -1  # Acceleration is micrometers/(microseconds)^2
@@ -147,7 +147,7 @@ run 50000
 
 # Cooling step
 #fix cool slurry langevin 300 300 10 234
-fix cool cbd_solvent nvt temp 30000 30000 30
+fix cool cbd_solvent nvt temp 3000 3000 30
 run 50000
 
 

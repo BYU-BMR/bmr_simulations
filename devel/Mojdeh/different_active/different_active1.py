@@ -4,15 +4,16 @@ import numpy as np
 import random, math, copy
 
 class DatafileGenerator():
-    newFileName = "final.data"
+    newFileName = "active_spheres6.data"
     positionLines = []
 
     # data string containing molecule ID, type, dia, rho, x, y, z, 0 0 0 
-    cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
-    #cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
+    #cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
+    cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
 
     m_cbd = 3.72
     dia = 2.0
+    act_dia = 6
 
     activeShapes = ['sphere','ellipsoid','rod','single','diparticle']
     activeShape = activeShapes[4]
@@ -28,11 +29,11 @@ class DatafileGenerator():
         active_dia = 4.0
 
 
-    cbd_type,active_type,solvent_type,wall_type = 1,2,3,4
+    cbd_type,solvent_type,active_type,wall_type = 1,2,3,4
 
-    scale = 1.50
+    scale = 0.50
 
-    shrink = .60
+    shrink = .50
 
     x0 = 0.0
     x1 = scale*3*50.0*dia
@@ -89,7 +90,7 @@ class DatafileGenerator():
         self.drawWallFromVtxs(vertex9,vertex10)
 
         # Only include the active particles if the opening_width is wide enough
-        self.fillCubeWithRandomMixVtxs(vertex1,vertex6)
+        ##self.fillCubeWithRandomMixVtxs(vertex1,vertex6)
         # if opening_width > self.active_dia:
         #     self.fillCubeWithMixVtxs(vertex1,vertex6)
         # else:
@@ -102,8 +103,8 @@ class DatafileGenerator():
         
         # # Fill top half of box with Active and the bottom half with CBD
         # middle_z_vertex = (vertex1[0],(vertex1[1]+vertex2[1])/2)
-        # self.fillCubeWithActiveVtxs(vertex5,middle_z_vertex)
-        # self.fillCubeWithCBDVtxs(vertex6,middle_z_vertex,checkForOverlap=False)
+        self.fillCubeWithActiveVtxs(vertex1,vertex6)
+        self.fillCubeWithCBDVtxs(vertex1,vertex6,checkForOverlap=True)
 
          # Draw top wall
         self.drawWallFromVtxs(vertex1,vertex5,atomType=5)
@@ -228,7 +229,7 @@ class DatafileGenerator():
         yh = max(y,y2)
         zl = min(z,z2)
         zh = max(z,z2)
-        radius = 4
+        radius = self.act_dia/2
         spacing = 2*radius
         x_range = math.floor((xh-xl)/spacing)
         y_range = math.floor((yh-yl)/spacing)

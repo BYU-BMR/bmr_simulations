@@ -49,7 +49,7 @@ fix                integrate_slurry_fix slurry meso
 # time-integrate only internal energy and density of boundary particles
 #fix                integrate_bc_fix bc meso/stationary
 
-dump               dump_id all custom 10000 Jstyle_evapall.lammpstrj id mol type xs ys zs
+dump               dump_id all custom 10000 myevap_potato.lammpstrj id mol type xs ys zs
 dump_modify        dump_id first yes
 dump_modify 	   dump_id sort 3
 
@@ -150,7 +150,7 @@ dump_modify        dump_id every 25000
 
 #delete_atoms group	hopper
 
-write_data finished_coat.data
+write_data my_evap_potato.data
 
 region		whole block	INF INF INF INF INF INF  
 
@@ -178,3 +178,4 @@ region		whole block	INF INF INF INF INF INF
 fix evap1 solvent evaporate 10000 1 whole  1234
 
 run 4500000
+write_data finishe_dried_potato.data

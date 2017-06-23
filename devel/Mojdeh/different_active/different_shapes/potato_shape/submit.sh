@@ -4,7 +4,7 @@
 #SBATCH --ntasks=12   # number of processor cores (i.e. tasks)
 #SBATCH --nodes=1   # number of nodes
 #SBATCH --mem=4096M   # memory per CPU core
-#SBATCH -J "10000"   # job name
+#SBATCH -J "potmix+eva["   # job name
 #MACHINEFILE=`/fslapps/fslutils/generate_pbs_nodefile`
 
 # Compatibility variables for PBS. Delete if not needed.
@@ -44,4 +44,4 @@ module load python/3/4
 #mpirun -np 16 lammps -in in.granular
 #lammps -in in.granular
 # mpirun -np $SLURM_NTASKS /fslgroup/fslg_bmr_wheeler/lammps-30Jul16/src/lmp_mpi -in in.drop
-time python final.py && mpirun -np $SLURM_NTASKS lammps -in final.in
+time python builder.py && mpirun -np $SLURM_NTASKS lammps -in Jmixing.in && mpirun -np $SLURM_NTASKS lammps -in Jevaporation.in

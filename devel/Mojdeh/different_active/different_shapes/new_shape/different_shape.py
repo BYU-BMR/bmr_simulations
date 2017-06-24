@@ -48,9 +48,9 @@ for x in np.arange(x0+1,x1-1,dia):
             ID += 1
             positionLines.append(cbdStr % (ID, 2, x, y, z))'''
 
-for x in np.arange(x0-5.5*(dia/2),x1+(dia/2),dia):
-    for y in np.arange(y1-(dia/2),y1+(dia/2),dia):
-        for z in np.arange(z0-(dia*3/2),z1+(dia*3/2),dia/30):
+for x in np.arange(x0+5*(dia/2),x1-5*(dia/2),dia/4):
+    for y in np.arange(y1+(dia/2),y1-(dia/2),dia/4):
+        for z in np.arange(z0+(dia/2),z1-(dia/2),dia/4):
             ID += 1
             positionLines.append(cbdStr % (ID, 2, x, y, z))
 

@@ -30,9 +30,9 @@ class DatafileGenerator():
 
     cbd_type,active_type,solvent_type,wall_type = 1,2,3,4
 
-    scale = 1.50
+    scale = 1.5
 
-    shrink = .60
+    shrink = .6
 
     x0 = 0.0
     x1 = scale*3*50.0*dia

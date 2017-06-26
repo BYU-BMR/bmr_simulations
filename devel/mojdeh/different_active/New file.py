@@ -2,7 +2,7 @@
 import numpy as np
 import random
 
-newFileName = "active_particle.data"
+newFileName = "tutorial.data"
 
 
 positionLines = []
@@ -12,14 +12,14 @@ cbdStr = "%d %d %f %f %f\n" #string for cbd particles
 
 m_cbd = 3.896 # results in dia = 2 for cbd particles
 rho_cbd = 0.93
-print (cbdStr)
+
 
 vol = m_cbd/rho_cbd
 dia = (3.0*vol/(4.0*3.1415))**(1.0/3.0)*2.0
 dia = 2.0
 
 solid_d = 3
-x0 = 1.0
+x0 = 0.0
 x1 = int(10.0*dia)
 x2 = x1 + solid_d
 y0 = 0.0
@@ -31,54 +31,16 @@ z3 = z2 + 1.0
 
 ID = 0
 
-'''# Add CBD particles to grid
-for x in np.arange(x0+1,x1-1,dia):
-    for y in np.arange(y0+1,y1-1,dia):
-        for z in np.arange(z1+1,z2-1,dia):
-            xc = x + random.randrange(-100,100)/1000
-            yc = y + random.randrange(-100,100)/1000
-            zc = z + random.randrange(-100,100)/1000
-            ID += 1
-            positionLines.append(cbdStr % (ID, 1, xc, yc, zc))'''
+
 
 # Add active particles to conglomerate
-'''for x in np.arange(x1,x2,dia/2.0):
-    for y in np.arange(y0,y0+2*solid_d,dia/2.0):
-        for z in np.arange(z1,z1+3*solid_d,dia/2.0):
-            ID += 1
-            positionLines.append(cbdStr % (ID, 2, x, y, z))'''
-
-for x in np.arange(x0+1,x1-solid_d,dia):
-    for y in np.arange(y1-solid_d,y1,dia):
-        for z in np.arange(z0,z1+solid_d,dia/4):
+for x in np.arange(x1,x2,dia/30):
+    for y in np.arange(y0,y0+solid_d,dia/30):
+        for z in np.arange(z1,z1+solid_d,dia/30):
             ID += 1
             positionLines.append(cbdStr % (ID, 2, x, y, z))
 
-'''for x in np.arange(x0,x1,dia/2.0):
-    for y in np.arange(y1-solid_d,y1,dia/2.0):
-        for z in np.arange(z3-solid_d,z3,dia/2.0):
-            ID += 1
-            positionLines.append(cbdStr % (ID, 4, x, y, z))
-
-for x in np.arange(x1,x2,dia/2.0):
-    for y in np.arange(y0,y0+solid_d,dia/2.0):
-        for z in np.arange(z3-solid_d,z3,dia/2.0):
-            ID += 1
-            positionLines.append(cbdStr % (ID, 5, x, y, z))'''
-            
     
-'''# Add top and bottom plates for shearing
-for x in np.arange(x0,x2,dia):
-    for y in np.arange(y0,y1,dia):
-        for z in np.arange(z0,z1,dia/4.0):
-            ID += 1
-            positionLines.append(cbdStr % (ID, 6, x, y, z))
-
-for x in np.arange(x0,x2,dia):
-    for y in np.arange(y0,y1,dia):
-        for z in np.arange(z2,z3,dia/4.0):
-            ID += 1
-            positionLines.append(cbdStr % (ID, 7, x, y, z))'''
 
 print("Writing new file: %s" % newFileName)
 

@@ -4,7 +4,7 @@ import numpy as np
 import random, math, copy
 
 class DatafileGenerator():
-    newFileName = "active_spheres_prop.data"
+    newFileName = "potatoe.data"
     positionLines = []
 
     # data string containing molecule ID, type, dia, rho, x, y, z, 0 0 0 
@@ -13,7 +13,7 @@ class DatafileGenerator():
 
     m_cbd = 3.72
     dia = 2.0
-    act_dia = 6
+    act_dia = 4
 
     cbd_type,solvent_type,active_type,wall_type = 1,2,3,4
 
@@ -53,12 +53,12 @@ class DatafileGenerator():
         # vertex8 = (xlen*(1.0-0.40),zlen*0.10)
 
         vertex1 = (0,zlen*0.05/2 + self.dia)
-        vertex2 = (xlen,zlen*.1)
+        vertex2 = (0,zlen*.13)
         vertex3 = (0,zlen*.1 + self.dia)
         vertex4 = (xlen,zlen*.5)
         vertex5 = (0,zlen*.5 + self.dia)
         vertex6 = (xlen,zlen*.6)
-
+        vertex7 = (xlen,zlen*.68)
 
         vertexA = (0,zlen*0.05/2)
         vertexB = (xlen,zlen*0.05/2)
@@ -68,10 +68,10 @@ class DatafileGenerator():
         self.drawWallFromVtxs(vertexA,vertexB)
 
         # Add particles to the simulation
-        self.fillCubeWithActiveVtxs(vertex3,vertex4)
-        self.fillCubeWithCBDVtxs(vertex1,vertex2,checkForOverlap=False)
-        self.fillCubeWithCBDVtxs(vertex3,vertex4,checkForOverlap=True)
-        self.fillCubeWithCBDVtxs(vertex5,vertex6,checkForOverlap=False)
+        self.fillCubeWithActiveVtxs(vertex1,vertex6)
+        #self.fillCubeWithCBDVtxs(vertex1,vertex2,checkForOverlap=False)
+        self.fillCubeWithCBDVtxs(vertex2,vertex7,checkForOverlap=True)
+        #self.fillCubeWithCBDVtxs(vertex5,vertex6,checkForOverlap=False)
 
 
 
@@ -106,9 +106,11 @@ class DatafileGenerator():
     def fillCubeWithActiveVtxs(self,v1,v2):
         (x1,z1) = v1
         (x2,z2) = v2
-        self.fillCubeWithActive(x1,self.y0,z1,x2,self.y1,z2)
+        self.fillCubeWithActive1(x1,self.y0,z1,x2,self.y1,z2)
+        self.fillCubeWithActive2(x1,self.y0,z1,x2,self.y1,z2)
+        self.fillCubeWithActive3(x1,self.y0,z1,x2,self.y1,z2)
 
-    def fillCubeWithActive(self,x,y,z,x2,y2,z2):
+    def fillCubeWithActive1(self,x,y,z,x2,y2,z2):
         xl = min(x,x2)
         xh = max(x,x2)
         yl = min(y,y2)
@@ -125,11 +127,57 @@ class DatafileGenerator():
         z_spacing = (zh-zl)/z_range 
         for i in range(int(x_range)):
             for j in range(int(y_range)):
-                for k in range(int(z_range)):
+                for k in range(int(z_range/6)):
                     x = xl+x_spacing*(i+0.5)
                     y = yl+y_spacing*(j+0.5)
-                    z = zl+z_spacing*(int(z_range-1)-k+0.5)
-                    self.drawSphere(x,y,z,radius)
+                    z = zl+z_spacing*(int(z_range-1)-6*k+2.0)
+                    self.drawpotato1(x,y,z,radius)
+
+    def fillCubeWithActive2(self,x,y,z,x2,y2,z2):
+        xl = min(x,x2)
+        xh = max(x,x2)
+        yl = min(y,y2)
+        yh = max(y,y2)
+        zl = min(z,z2)
+        zh = max(z,z2)
+        radius = self.act_dia/2
+        spacing = 2*radius
+        x_range = math.floor((xh-xl)/spacing)
+        y_range = math.floor((yh-yl)/spacing)
+        z_range = math.floor((zh-zl)/spacing)
+        x_spacing = (xh-xl)/x_range
+        y_spacing = (yh-yl)/y_range
+        z_spacing = (zh-zl)/z_range 
+        for i in range(int(x_range)):
+            for j in range(int(y_range)):
+                for k in range(int(z_range/6)):
+                    x = xl+x_spacing*(i+0.5)
+                    y = yl+y_spacing*(j+0.5)
+                    z = zl+z_spacing*(int(z_range-1)-6*k-2.0)
+                    self.drawpotato2(x,y,z,radius)
+
+    def fillCubeWithActive3(self,x,y,z,x2,y2,z2):
+        xl = min(x,x2)
+        xh = max(x,x2)
+        yl = min(y,y2)
+        yh = max(y,y2)
+        zl = min(z,z2)
+        zh = max(z,z2)
+        radius = self.act_dia/2
+        spacing = 2*radius
+        x_range = math.floor((xh-xl)/spacing)
+        y_range = math.floor((yh-yl)/spacing)
+        z_range = math.floor((zh-zl)/spacing)
+        x_spacing = (xh-xl)/x_range
+        y_spacing = (yh-yl)/y_range
+        z_spacing = (zh-zl)/z_range 
+        for i in range(int(x_range)):
+            for j in range(int(y_range)):
+                for k in range(int(z_range/6)):
+                    x = xl+x_spacing*(i+0.5)
+                    y = yl+y_spacing*(j+0.5)
+                    z = zl+z_spacing*(int(z_range-1)-6*k-0.0)
+                    self.drawpotato3(x,y,z,radius)
 
     def fillCubeWithCBDVtxs(self,v1,v2,checkForOverlap=True):
         (x1,z1) = v1
@@ -158,7 +206,7 @@ class DatafileGenerator():
             for line in particleLines:
                 if line.split()[2] == str(self.active_type):
                     activeParticleLines.append(line)
-            print("Active particles:", len(activeParticleLines))
+            print("Active particles:", len(activeParticleLines)*(3/4))
             minDistance = self.dia**2
             for i in range(int(x_range)):
                 for j in range(int(y_range)):
@@ -236,12 +284,53 @@ class DatafileGenerator():
                     for yi in np.arange(y-ry,y+ry,self.dia):
                         self.appendLine(self.active_type,xi,yi,zi)
 
+    def drawpotato1(self,x,y,z,radius):
+        self.molID += 1
+        thk = self.dia/2
+        space = 0
+        for xi in np.arange(x-thk,x+thk,self.dia):
+            for yi in np.arange(y-thk,y+thk,self.dia):
+                for zi in np.arange(z-self.dia*3/2 + space,z+self.dia*3/2 - space,self.dia/3):
+                    if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) < radius**2:
+                        self.appendLine(self.active_type,xi,yi,zi)
+
+    def drawpotato2(self,x,y,z,radius):
+        self.molID += 1
+        thk = self.dia/2
+        space = 0
+        for xi in np.arange(x-self.dia*3/2 + space,x+self.dia*3/2 - space,self.dia/3):
+            for yi in np.arange(y-thk,y+thk,self.dia):
+                for zi in np.arange(z-thk,z+thk,self.dia):
+                    if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) < radius**2:
+                        self.appendLine(self.active_type,xi,yi,zi)
+
+    def drawpotato3(self,x,y,z,radius):
+        self.molID += 1
+        thk = self.dia/2
+        space = 0
+        for xi in np.arange(x-thk,x+thk,self.dia):
+            for yi in np.arange(y-self.dia*3/2 + space,y+self.dia*3/2 - space,self.dia/3):
+                for zi in np.arange(z-thk,z+thk,self.dia):
+                    if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) < radius**2:
+                        self.appendLine(self.active_type,xi,yi,zi)
 
     def drawSphere(self,x,y,z,radius):
         self.molID += 1
+        spacer = self.dia/2
+        multiplier = 10
+        for xi in np.arange(x-radius,x+radius,self.dia/multiplier):
+            for yi in np.arange(y-radius,y+radius,self.dia/multiplier):
+                for zi in np.arange(z-radius+spacer,z+radius-spacer,self.dia/multiplier):
+                    if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) < radius**2:
+                        if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) > self.dia**2:
+                            self.appendLine(self.active_type,xi,yi,zi)
+
+    def drawDisc(self,x,y,z,radius):
+        self.molID += 1
+        thickness = (self.dia/2)*1
         for xi in np.arange(x-radius,x+radius,self.dia):
             for yi in np.arange(y-radius,y+radius,self.dia):
-                for zi in np.arange(z-radius,z+radius,self.dia):
+                for zi in np.arange(z-thickness,z+thickness,self.dia):
                     if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) < radius**2:
                         self.appendLine(self.active_type,xi,yi,zi)
 

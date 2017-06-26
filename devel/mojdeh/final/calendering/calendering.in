@@ -108,7 +108,7 @@ variable zvelocity equal -10
 
 
 
-run 500000
+run 50000
 
 unfix calendering 
 

@@ -1,10 +1,10 @@
 #!/bin/bash
 
-#SBATCH --time=3:00:00   # walltime
+#SBATCH --time=72:00:00   # walltime
 #SBATCH --ntasks=12   # number of processor cores (i.e. tasks)
 #SBATCH --nodes=1   # number of nodes
 #SBATCH --mem=4096M   # memory per CPU core
-#SBATCH -J "dryprop"   # job name
+#SBATCH -J "mixpota6"   # job name
 #MACHINEFILE=`/fslapps/fslutils/generate_pbs_nodefile`
 
 # Compatibility variables for PBS. Delete if not needed.
@@ -19,4 +19,4 @@ export OMP_NUM_THREADS=1
 module load python/3/4
 
 # LOAD MODULES, INSERT CODE, AND RUN YOUR PROGRAMS HERE
-time python Evaporation.py && mpirun -np $SLURM_NTASKS lammps -in Evaporation.in
+time python Evaporation.py && mpirun -np $SLURM_NTASKS lammps -in mixpotatoes.in

@@ -2,7 +2,7 @@ atom_style         meso-molecular
 dimension          3
 newton             on
 units              micro
-read_data          mixedprop4.data
+read_data          mixedshorter.data
 
 variable           h         equal 2.0
 variable           h_act     equal 3.0
@@ -32,7 +32,7 @@ fix                integrate_slurry_fix slurry meso
 # time-integrate only internal energy and density of boundary particles
 fix                integrate_bc_fix bc meso/stationary
 
-dump               dump_id all custom 10000 dryprop.lammpstrj id type mol xs ys zs
+dump               dump_id all custom 10000 dryshorter1.lammpstrj id type mol xs ys zs
 dump_modify        dump_id first yes
 dump_modify 	   dump_id sort 3
 
@@ -94,4 +94,4 @@ fix evap_upper_3 solvent evaporate 1000 10 evap_region_upper_3 139
 
 run 30000000
 
-write_data driedprop.data
+write_data driedshorter1.data

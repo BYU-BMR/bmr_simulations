@@ -30,7 +30,7 @@ fix                integrate_slurry_fix slurry meso
 # time-integrate only internal energy and density of boundary particles
 fix                integrate_bc_fix bc meso/stationary
 
-dump               dump_id all custom 10000 mixpotatoe6.lammpstrj id type mol xs ys zs
+dump               dump_id all custom 10000 mixpotatoe8.lammpstrj id type mol xs ys zs
 dump_modify        dump_id first yes
 dump_modify 	   dump_id sort 3
 
@@ -49,13 +49,15 @@ neighbor           ${skin} bin # set Verlet list skin distance
 variable wiggle_s equal swiggle(0,20,10)
 variable wiggle_c equal cwiggle(0,-20,10)
 
-group stir_bar molecule 2:351
+group stir_bar molecule 2:351:2
+group stir_bar2 molecule 3:351:2
 
 #fix stir cbd addforce v_wiggle_c 0.0 v_wiggle_s
 #fix strong_gravity slurry addforce 0.0 0.0 -0.05
 
 #fix add_force slurry setforce 1 1 0
-#fix stir_the_bar stir_bar addforce v_wiggle_s 0.0 v_wiggle_c
+fix stir_the_bar stir_bar addforce v_wiggle_s 0.0 v_wiggle_c
+fix stir_the_bar_2 stir_bar2 addforce v_wiggle_c 0.0 v_wiggle_s
 fix make_rigid active rigid/nvt molecule temp 30000000 30000000 30
 fix add_gravity slurry gravity .000098 vector 0 0 -1
 fix heat_cbd_solvent cbd_solvent nvt temp 30000000 30000000 30
@@ -66,7 +68,8 @@ run 100000
 unfix heat_cbd_solvent
 unfix add_gravity
 unfix make_rigid
-#unfix stir_the_bar
+unfix stir_the_bar
+unfix stir_the_bar_2
 
 fix make_rigid active rigid molecule
 
@@ -84,7 +87,7 @@ fix less_gravity slurry gravity ${g} vector 0 0 -1
 run 500000
 
 
-write_data mixedpotatoe6.data
+write_data mixedpotatoe8.data
 
 
 

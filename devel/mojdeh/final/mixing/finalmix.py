@@ -8,8 +8,8 @@ class DatafileGenerator():
     positionLines = []
 
     # data string containing molecule ID, type, dia, rho, x, y, z, 0 0 0 
-    cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
-    #cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
+    #cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
+    cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
 
     m_cbd = 3.72
     dia = 2.0
@@ -23,11 +23,11 @@ class DatafileGenerator():
     cbdcount = 0
 
     x0 = 0.0
-    x1 = scale*10.0*dia
+    x1 = scale*30.0*dia
     y0 = 0.0
-    y1 = scale*10.0*dia
+    y1 = scale*30.0*dia
     z0 = 0
-    z1 = scale*100.0*dia
+    z1 = scale*300.0*dia
 
     ID = 0
     molID = 0
@@ -118,7 +118,7 @@ class DatafileGenerator():
         zl = min(z,z2)
         zh = max(z,z2)
         radius = self.act_dia/2
-        spacing = 2*radius
+        spacing = 7*radius
         x_range = math.floor((xh-xl)/spacing)
         y_range = math.floor((yh-yl)/spacing)
         z_range = math.floor((zh-zl)/spacing)
@@ -127,11 +127,11 @@ class DatafileGenerator():
         z_spacing = (zh-zl)/z_range 
         for i in range(int(x_range)):
             for j in range(int(y_range)):
-                for k in range(int(z_range/6)):
+                for k in range(int(z_range/1)):
                     x = xl+x_spacing*(i+0.5)
                     y = yl+y_spacing*(j+0.5)
-                    z = zl+z_spacing*(int(z_range-1)-6*k+2.0)
-                    self.drawRaspberry(x,y,z,radius)
+                    z = zl+z_spacing*(int(z_range-1)-1*k+2.0)
+                    self.drawRaspberry(x,y,z,3*radius)
 
     def fillCubeWithActive2(self,x,y,z,x2,y2,z2):
         xl = min(x,x2)
@@ -141,7 +141,7 @@ class DatafileGenerator():
         zl = min(z,z2)
         zh = max(z,z2)
         radius = self.act_dia/2
-        spacing = 2*radius
+        spacing = 7*radius
         x_range = math.floor((xh-xl)/spacing)
         y_range = math.floor((yh-yl)/spacing)
         z_range = math.floor((zh-zl)/spacing)
@@ -150,10 +150,10 @@ class DatafileGenerator():
         z_spacing = (zh-zl)/z_range 
         for i in range(int(x_range)):
             for j in range(int(y_range)):
-                for k in range(int(z_range/6)):
+                for k in range(int(z_range/1)):
                     x = xl+x_spacing*(i+0.5)
                     y = yl+y_spacing*(j+0.5)
-                    z = zl+z_spacing*(int(z_range-1)-6*k-2.0)
+                    z = zl+z_spacing*(int(z_range-1)-1*k-2.0)
                     self.drawRaspberry(x,y,z,radius)
 
     def fillCubeWithActive3(self,x,y,z,x2,y2,z2):
@@ -164,7 +164,7 @@ class DatafileGenerator():
         zl = min(z,z2)
         zh = max(z,z2)
         radius = self.act_dia/2
-        spacing = 2*radius
+        spacing = 7*radius
         x_range = math.floor((xh-xl)/spacing)
         y_range = math.floor((yh-yl)/spacing)
         z_range = math.floor((zh-zl)/spacing)
@@ -173,10 +173,10 @@ class DatafileGenerator():
         z_spacing = (zh-zl)/z_range 
         for i in range(int(x_range)):
             for j in range(int(y_range)):
-                for k in range(int(z_range/6)):
+                for k in range(int(z_range/1)):
                     x = xl+x_spacing*(i+0.5)
                     y = yl+y_spacing*(j+0.5)
-                    z = zl+z_spacing*(int(z_range-1)-6*k-0.0)
+                    z = zl+z_spacing*(int(z_range-1)-1*k-0.5)
                     self.drawRaspberry(x,y,z,radius)
 
     def fillCubeWithCBDVtxs(self,v1,v2,checkForOverlap=True):
@@ -290,7 +290,7 @@ class DatafileGenerator():
             for yi in np.arange(y-radius,y+radius,self.dia):
                 for zi in np.arange(z-radius,z+radius,self.dia):
                     if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) < radius**1.6:
-                        if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) > radius**1.4:  # making hollow
+                        if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) > radius**1:  # making hollow
                             self.appendLine(self.active_type,xi,yi,zi)
 
     def drawpotato1(self,x,y,z,radius):

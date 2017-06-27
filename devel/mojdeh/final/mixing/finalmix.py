@@ -4,7 +4,7 @@ import numpy as np
 import random, math, copy
 
 class DatafileGenerator():
-    newFileName = "potatoe.data"
+    newFileName = "raspberry_test1.data"
     positionLines = []
 
     # data string containing molecule ID, type, dia, rho, x, y, z, 0 0 0 
@@ -131,7 +131,7 @@ class DatafileGenerator():
                     x = xl+x_spacing*(i+0.5)
                     y = yl+y_spacing*(j+0.5)
                     z = zl+z_spacing*(int(z_range-1)-6*k+2.0)
-                    self.drawpotato1(x,y,z,radius)
+                    self.drawRaspberry(x,y,z,radius)
 
     def fillCubeWithActive2(self,x,y,z,x2,y2,z2):
         xl = min(x,x2)
@@ -154,7 +154,7 @@ class DatafileGenerator():
                     x = xl+x_spacing*(i+0.5)
                     y = yl+y_spacing*(j+0.5)
                     z = zl+z_spacing*(int(z_range-1)-6*k-2.0)
-                    self.drawpotato2(x,y,z,radius)
+                    self.drawRaspberry(x,y,z,radius)
 
     def fillCubeWithActive3(self,x,y,z,x2,y2,z2):
         xl = min(x,x2)
@@ -177,7 +177,7 @@ class DatafileGenerator():
                     x = xl+x_spacing*(i+0.5)
                     y = yl+y_spacing*(j+0.5)
                     z = zl+z_spacing*(int(z_range-1)-6*k-0.0)
-                    self.drawpotato3(x,y,z,radius)
+                    self.drawRaspberry(x,y,z,radius)
 
     def fillCubeWithCBDVtxs(self,v1,v2,checkForOverlap=True):
         (x1,z1) = v1
@@ -283,6 +283,15 @@ class DatafileGenerator():
                 if not pix[i,height-1-j]:
                     for yi in np.arange(y-ry,y+ry,self.dia):
                         self.appendLine(self.active_type,xi,yi,zi)
+
+    def drawRaspberry(self,x,y,z,radius):
+        self.molID += 1
+        for xi in np.arange(x-radius,x+radius,self.dia):
+            for yi in np.arange(y-radius,y+radius,self.dia):
+                for zi in np.arange(z-radius,z+radius,self.dia):
+                    if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) < radius**1.6:
+                        if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) > radius**1.4:  # making hollow
+                            self.appendLine(self.active_type,xi,yi,zi)
 
     def drawpotato1(self,x,y,z,radius):
         self.molID += 1

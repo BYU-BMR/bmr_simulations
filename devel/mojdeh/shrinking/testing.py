@@ -8,12 +8,12 @@ class DatafileGenerator():
     positionLines = []
 
     # data string containing molecule ID, type, dia, rho, x, y, z, 0 0 0 
-    cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
-    #cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
+    #cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
+    cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
 
     m_cbd = 3.72
     dia = 2.0
-    act_dia = 4
+    act_dia = 10
 
     cbd_type,active_type,solvent_type,wall_type = 1,2,3,4
 
@@ -29,13 +29,7 @@ class DatafileGenerator():
     z0 = 0
     z1 = scale*300.0*dia
 
-    xm0 = 0 
-    xm1 = 30.0*dia
-    ym0 = 0
-    ym1 = 30.0*dia
-    zm0 = 0 
-    zm1 = 300.0*dia
-
+    
     ID = 0
     molID = 0
 
@@ -64,17 +58,19 @@ class DatafileGenerator():
 
         
 
-        vertexA = (0,zlen*0.05/2)
-        vertexB = (xlen,zlen*0.05/2)
+        vertexA = (0,zlen*0.05/2-30)
+        vertexB = (xlen,zlen*0.05/2-30)
 
         
         # Draw moving wall on bottom
         self.drawWallFromVtxs(vertexA,vertexB)
 
         # Add particles to the simulation
-        self.fillCubeWithActiveVtxs(vertex1,vertex2)
+        #self.fillCubeWithActiveVtxs(vertex1,vertex2)
         #self.fillCubeWithCBDVtxs(vertex1,vertex2,checkForOverlap=False)
-        self.fillCubeWithCBDVtxs(vertex3,vertex4,checkForOverlap=False)
+        #self.fillCubeWithCBDVtxs(vertex1,vertex4,checkForOverlap=False)
+
+        self.fillCubeWithRandomMixVtxs(vertex1,vertex4)
         #self.fillCubeWithCBDVtxs(vertex5,vertex6,checkForOverlap=False)
 
 
@@ -91,28 +87,32 @@ class DatafileGenerator():
         yh = max(y,y2)
         zl = min(z,z2)
         zh = max(z,z2)
-        for yi in np.arange(yl,yh-self.dia,self.dia):
-            for zi in np.arange(zl,zh-self.dia,self.dia):
-                for xi in np.arange(xl,xh-self.dia*2,self.dia*2):
-                    val = random.randint(0,99)
-                    if val >= 0 and val < 18:
-                        atom_type = self.active_type
-                        self.molID += 1
+        radius = self.act_dia/2
+        for yi in np.arange(yl,yh-self.dia,self.dia*5):
+            for zi in np.arange(zl,zh-self.dia,self.dia*5):
+                for xi in np.arange(xl,xh-self.dia*2,self.dia*5):
+                    val = random.randint(0,87)
+                    if val >= 12 and val < 18:
+                        value = random.randint(0,2)
+                        if value == 0:
+                            self.drawRaspberry(xi,yi,zi,radius)
+                        
                     elif val >= 18 and val < 32:
                         atom_type = self.cbd_type
+                        self.appendLine(atom_type,xi+self.dia*3/2,yi+self.dia/2,zi+self.dia/2)
                     else:
                         atom_type = self.solvent_type
-                    self.appendLine(atom_type,xi+self.dia*1/2,yi+self.dia/2,zi+self.dia/2)
-                    self.appendLine(atom_type,xi+self.dia*3/2,yi+self.dia/2,zi+self.dia/2)
+                        self.appendLine(atom_type,xi+self.dia*1/2,yi+self.dia/2,zi+self.dia/2)
+                    
 
 
 
     def fillCubeWithActiveVtxs(self,v1,v2):
         (x1,z1) = v1
         (x2,z2) = v2
-        self.fillCubeWithActive1(x1,self.y0,z1,x2,self.y1,z2)
-        self.fillCubeWithActive2(x1,self.y0,z1,x2,self.y1,z2)
-        self.fillCubeWithActive3(x1,self.y0,z1,x2,self.y1,z2)
+        self.fillCubeWithActive(x1,self.y0,z1,x2,self.y1,z2)
+        #self.fillCubeWithActive2(x1,self.y0,z1,x2,self.y1,z2)
+        #self.fillCubeWithActive3(x1,self.y0,z1,x2,self.y1,z2)
 
     def fillCubeWithActive1(self,x,y,z,x2,y2,z2):
         xl = min(x,x2)
@@ -293,8 +293,8 @@ class DatafileGenerator():
         for xi in np.arange(x-radius,x+radius,self.dia):
             for yi in np.arange(y-radius,y+radius,self.dia):
                 for zi in np.arange(z-radius,z+radius,self.dia):
-                    if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) < radius**1.6:
-                        if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) > radius**1:  # making hollow
+                    if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) < radius**2:
+                        #if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) > radius**1:  # making hollow
                             self.appendLine(self.active_type,xi,yi,zi)
 
     def drawpotato1(self,x,y,z,radius):

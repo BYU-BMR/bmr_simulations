@@ -2,7 +2,7 @@ atom_style         meso-molecular
 dimension          3
 newton             on
 units              micro
-read_data          mixraspberry.data
+read_data          mixedraspberry.data
 
 variable           h         equal 2.0
 variable           h_act     equal 3.0

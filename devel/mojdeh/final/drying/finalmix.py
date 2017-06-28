@@ -70,7 +70,7 @@ class DatafileGenerator():
         # Add particles to the simulation
         self.fillCubeWithActiveVtxs(vertex1,vertex6)
         #self.fillCubeWithCBDVtxs(vertex1,vertex2,checkForOverlap=False)
-        self.fillCubeWithCBDVtxs(vertex2,vertex7,checkForOverlap=True)
+        #self.fillCubeWithCBDVtxs(vertex2,vertex7,checkForOverlap=True)
         #self.fillCubeWithCBDVtxs(vertex5,vertex6,checkForOverlap=False)
 
 

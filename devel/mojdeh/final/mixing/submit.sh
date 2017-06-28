@@ -44,4 +44,4 @@ module load python/3/4
 #mpirun -np 16 lammps -in in.granular
 #lammps -in in.granular
 # mpirun -np $SLURM_NTASKS /fslgroup/fslg_bmr_wheeler/lammps-30Jul16/src/lmp_mpi -in in.drop
-time python builder.py && mpirun -np $SLURM_NTASKS lammps -in mix_raspberry.in
+time python finalmix.py && mpirun -np $SLURM_NTASKS lammps -in mixing_raspberry.in

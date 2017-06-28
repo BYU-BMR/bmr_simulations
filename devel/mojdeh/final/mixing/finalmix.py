@@ -4,18 +4,18 @@ import numpy as np
 import random, math, copy
 
 class DatafileGenerator():
-    newFileName = "raspberry_test1.data"
+    newFileName = "raspberry.data"
     positionLines = []
 
     # data string containing molecule ID, type, dia, rho, x, y, z, 0 0 0 
-    #cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
-    cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
+    cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
+    #cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
 
     m_cbd = 3.72
     dia = 2.0
     act_dia = 4
 
-    cbd_type,solvent_type,active_type,wall_type = 1,2,3,4
+    cbd_type,active_type,solvent_type,wall_type = 1,2,3,4
 
     scale = 1.00
 

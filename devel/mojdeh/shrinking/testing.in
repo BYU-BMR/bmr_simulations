@@ -2,37 +2,37 @@ atom_style         meso-molecular
 dimension          3
 newton             on
 units              micro
-read_data          different_particles.data
+read_data          testing.data
 
-variable           h_cbd equal 2.0
+variable           h equal 2.0
 variable		   h_act equal 3.0
-variable		   h_mix equal (${h_cbd}+${h_act})/2
+variable		   h_mix equal (${h}+${h_act})/2
 variable           c     equal 100.0 # soundspeed for Tait's EOS
 variable           dt    equal 0.0001
 variable		   visc  equal 2357.8
-
-group              cbd type 1 # assign group name "cbd" to cbd particles (type 1)
-group			   act type 2 # assign group name "act2" to active particles (type 2)
-group			   slurry type 1 2
-
-
-
-
-
-
+print           hi
+group              cbd type 1 
+group			   active type 2
+group			   solvent type 3
+group  			   cbd_solvent type 1 3
+group      		   cbd_active type 1 2
+print           hi1
+group              slurry type 1 2 3
+group              bc type 4
+print           hi2
 pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater/morris
 pair_coeff         * * sph/taitwater/morris 0.93 ${c} ${visc} ${h}
 pair_coeff         * * sph/rhosum ${h}
+print           hi3
 
 
-
-timestep 	${dt}
+timestep 	      	${dt}
 
 # time-integrate position, velocities, internal energy and density of cbd particles
 fix                integrate_slurry_fix slurry meso
 # time-integrate only internal energy and density of boundary particles
-#fix                integrate_bc_fix bc meso/stationary
-
+fix                integrate_bc_fix bc meso/stationary
+print           hi
 
 # dump files
 dump               dump_id all custom 10000 shrink1.lammpstrj id type mol xs ys zs 
@@ -45,15 +45,18 @@ thermo_style       custom step time temp press density lx ly lz
 thermo_modify      norm no
 
 neigh_modify       every 5 delay 0 check no
-variable           skin equal 0.3*${h_cbd}
+variable           skin equal 0.3*${h}
 neighbor           ${skin} bin # set Verlet list skin distance
 
 
 
-run 5000000
+run 5000
 
 
-change_box all x scale 1.1 y volume z volume remap
+change_box slurry x scale 1.1 y scale 1.1 z scale 1.1 remap
 
 # reset_timestep 		0
 # write_restart restart_tutorial
+run 5000000
+
+write_data finished_testing.data

@@ -93,13 +93,13 @@ class DatafileGenerator():
             for zi in np.arange(zl,zh-self.dia,self.dia*15):
                 for xi in np.arange(xl,xh-self.dia*2,self.dia*15):
                     val = random.randint(0,87)
-                    if val >= 12 and val < 18:
+                    if val >= 3 and val < 17:
                         self.activecount += 1
                         value = random.randint(0,2)
                         if value == 0:
                             self.drawRaspberry(xi,yi,zi,radius)
                         
-                    elif val >= 18 and val < 32:
+                    elif val >= 17 and val < 33:
                         self.cbdcount += 1
                         atom_type = self.cbd_type
                         self.appendLine(atom_type,xi+self.dia*3/2,yi+self.dia/2,zi+self.dia/2)

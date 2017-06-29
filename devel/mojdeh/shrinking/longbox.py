@@ -4,12 +4,12 @@ import numpy as np
 import random, math, copy
 
 class DatafileGenerator():
-    newFileName = "longbox2.data"
+    newFileName = "longbox.data"
     positionLines = []
 
     # data string containing molecule ID, type, dia, rho, x, y, z, 0 0 0 
-    #cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
-    cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
+    cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
+    #cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
 
     m_cbd = 3.72
     dia = 2.0
@@ -24,12 +24,12 @@ class DatafileGenerator():
     activecount = 0
 
     x0 = 0.0
-    x1 = scale*300.0*dia
+    x1 = scale*373.0*dia
     y0 = 0.0
-    y1 = scale*300.0*dia
+    y1 = scale*373.0*dia
     z0 = 0
-    z1 = 3000
-    zm = 600
+    z1 = scale*1500*dia
+    
     
     ID = 0
     molID = 0
@@ -44,13 +44,13 @@ class DatafileGenerator():
 
         xlen = abs(self.x1-self.x0)
         ylen = abs(self.y1-self.y0)
-        zlen = abs(self.zm-self.z0)
+        zlen = abs(self.z1-self.z0)
 
         # Set up walls
-        vertex1 = (0,zlen*0.05/2+10*self.dia+30)
+        vertex1 = (0,zlen*0.02/2+10*self.dia+30)
         vertex2 = (xlen,zlen*0.40- 20*self.dia+30)
         vertex3 = (0,zlen*0.4+self.dia+30)
-        vertex4 = (xlen,zlen*0.80+30)
+        vertex4 = (xlen,zlen*0.97+30)
         
         # vertex5 = (xlen*(1.0-0.20),zlen*0.95)
         # vertex6 = (xlen*(1.0-0.20),zlen*0.40)
@@ -63,8 +63,8 @@ class DatafileGenerator():
         vertexB = (xlen,zlen*0.05/2)
 
         
-        # Draw moving wall on bottom
-        self.drawWallFromVtxs(vertexA,vertexB)
+        #Draw moving wall on bottom
+        #self.drawWallFromVtxs(vertexA,vertexB)
 
         # Add particles to the simulation
         #self.fillCubeWithActiveVtxs(vertex1,vertex2)
@@ -77,9 +77,9 @@ class DatafileGenerator():
 
 
     def fillCubeWithRandomMixVtxs(self,v1,v2):
-        (x1,zm) = v1
+        (x1,z1) = v1
         (x2,z2) = v2
-        self.fillCubeWithRandomMix(x1,self.y0,zm,x2,self.y1,z2)
+        self.fillCubeWithRandomMix(x1,self.y0,z1,x2,self.y1,z2)
 
     def fillCubeWithRandomMix(self,x,y,z,x2,y2,z2):
         xl = min(x,x2)
@@ -89,9 +89,9 @@ class DatafileGenerator():
         zl = min(z,z2)
         zh = max(z,z2)
         radius = self.act_dia/2
-        for yi in np.arange(yl,yh-self.dia,self.dia*5):
-            for zi in np.arange(zl,zh-self.dia,self.dia*50):
-                for xi in np.arange(xl,xh-self.dia*2,self.dia*5):
+        for yi in np.arange(yl,yh-self.dia,self.dia*15):
+            for zi in np.arange(zl,zh-self.dia,self.dia*15):
+                for xi in np.arange(xl,xh-self.dia*2,self.dia*15):
                     val = random.randint(0,87)
                     if val >= 12 and val < 18:
                         self.activecount += 1
@@ -296,7 +296,7 @@ class DatafileGenerator():
         self.molID += 1
         for xi in np.arange(x-radius,x+radius,self.dia):
             for yi in np.arange(y-radius,y+radius,self.dia):
-                for zi in np.arange(z-radius,z+radius,self.dia*10):
+                for zi in np.arange(z-radius,z+radius,self.dia):
                     if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) < radius**2:
                         #if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) > radius**1:  # making hollow
                             self.appendLine(self.active_type,xi,yi,zi)

@@ -1,3 +1,4 @@
+
 atom_style         meso-molecular
 dimension          3
 newton             on
@@ -37,7 +38,7 @@ fix                integrate_bc_fix bc meso/stationary
 
 
 # dump files
-dump               dump_id all custom 10000 npt_shrink1.lammpstrj id type mol xs ys zs 
+dump               dump_id all custom 10000 SC-npt_shrink3.lammpstrj id type mol xs ys zs 
 dump_modify        dump_id first yes
 
 dump_modify 	   dump_id sort 3
@@ -50,11 +51,11 @@ neigh_modify       every 5 delay 0 check no
 variable           skin equal 0.3*${h}
 neighbor           ${skin} bin # set Verlet list skin distance
 
-fix stir slurry langevin 300 300 10 234 
+fix stir slurry langevin 300 300 10000 234 
 
 
 
-run 10000
+run 1000000
 
 
 #fix npt_method all npt temp $T $T 100.0 iso 100.0 100.0 1000.0 tloop 20
@@ -64,41 +65,41 @@ run 10000
 
 
 
-fix npt_method1 all npt temp 1000 1000 100.0 iso 100.0 100.0 1000.0 tloop 20
+fix npt_method1 all npt temp 500 500 100.0 iso 100.0 100.0 1000.0 tloop 20
 
 run 500000
 unfix npt_method1
-fix cool1 active all  temp 400 400 30
-run 50000
+fix cool1  all  temp 400 400 30
+run 500000
 unfix cool1
 
 fix npt_method2 all npt temp 400 400 100.0 iso 100.0 100.0 1000.0 tloop 20
 
 run 500000
 unfix npt_method2
-fix cool2 active all  temp 300 300 30
-run 50000
+fix cool2  all  temp 300 300 30
+run 500000
 unfix cool2
 
 fix npt_method3 all npt temp 300 300 100.0 iso 100.0 100.0 1000.0 tloop 20
 
 run 500000
 unfix npt_method3
-fix cool3 active all  temp 200 200 30
-run 50000
+fix cool3 all  temp 200 200 30
+run 500000
 unfix cool3
 
-fix npt_method4 all npt temp 200 200 100.0 iso 100.0 100.0 1000.0 tloop 20
+#fix npt_method4 all npt temp 200 200 100.0 iso 100.0 100.0 1000.0 tloop 20
 
-run 500000
-unfix npt_method4
-fix cool4 active all  temp 100 100 30
-run 50000
-unfix cool4
+#run 500000
+#unfix npt_method4
+#fix cool4 active all  temp 100 100 30
+#run 50000
+#unfix cool4
 
-fix npt_method5 all npt temp 100 100 100.0 iso 100.0 100.0 1000.0 tloop 20
+#fix npt_method5 all npt temp 100 100 100.0 iso 100.0 100.0 1000.0 tloop 20
 
-run 500000
+#run 500000
 
 
-write_data finished_npt_shrink1.data
+write_data finished_npt_shrink3.data

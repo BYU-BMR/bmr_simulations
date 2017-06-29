@@ -8,8 +8,8 @@ class DatafileGenerator():
     positionLines = []
 
     # data string containing molecule ID, type, dia, rho, x, y, z, 0 0 0 
-    cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
-    #cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
+    #cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
+    cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
 
     m_cbd = 3.72
     dia = 2.0
@@ -24,11 +24,11 @@ class DatafileGenerator():
     activecount = 0
 
     x0 = 0.0
-    x1 = scale*300*dia
+    x1 = scale*100*dia
     y0 = 0.0
-    y1 = scale*300*dia
+    y1 = scale*60*dia
     z0 = 0
-    z1 = scale*1500*dia
+    z1 = scale*100*dia
     
     
     ID = 0
@@ -99,15 +99,6 @@ class DatafileGenerator():
                         if value == 0:
                             self.drawRaspberry(xi,yi,zi,radius)
                         
-                    elif val >= 18 and val < 32:
-                        self.cbdcount += 1
-                        atom_type = self.cbd_type
-                        self.appendLine(atom_type,xi+self.dia*3/2,yi+self.dia/2,zi+self.dia/2)
-                    else:
-                        self.solventcount += 1
-                        atom_type = self.solvent_type
-                        self.appendLine(atom_type,xi+self.dia*1/2,yi+self.dia/2,zi+self.dia/2)
-                    
 
 
 
@@ -379,9 +370,9 @@ class DatafileGenerator():
         print("Number of Solvent particles =",self.solventcount)
         print("Number of Active Particles =", self.activecount)
 
-        volact = self.activecount/(self.cbdcount+self.solventcount+self.activecount)
-        volcbd = self.cbdcount/(self.cbdcount+self.solventcount+self.activecount)
-        volsol = self.solventcount/(self.cbdcount+self.solventcount+self.activecount)
+        #volact = self.activecount/(self.cbdcount+self.solventcount+self.activecount)
+        #volcbd = self.cbdcount/(self.cbdcount+self.solventcount+self.activecount)
+        #volsol = self.solventcount/(self.cbdcount+self.solventcount+self.activecount)
 
 
 

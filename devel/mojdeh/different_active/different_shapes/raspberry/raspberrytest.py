@@ -4,33 +4,31 @@ import numpy as np
 import random, math, copy
 
 class DatafileGenerator():
-    newFileName = "longbox.data"
+    newFileName = "raspberry.data"
     positionLines = []
 
     # data string containing molecule ID, type, dia, rho, x, y, z, 0 0 0 
-    cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
-    #cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
+    #cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
+    cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
 
     m_cbd = 3.72
     dia = 2.0
     act_dia = 10
 
-    cbd_type,active_type,solvent_type,wall_type = 1,2,3,4
+
+    cbd_type,active_type, solvent_type,wall_type = 1,2,3,4
 
     scale = 1.00
-
     solventcount = 0
     cbdcount = 0
-    activecount = 0
 
     x0 = 0.0
-    x1 = scale*300*dia
+    x1 = scale*10*dia
     y0 = 0.0
-    y1 = scale*300*dia
+    y1 = scale*10*dia
     z0 = 0
-    z1 = scale*1500*dia
-    
-    
+    z1 = scale*100*dia
+
     ID = 0
     molID = 0
 
@@ -39,39 +37,38 @@ class DatafileGenerator():
         self.writeFile()
 
     def setUpSimulation(self):
-
-        
-
         xlen = abs(self.x1-self.x0)
         ylen = abs(self.y1-self.y0)
         zlen = abs(self.z1-self.z0)
 
         # Set up walls
-        vertex1 = (0,zlen*0.02/2+10*self.dia+30)
-        vertex2 = (xlen,zlen*0.40- 20*self.dia+30)
-        vertex3 = (0,zlen*0.4+self.dia+30)
-        vertex4 = (xlen,zlen*0.97+30)
+        # vertex1 = (xlen*0.20,zlen*0.95)
+        # vertex2 = (xlen*0.20,zlen*0.40)
+        # vertex3 = (xlen*0.40,zlen*0.20)
+        # vertex4 = (xlen*0.40,zlen*0.10)
         
         # vertex5 = (xlen*(1.0-0.20),zlen*0.95)
         # vertex6 = (xlen*(1.0-0.20),zlen*0.40)
         # vertex7 = (xlen*(1.0-0.40),zlen*0.20)
         # vertex8 = (xlen*(1.0-0.40),zlen*0.10)
 
-        
+        vertex1 = (0,zlen*0.02/2+10*self.dia+30)
+        vertex2 = (xlen,zlen*0.40- 20*self.dia+30)
+        vertex3 = (0,zlen*0.4+self.dia+30)
+        vertex4 = (xlen,zlen*0.97+30)
+
 
         vertexA = (0,zlen*0.05/2)
         vertexB = (xlen,zlen*0.05/2)
 
         
-        #Draw moving wall on bottom
-        #self.drawWallFromVtxs(vertexA,vertexB)
+        # Draw moving wall on bottom
+        self.drawWallFromVtxs(vertexA,vertexB)
 
         # Add particles to the simulation
-        #self.fillCubeWithActiveVtxs(vertex1,vertex2)
+        self.fillCubeWithActiveVtxs(vertex3,vertex4)
         #self.fillCubeWithCBDVtxs(vertex1,vertex2,checkForOverlap=False)
-        #self.fillCubeWithCBDVtxs(vertex1,vertex4,checkForOverlap=False)
-
-        self.fillCubeWithRandomMixVtxs(vertex1,vertex4)
+        self.fillCubeWithCBDVtxs(vertex3,vertex4,checkForOverlap=True)
         #self.fillCubeWithCBDVtxs(vertex5,vertex6,checkForOverlap=False)
 
 
@@ -88,26 +85,19 @@ class DatafileGenerator():
         yh = max(y,y2)
         zl = min(z,z2)
         zh = max(z,z2)
-        radius = self.act_dia/2
-        for yi in np.arange(yl,yh-self.dia,self.dia*15):
-            for zi in np.arange(zl,zh-self.dia,self.dia*15):
-                for xi in np.arange(xl,xh-self.dia*2,self.dia*15):
-                    val = random.randint(0,87)
-                    if val >= 12 and val < 18:
-                        self.activecount += 1
-                        value = random.randint(0,2)
-                        if value == 0:
-                            self.drawRaspberry(xi,yi,zi,radius)
-                        
+        for yi in np.arange(yl,yh-self.dia,self.dia):
+            for zi in np.arange(zl,zh-self.dia,self.dia):
+                for xi in np.arange(xl,xh-self.dia*2,self.dia*2):
+                    val = random.randint(0,99)
+                    if val >= 0 and val < 18:
+                        atom_type = self.active_type
+                        self.molID += 1
                     elif val >= 18 and val < 32:
-                        self.cbdcount += 1
                         atom_type = self.cbd_type
-                        self.appendLine(atom_type,xi+self.dia*3/2,yi+self.dia/2,zi+self.dia/2)
                     else:
-                        self.solventcount += 1
                         atom_type = self.solvent_type
-                        self.appendLine(atom_type,xi+self.dia*1/2,yi+self.dia/2,zi+self.dia/2)
-                    
+                    self.appendLine(atom_type,xi+self.dia*1/2,yi+self.dia/2,zi+self.dia/2)
+                    self.appendLine(atom_type,xi+self.dia*3/2,yi+self.dia/2,zi+self.dia/2)
 
 
 
@@ -115,77 +105,22 @@ class DatafileGenerator():
         (x1,z1) = v1
         (x2,z2) = v2
         self.fillCubeWithActive(x1,self.y0,z1,x2,self.y1,z2)
-        #self.fillCubeWithActive2(x1,self.y0,z1,x2,self.y1,z2)
-        #self.fillCubeWithActive3(x1,self.y0,z1,x2,self.y1,z2)
 
-    def fillCubeWithActive1(self,x,y,z,x2,y2,z2):
-        xl = min(x,x2)
-        xh = max(x,x2)
-        yl = min(y,y2)
-        yh = max(y,y2)
-        zl = min(z,z2)
-        zh = max(z,z2)
-        radius = self.act_dia/2
-        spacing = 20*radius
-        x_range = math.floor((xh-xl)/spacing)
-        y_range = math.floor((yh-yl)/spacing)
-        z_range = math.floor((zh-zl)/spacing)
-        x_spacing = (xh-xl)/x_range
-        y_spacing = (yh-yl)/y_range
-        z_spacing = (zh-zl)/z_range 
-        for i in range(int(x_range)):
-            for j in range(int(y_range)):
-                for k in range(int(z_range/1)):
-                    x = xl+x_spacing*(i+0.5)
-                    y = yl+y_spacing*(j+0.5)
-                    z = zl+z_spacing*(int(z_range-1)-1*k+2.0)
-                    self.drawRaspberry(x,y,z,3*radius)
+    def fillCubeWithActive(self,x,y,z,x1,y1,z1):
+        
 
-    def fillCubeWithActive2(self,x,y,z,x2,y2,z2):
-        xl = min(x,x2)
-        xh = max(x,x2)
-        yl = min(y,y2)
-        yh = max(y,y2)
-        zl = min(z,z2)
-        zh = max(z,z2)
-        radius = self.act_dia/2
-        spacing = 20*radius
-        x_range = math.floor((xh-xl)/spacing)
-        y_range = math.floor((yh-yl)/spacing)
-        z_range = math.floor((zh-zl)/spacing)
-        x_spacing = (xh-xl)/x_range
-        y_spacing = (yh-yl)/y_range
-        z_spacing = (zh-zl)/z_range 
+        radius = 2
+        spacing = 2*radius
+        x_range = math.floor((self.x0+(self.x1-self.x0))/spacing)
+        y_range = math.floor((self.x0+(self.x1-self.x0))/spacing)
+        z_range = math.floor((self.z0+(self.z1-self.z0))/spacing)
         for i in range(int(x_range)):
-            for j in range(int(y_range)):
-                for k in range(int(z_range/1)):
-                    x = xl+x_spacing*(i+0.5)
-                    y = yl+y_spacing*(j+0.5)
-                    z = zl+z_spacing*(int(z_range-1)-1*k-2.0)
-                    self.drawRaspberry(x,y,z,radius)
+            for j in range(int(z_range)):
+                x = (self.x0+(self.x1-self.x0)/x_range*(i+0.5))
+                y = (self.y0+(self.y1-self.y0)/y_range*(i+0.5))
+                z = (self.z0+(self.z1-self.z0)/z_range*(j+0.5))
+                self.drawRaspberry(x,y,z,radius)
 
-    def fillCubeWithActive3(self,x,y,z,x2,y2,z2):
-        xl = min(x,x2)
-        xh = max(x,x2)
-        yl = min(y,y2)
-        yh = max(y,y2)
-        zl = min(z,z2)
-        zh = max(z,z2)
-        radius = self.act_dia/2
-        spacing = 20*radius
-        x_range = math.floor((xh-xl)/spacing)
-        y_range = math.floor((yh-yl)/spacing)
-        z_range = math.floor((zh-zl)/spacing)
-        x_spacing = (xh-xl)/x_range
-        y_spacing = (yh-yl)/y_range
-        z_spacing = (zh-zl)/z_range 
-        for i in range(int(x_range)):
-            for j in range(int(y_range)):
-                for k in range(int(z_range/1)):
-                    x = xl+x_spacing*(i+0.5)
-                    y = yl+y_spacing*(j+0.5)
-                    z = zl+z_spacing*(int(z_range-1)-1*k-0.5)
-                    self.drawRaspberry(x,y,z,radius)
 
     def fillCubeWithCBDVtxs(self,v1,v2,checkForOverlap=True):
         (x1,z1) = v1
@@ -201,7 +136,7 @@ class DatafileGenerator():
         yh = max(y,y2)
         zl = min(z,z2)
         zh = max(z,z2)
-        spacing = self.dia*10
+        spacing = self.dia
         x_range = math.floor((xh-xl)/spacing)
         y_range = math.floor((yh-yl)/spacing)
         z_range = math.floor((zh-zl)/spacing)
@@ -214,7 +149,7 @@ class DatafileGenerator():
             for line in particleLines:
                 if line.split()[2] == str(self.active_type):
                     activeParticleLines.append(line)
-            print("Active particles:", len(activeParticleLines)*(3/4))
+            print("Active particles:", len(activeParticleLines))
             minDistance = self.dia**2
             for i in range(int(x_range)):
                 for j in range(int(y_range)):
@@ -292,55 +227,14 @@ class DatafileGenerator():
                     for yi in np.arange(y-ry,y+ry,self.dia):
                         self.appendLine(self.active_type,xi,yi,zi)
 
+
     def drawRaspberry(self,x,y,z,radius):
         self.molID += 1
         for xi in np.arange(x-radius,x+radius,self.dia):
             for yi in np.arange(y-radius,y+radius,self.dia):
                 for zi in np.arange(z-radius,z+radius,self.dia):
                     if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) < radius**2:
-                        #if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) > radius**1:  # making hollow
-                            self.appendLine(self.active_type,xi,yi,zi)
-
-    def drawpotato1(self,x,y,z,radius):
-        self.molID += 1
-        thk = self.dia/2
-        space = 0
-        for xi in np.arange(x-thk,x+thk,self.dia):
-            for yi in np.arange(y-thk,y+thk,self.dia):
-                for zi in np.arange(z-self.dia*3/2 + space,z+self.dia*3/2 - space,self.dia/3):
-                    if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) < radius**2:
                         self.appendLine(self.active_type,xi,yi,zi)
-
-    def drawpotato2(self,x,y,z,radius):
-        self.molID += 1
-        thk = self.dia/2
-        space = 0
-        for xi in np.arange(x-self.dia*3/2 + space,x+self.dia*3/2 - space,self.dia/3):
-            for yi in np.arange(y-thk,y+thk,self.dia):
-                for zi in np.arange(z-thk,z+thk,self.dia):
-                    if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) < radius**2:
-                        self.appendLine(self.active_type,xi,yi,zi)
-
-    def drawpotato3(self,x,y,z,radius):
-        self.molID += 1
-        thk = self.dia/2
-        space = 0
-        for xi in np.arange(x-thk,x+thk,self.dia):
-            for yi in np.arange(y-self.dia*3/2 + space,y+self.dia*3/2 - space,self.dia/3):
-                for zi in np.arange(z-thk,z+thk,self.dia):
-                    if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) < radius**2:
-                        self.appendLine(self.active_type,xi,yi,zi)
-
-    def drawSphere(self,x,y,z,radius):
-        self.molID += 1
-        spacer = self.dia/2
-        multiplier = 10
-        for xi in np.arange(x-radius,x+radius,self.dia/multiplier):
-            for yi in np.arange(y-radius,y+radius,self.dia/multiplier):
-                for zi in np.arange(z-radius+spacer,z+radius-spacer,self.dia/multiplier):
-                    if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) < radius**2:
-                        if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) > self.dia**2:
-                            self.appendLine(self.active_type,xi,yi,zi)
 
     def drawDisc(self,x,y,z,radius):
         self.molID += 1
@@ -368,23 +262,25 @@ class DatafileGenerator():
                 for zi in np.arange(z-rz,z+rz,self.dia):
                     if ((xi-x)**2/(rx**2) + (zi-z)**2/(rz**2)) < 1.0:
                         self.appendLine(self.active_type,xi,yi,zi)
+    def drawpotato(self,x,y,z,radius):
+        self.molID += 1
+        thk = self.dia/2
+        for xi in np.arange(x-thk,x+thk,self.dia):
+            for yi in np.arange(y-thk,y+thk,self.dia):
+                for zi in np.arange(z-self.dia*3/2,z+self.dia*3/2,self.dia/30):
+                    if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) < radius**2:
+                        self.appendLine(self.active_type,xi,yi,zi)
 
     def drawDiParticle(self,x,y,z):
         self.molID += 1
         self.appendLine(self.active_type,x-self.dia/2,y,z)
         self.appendLine(self.active_type,x+self.dia/2,y,z)
 
+
+
     def writeFile(self):
         print("Number of CBD particles =",self.cbdcount)
         print("Number of Solvent particles =",self.solventcount)
-        print("Number of Active Particles =", self.activecount)
-
-        volact = self.activecount/(self.cbdcount+self.solventcount+self.activecount)
-        volcbd = self.cbdcount/(self.cbdcount+self.solventcount+self.activecount)
-        volsol = self.solventcount/(self.cbdcount+self.solventcount+self.activecount)
-
-
-
         print("Writing new file: %s" % self.newFileName)
 
         xmin = self.x0

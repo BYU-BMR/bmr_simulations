@@ -8,8 +8,8 @@ class DatafileGenerator():
     positionLines = []
 
     # data string containing molecule ID, type, dia, rho, x, y, z, 0 0 0 
-    #cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
-    cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
+    cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
+    #cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
 
     m_cbd = 3.72
     dia = 2.0

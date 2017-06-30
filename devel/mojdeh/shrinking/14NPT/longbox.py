@@ -24,11 +24,11 @@ class DatafileGenerator():
     activecount = 0
 
     x0 = 0.0
-    x1 = scale*30*dia
+    x1 = scale*300*dia
     y0 = 0.0
-    y1 = scale*30*dia
+    y1 = scale*300*dia
     z0 = 0
-    z1 = scale*150*dia
+    z1 = scale*1500*dia
     
     
     ID = 0

@@ -51,11 +51,6 @@ neigh_modify       every 5 delay 0 check no
 variable           skin equal 0.3*${h}
 neighbor           ${skin} bin # set Verlet list skin distance
 
-
-variable slurry_height_1 equal bound(slurry,zmax)
-
-print ${slurry_height_1}
-
 fix stir slurry langevin 50000000 50000000 100 234 
 
 
@@ -119,15 +114,15 @@ run 10000
 unfix cool5
 
 
-fix npt_method6 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
-run 10000
-write_data semifin_npt_shrink6.data
+#fix npt_method6 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
+#run 10000
+#write_data semifin_npt_shrink6.data
 
-unfix npt_method6
+#unfix npt_method6
 
-fix cool6 all nvt temp 40000 40000 300
-run 10000
-unfix cool6
+#fix cool6 all nvt temp 40000 40000 300
+#run 10000
+#unfix cool6
 
 
 #fix npt_method7 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
@@ -210,8 +205,5 @@ unfix cool6
 
 #run 500000
 
-variable slurry_height_2 equal bound(slurry,zmax)
-
-print ${slurry_height_2}
 
 write_data finished_npt_shrink.data

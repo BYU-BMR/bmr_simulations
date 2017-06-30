@@ -38,7 +38,7 @@ fix                integrate_bc_fix bc meso/stationary
 
 
 # dump files
-dump               dump_id all custom 10000 SC-npt_shrink13.lammpstrj id type mol xs ys zs 
+dump               dump_id all custom 10000 SC-npt_shrink12.lammpstrj id type mol xs ys zs 
 dump_modify        dump_id first yes
 
 dump_modify 	   dump_id sort 3
@@ -50,11 +50,6 @@ thermo_modify      norm no
 neigh_modify       every 5 delay 0 check no
 variable           skin equal 0.3*${h}
 neighbor           ${skin} bin # set Verlet list skin distance
-
-
-variable slurry_height_1 equal bound(slurry,zmax)
-
-print ${slurry_height_1}
 
 fix stir slurry langevin 50000000 50000000 100 234 
 
@@ -210,8 +205,5 @@ unfix cool6
 
 #run 500000
 
-variable slurry_height_2 equal bound(slurry,zmax)
-
-print ${slurry_height_2}
 
 write_data finished_npt_shrink.data

@@ -8,8 +8,8 @@ class DatafileGenerator():
     positionLines = []
 
     # data string containing molecule ID, type, dia, rho, x, y, z, 0 0 0 
-    cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
-    #cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
+    #cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
+    cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
 
     m_cbd = 3.72
     dia = 2.0
@@ -97,7 +97,7 @@ class DatafileGenerator():
                         self.activecount += 1
                         value = random.randint(0,2)
                         if value == 0:
-                            self.drawpotato1(xi,yi,zi,radius)
+                            self.drawSphere(xi,yi,zi,radius)
                         
                     elif val >= 17 and val < 33:
                         self.cbdcount += 1

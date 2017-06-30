@@ -38,7 +38,7 @@ fix                integrate_bc_fix bc meso/stationary
 
 
 # dump files
-dump               dump_id all custom 10000 SC-npt_shrink16.lammpstrj id type mol xs ys zs 
+dump               dump_id all custom 10000 SC-npt_shrink15.lammpstrj id type mol xs ys zs 
 dump_modify        dump_id first yes
 
 dump_modify 	   dump_id sort 3
@@ -71,7 +71,7 @@ run 100000
 
 unfix stir 
 
-fix npt_method1 all npt temp 50000000 50000000 1000.0 z 100.0 100.0 1000.0 tloop 20
+fix npt_method1 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
 
 run 10000
 write_data semifin_npt_shrink1.data
@@ -81,7 +81,7 @@ run 10000
 unfix cool1
 
 
-fix npt_method2 all npt temp 50000000 50000000 1000.0 z 100.0 100.0 1000.0 tloop 20
+fix npt_method2 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
 run 10000
 write_data semifin_npt_shrink2.data
 unfix npt_method2 
@@ -91,7 +91,7 @@ run 10000
 unfix cool2
 
 
-fix npt_method3 all npt temp 50000000 50000000 1000.0 z 100.0 100.0 1000.0 tloop 20
+fix npt_method3 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
 run 10000
 write_data semifin_npt_shrink3.data
 unfix npt_method3
@@ -100,7 +100,7 @@ run 10000
 unfix cool3
 
 
-fix npt_method4 all npt temp 50000000 50000000 1000.0 z 100.0 100.0 1000.0 tloop 20
+fix npt_method4 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
 run 10000
 write_data semifin_npt_shrink4.data
 unfix npt_method4 
@@ -109,7 +109,7 @@ run 10000
 unfix cool4
 
 
-fix npt_method5 all npt temp 50000000 50000000 1000.0 z 100.0 100.0 1000.0 tloop 20
+fix npt_method5 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
 run 10000
 write_data semifin_npt_shrink5.data
 
@@ -120,7 +120,7 @@ run 10000
 unfix cool5
 
 
-fix npt_method6 all npt temp 50000000 50000000 1000.0 z 100.0 100.0 1000.0 tloop 20
+fix npt_method6 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
 run 10000
 write_data semifin_npt_shrink6.data
 
@@ -131,7 +131,7 @@ run 10000
 unfix cool6
 
 
-fix npt_method7 all npt temp 50000000 50000000 1000.0 z 100.0 100.0 1000.0 tloop 20
+fix npt_method7 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
 run 10000
 write_data semifin_npt_shrink7.data
 
@@ -143,7 +143,7 @@ unfix cool7
 
 
 
-fix npt_method8 all npt temp 50000000 50000000 1000.0 z 100.0 100.0 1000.0 tloop 20
+fix npt_method8 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
 run 10000
 write_data semifin_npt_shrink8.data
 
@@ -154,7 +154,7 @@ run 10000
 unfix cool8
 
 
-fix npt_method9 all npt temp 50000000 50000000 1000.0 z 100.0 100.0 1000.0 tloop 20
+fix npt_method9 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
 run 10000
 write_data semifin_npt_shrink9.data
 
@@ -165,7 +165,7 @@ run 10000
 unfix cool9
 
 
-fix npt_method10 all npt temp 50000000 50000000 1000.0 z 100.0 100.0 1000.0 tloop 20
+fix npt_method10 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
 run 10000
 write_data semifin_npt_shrink10.data
 
@@ -177,7 +177,7 @@ unfix cool10
 
 
 
-fix npt_method11 all npt temp 50000000 50000000 1000.0 z 100.0 100.0 1000.0 tloop 20
+fix npt_method11 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
 run 10000
 write_data semifin_npt_shrink11.data
 
@@ -188,7 +188,7 @@ run 10000
 unfix cool11
 
 
-fix npt_method12 all npt temp 50000000 50000000 1000.0 z 100.0 100.0 1000.0 tloop 20
+fix npt_method12 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
 run 10000
 write_data semifin_npt_shrink12.data
 
@@ -199,7 +199,7 @@ run 10000
 unfix cool12
 
 
-fix npt_method13 all npt temp 50000000 50000000 1000.0 z 100.0 100.0 1000.0 tloop 20
+fix npt_method13 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
 run 10000
 write_data semifin_npt_shrink13.data
 
@@ -210,7 +210,7 @@ run 10000
 unfix cool13
 
 
-fix npt_method14 all npt temp 50000000 50000000 1000.0 z 100.0 100.0 1000.0 tloop 20
+fix npt_method14 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
 run 10000
 write_data semifin_npt_shrink14.data
 
@@ -221,7 +221,7 @@ run 10000
 unfix cool14
 
 
-fix npt_method15 all npt temp 50000000 50000000 1000.0 z 100.0 100.0 1000.0 tloop 20
+fix npt_method15 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
 run 10000
 write_data semifin_npt_shrink15.data
 

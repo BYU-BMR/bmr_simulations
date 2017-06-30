@@ -64,6 +64,7 @@ class DatafileGenerator():
 
         
         #Draw moving wall on bottom
+        self.drawWallFromVtxs(vertexA,vertexB)
 
         # Add particles to the simulation
         #self.fillCubeWithActiveVtxs(vertex1,vertex2)

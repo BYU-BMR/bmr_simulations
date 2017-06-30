@@ -8,8 +8,8 @@ class DatafileGenerator():
     positionLines = []
 
     # data string containing molecule ID, type, dia, rho, x, y, z, 0 0 0 
-    #cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
-    cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
+    cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
+    #cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
 
     m_cbd = 3.72
     dia = 2.0
@@ -64,7 +64,7 @@ class DatafileGenerator():
 
         
         #Draw moving wall on bottom
-        #self.drawWallFromVtxs(vertexA,vertexB)
+        self.drawWallFromVtxs(vertexA,vertexB)
 
         # Add particles to the simulation
         #self.fillCubeWithActiveVtxs(vertex1,vertex2)
@@ -89,9 +89,9 @@ class DatafileGenerator():
         zl = min(z,z2)
         zh = max(z,z2)
         radius = self.act_dia/2
-        for yi in np.arange(yl+self.dia*3,yh-self.dia,self.dia*7):
-            for zi in np.arange(zl-self.dia*5,zh-self.dia*5,self.dia*7):
-                for xi in np.arange(xl+self.dia*3,xh-self.dia*2,self.dia*7):
+        for yi in np.arange(yl+self.dia*3,yh-self.dia,self.dia*10):
+            for zi in np.arange(zl-self.dia*5,zh-self.dia*5,self.dia*10):
+                for xi in np.arange(xl+self.dia*3,xh-self.dia*2,self.dia*10):
                     val = random.randint(0,87)
                     if val >= 3 and val < 17:
                         self.activecount += 1

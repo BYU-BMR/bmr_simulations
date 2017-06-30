@@ -24,11 +24,11 @@ class DatafileGenerator():
     activecount = 0
 
     x0 = 0.0
-    x1 = scale*30*dia
+    x1 = scale*50*dia
     y0 = 0.0
-    y1 = scale*30*dia
+    y1 = scale*50*dia
     z0 = 0
-    z1 = scale*150*dia
+    z1 = scale*500*dia
     
     
     ID = 0
@@ -64,7 +64,7 @@ class DatafileGenerator():
 
         
         #Draw moving wall on bottom
-        self.drawWallFromVtxs(vertexA,vertexB)
+        #self.drawWallFromVtxs(vertexA,vertexB)
 
         # Add particles to the simulation
         #self.fillCubeWithActiveVtxs(vertex1,vertex2)
@@ -89,9 +89,9 @@ class DatafileGenerator():
         zl = min(z,z2)
         zh = max(z,z2)
         radius = self.act_dia/2
-        for yi in np.arange(yl,yh-self.dia,self.dia*5):
-            for zi in np.arange(zl,zh-self.dia,self.dia*5):
-                for xi in np.arange(xl,xh-self.dia*2,self.dia*5):
+        for yi in np.arange(yl,yh-self.dia,self.dia*10):
+            for zi in np.arange(zl,zh-self.dia,self.dia*10):
+                for xi in np.arange(xl,xh-self.dia*2,self.dia*10):
                     val = random.randint(0,87)
                     if val >= 3 and val < 17:
                         self.activecount += 1

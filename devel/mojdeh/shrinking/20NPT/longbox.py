@@ -90,7 +90,7 @@ class DatafileGenerator():
         zh = max(z,z2)
         radius = self.act_dia/2
         for yi in np.arange(yl+self.dia*3,yh-self.dia,self.dia*7):
-            for zi in np.arange(zl,zh-self.dia,self.dia*7):
+            for zi in np.arange(zl--self.dia*5,zh-self.dia*7,self.dia*7):
                 for xi in np.arange(xl+self.dia*3,xh-self.dia*2,self.dia*7):
                     val = random.randint(0,87)
                     if val >= 3 and val < 17:

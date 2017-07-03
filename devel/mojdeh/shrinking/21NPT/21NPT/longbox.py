@@ -4,12 +4,12 @@ import numpy as np
 import random, math, copy
 
 class DatafileGenerator():
-    newFileName = "longboxtest.data"
+    newFileName = "longbox.data"
     positionLines = []
 
     # data string containing molecule ID, type, dia, rho, x, y, z, 0 0 0 
-    #cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
-    cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
+    cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
+    #cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
 
     m_cbd = 3.72
     dia = 2.0
@@ -59,7 +59,7 @@ class DatafileGenerator():
 
         
 
-        vertexA = (0,zlen*0.05/2)
+        vertexA = (0,zlen*0.03/2)
         vertexB = (xlen,zlen*0.05/2)
 
         
@@ -89,15 +89,15 @@ class DatafileGenerator():
         zl = min(z,z2)
         zh = max(z,z2)
         radius = self.act_dia/2
-        for yi in np.arange(yl+self.dia*3,yh-self.dia,self.dia*15):
-            for zi in np.arange(zl-self.dia*5,zh-self.dia*5,self.dia*15):
-                for xi in np.arange(xl+self.dia*3,xh-self.dia*2,self.dia*15):
+        for yi in np.arange(yl+self.dia*3,yh-self.dia,self.dia*7):
+            for zi in np.arange(zl--self.dia*5,zh-self.dia*7,self.dia*7):
+                for xi in np.arange(xl+self.dia*3,xh-self.dia*2,self.dia*7):
                     val = random.randint(0,87)
                     if val >= 3 and val < 17:
                         self.activecount += 1
                         value = random.randint(0,2)
                         if value == 0:
-                            self.drawSphere(xi,yi,zi,radius)
+                            self.drawRaspberry(xi,yi,zi,radius)
                         
                     elif val >= 17 and val < 33:
                         self.cbdcount += 1
@@ -267,7 +267,7 @@ class DatafileGenerator():
         self.molID += 1
         print("molID for wall is:", self.molID)
         length = math.sqrt((x2-x)**2 + (z2-z)**2)
-        numPoints = math.ceil(length/(self.dia*1))
+        numPoints = math.ceil(length/(self.dia*3))
         delta_x = (x2-x)/numPoints
         delta_z = (z2-z)/numPoints
         for i in range(numPoints):

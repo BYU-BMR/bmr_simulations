@@ -4,7 +4,7 @@ import numpy as np
 import random, math, copy
 
 class DatafileGenerator():
-    newFileName = "longbox.data"
+    newFileName = "potato.data"
     positionLines = []
 
     # data string containing molecule ID, type, dia, rho, x, y, z, 0 0 0 
@@ -24,11 +24,11 @@ class DatafileGenerator():
     activecount = 0
 
     x0 = 0.0
-    x1 = scale*30*dia
+    x1 = scale*300*dia
     y0 = 0.0
-    y1 = scale*30*dia
+    y1 = scale*300*dia
     z0 = 0
-    z1 = scale*150*dia
+    z1 = scale*1500*dia
     
     
     ID = 0
@@ -89,15 +89,15 @@ class DatafileGenerator():
         zl = min(z,z2)
         zh = max(z,z2)
         radius = self.act_dia/2
-        for yi in np.arange(yl,yh-self.dia,self.dia*5):
-            for zi in np.arange(zl,zh-self.dia,self.dia*5):
-                for xi in np.arange(xl,xh-self.dia*2,self.dia*5):
+        for yi in np.arange(yl,yh-self.dia,self.dia*15):
+            for zi in np.arange(zl,zh-self.dia,self.dia*15):
+                for xi in np.arange(xl,xh-self.dia*2,self.dia*15):
                     val = random.randint(0,87)
                     if val >= 3 and val < 17:
                         self.activecount += 1
                         value = random.randint(0,2)
                         if value == 0:
-                            self.drawRaspberry(xi,yi,zi,radius)
+                            self.drawpotato1(xi,yi,zi,radius)
                         
                     elif val >= 17 and val < 33:
                         self.cbdcount += 1

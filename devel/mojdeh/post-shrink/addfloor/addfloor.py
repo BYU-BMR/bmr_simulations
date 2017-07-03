@@ -7,6 +7,7 @@ wallStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
 #wallStr = "%d %d %d %f %f %f\n"
 
 atomsline = 2
+m_wall = 3.72
 walldia = 2
 ID = 0
 wallmolID = 200
@@ -15,7 +16,7 @@ wall_type = 5
 def appendLine(wallid,atomType,x,y,z):
 	linesToWrite.append(wallStr % (wallid,molID,atomType,x,y,z))
 
-readinFile = "finished_npt_shrink24.data"
+readinFile = "finished_npt_shrink_23.data"
 preparedFile = "readry.data"
 
 copyfile(readinFile,preparedFile)

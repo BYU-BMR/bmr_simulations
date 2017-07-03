@@ -284,8 +284,7 @@ unfix cool15
 #write_data semifin_npt_shrink6.data
 #run 300000
 #write_data semifin_npt_shrink7.data
-#run 100000
-#write_data semifin_npt_shrink8.data
+#run 100000#write_data semifin_npt_shrink8.data
 #run 100000
 #write_data semifin_npt_shrink9.data
 #run 100000
@@ -317,7 +316,8 @@ unfix cool15
 
 
 
-fix rest slurry move linear  0.0 0.0 15
+variable g equal 9.8/100
+fix less_gravity slurry gravity ${g} vector 0 0 +1
 
 variable slurry_height_2 equal bound(slurry,zmax)
 

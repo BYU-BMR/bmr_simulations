@@ -6,7 +6,7 @@ units              micro
 #boundary 		   p p f
 read_data          longbox.data
 
-variable		   trial	equal 1
+variable		   trial	equal 2
 
 
 variable           h equal 2.0
@@ -77,7 +77,7 @@ unfix stir
 
 fix npt_method1 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
 
-run 50000
+run 70000
 variable slurry_height_1 equal bound(slurry,zmax)
 print ${slurry_height_1}
 
@@ -90,7 +90,7 @@ variable slurry_height_1a equal bound(slurry,zmax)
 print ${slurry_height_1a}
 ##############
 fix npt_method2 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
-run 50000
+run 70000
 variable slurry_height_2 equal bound(slurry,zmax)
 
 print ${slurry_height_2}
@@ -103,7 +103,7 @@ unfix cool2
 ##############
 
 fix npt_method3 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
-run 50000
+run 70000
 variable slurry_height_3 equal bound(slurry,zmax)
 
 print ${slurry_height_3}
@@ -116,7 +116,7 @@ unfix cool3
 ##############
 
 fix npt_method4 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
-run 50000
+run 70000
 variable slurry_height_4 equal bound(slurry,zmax)
 
 print ${slurry_height_4}
@@ -128,7 +128,7 @@ unfix cool4
 ##############
 
 fix npt_method5 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
-run 50000
+run 70000
 variable slurry_height_5 equal bound(slurry,zmax)
 
 print ${slurry_height_5}
@@ -142,7 +142,7 @@ unfix cool5
 ##############
 
 fix npt_method6 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
-run 50000
+run 70000
 variable slurry_height_6 equal bound(slurry,zmax)
 
 print ${slurry_height_6}
@@ -156,7 +156,7 @@ unfix cool6
 ##############
 
 fix npt_method7 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
-run 50000
+run 70000
 variable slurry_height_7 equal bound(slurry,zmax)
 
 print ${slurry_height_7}
@@ -170,7 +170,7 @@ unfix cool7
 ##############
 
 fix npt_method8 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
-run 50000
+run 70000
 variable slurry_height_8 equal bound(slurry,zmax)
 
 print ${slurry_height_8}
@@ -184,7 +184,7 @@ unfix cool8
 ##############
 
 fix npt_method9 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
-run 50000
+run 70000
 variable slurry_height_9 equal bound(slurry,zmax)
 
 print ${slurry_height_9}
@@ -198,7 +198,7 @@ unfix cool9
 ##############
 
 fix npt_method10 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
-run 50000
+run 70000
 variable slurry_height_10 equal bound(slurry,zmax)
 
 print ${slurry_height_10}
@@ -213,7 +213,7 @@ unfix cool10
 ##############
 
 fix npt_method11 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
-run 50000
+run 70000
 variable slurry_height_11 equal bound(slurry,zmax)
 
 print ${slurry_height_11}
@@ -227,7 +227,7 @@ unfix cool11
 
 ##############
 fix npt_method12 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
-run 50000
+run 70000
 variable slurry_height_12 equal bound(slurry,zmax)
 
 print ${slurry_height_12}
@@ -241,7 +241,7 @@ unfix cool12
 ##############
 
 fix npt_method13 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
-run 50000
+run 70000
 variable slurry_height_13 equal bound(slurry,zmax)
 
 print ${slurry_height_13}
@@ -255,7 +255,7 @@ unfix cool13
 
 ##############
 fix npt_method14 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
-run 50000
+run 70000
 variable slurry_height_14 equal bound(slurry,zmax)
 
 print ${slurry_height_14}
@@ -269,7 +269,7 @@ unfix cool14
 
 ##############
 fix npt_method15 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
-run 50000
+run 70000
 variable slurry_height_15 equal bound(slurry,zmax)
 
 print ${slurry_height_15}
@@ -283,7 +283,7 @@ unfix cool15
 
 ##############
 fix npt_method16 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
-run 50000
+run 70000
 variable slurry_height_16 equal bound(slurry,zmax)
 
 print ${slurry_height_16}
@@ -297,7 +297,7 @@ unfix cool16
 ############
 
 fix npt_method17 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
-run 50000
+run 70000
 variable slurry_height_17 equal bound(slurry,zmax)
 
 print ${slurry_height_17}
@@ -310,7 +310,7 @@ run 50000
 unfix cool17
 ################
 fix npt_method18 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
-run 50000
+run 70000
 variable slurry_height_18 equal bound(slurry,zmax)
 
 print ${slurry_height_18}
@@ -323,7 +323,7 @@ run 50000
 unfix cool18
 ################
 fix npt_method19 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
-run 50000
+run 70000
 variable slurry_height_19 equal bound(slurry,zmax)
 
 print ${slurry_height_19}
@@ -336,7 +336,7 @@ run 50000
 unfix cool19
 ######################
 fix npt_method20 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
-run 50000
+run 70000
 variable slurry_height_20 equal bound(slurry,zmax)
 
 print ${slurry_height_20}

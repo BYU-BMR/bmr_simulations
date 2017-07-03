@@ -48,10 +48,10 @@ with open(readinFile,"r") as inFile:
 			xlo = float(xline.split()[0])
 			yhi = float(yline.split()[1])
 			ylo = float(yline.split()[0])
-			zlo = float(zline.split()[0]) - 2*walldia
+			zlo = float(zline.split()[0]) - 10*walldia
 			zhi = float(zline.split()[1])
 			
-			plateheight = zlo + walldia
+			plateheight = zlo + 3*walldia
 			platelen = float(xhi) - float(xlo)
 			
 			vertex1 = (0,plateheight)
@@ -78,7 +78,8 @@ with open(readinFile,"r") as inFile:
 		# Go back and correct number of atoms
 		linesToWrite[atomsline] = str(int(atomCount)) + " atoms\n"
 		linesToWrite[7] = str(zlo) + " " + str(zhi) + " zlo" + " zhi\n"
-
+		linesToWrite[14] = "4 "+ str(m_wall) + "\n"
+		
 		for line in linesToWrite:
 			outFile.write(line)
 

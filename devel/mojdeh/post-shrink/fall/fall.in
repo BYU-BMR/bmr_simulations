@@ -35,7 +35,7 @@ fix                integrate_slurry_fix slurry meso
 # time-integrate only internal energy and density of boundary particles
 fix                integrate_bc_fix bc meso/stationary
 
-dump               dump_id all custom 10000 fall24.lammpstrj id type mol xs ys zs
+dump               dump_id all custom 10000 fall24-2.lammpstrj id type mol xs ys zs
 dump_modify        dump_id first yes
 dump_modify 	   dump_id sort 3
 #compute thermo_temp slurry temp
@@ -47,7 +47,7 @@ thermo_style       custom step time temp press density lx ly lz
 thermo_modify      norm no
 
 neigh_modify       every 5 delay 0 check no
-variable           skin equal 0.3*${hsol}
+variable           skin equal 0.3*${h}
 neighbor           ${skin} bin # set Verlet list skin distance
 
 variable g equal 9.8/100
@@ -56,12 +56,9 @@ fix add_gravity slurry gravity ${g} vector 0 0 -1  # Acceleration is micrometers
 fix cool slurry langevin 3000 3000 10 13
 
 run 10000000
-unfix add_gravity
-variable g2 equal 9.8/100000
-fix add_gravity2 slurry gravity ${g2} vector 0 0 -1
-run 3000000
 
-write_data fell24.data
+
+write_data fell24-2.data
 
 
 

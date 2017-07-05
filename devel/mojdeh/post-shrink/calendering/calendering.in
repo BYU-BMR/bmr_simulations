@@ -21,8 +21,9 @@ variable 		   visc_mix3     equal (${visc_CBD}+${visc_solvent})/2.0
 group              cbd type 1 
 group			   active type 3
 group              slurry type 1 3 
-group              bc type 4 5
+group              fixed_wall type 4
 group			   moving_wall type 5
+group              bc type 4 5
 
 pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater/morris
 pair_coeff         * * sph/taitwater/morris 0.93 ${c} ${visc_CBD} ${h}

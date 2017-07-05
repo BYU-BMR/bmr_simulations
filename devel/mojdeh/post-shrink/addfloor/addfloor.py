@@ -16,7 +16,7 @@ wall_type = 5
 def appendLine(wallid,atomType,x,y,z):
 	linesToWrite.append(wallStr % (wallid,molID,atomType,x,y,z))
 
-readinFile = "finished_npt_shrink_23.data"
+readinFile = "semifin_npt_shrink7_27.data"
 preparedFile = "readry.data"
 
 copyfile(readinFile,preparedFile)

@@ -4,7 +4,7 @@ import numpy as np
 import random, math, copy
 
 class DatafileGenerator():
-    newFileName = "longbox.data"
+    newFileName = "test.data"
     positionLines = []
 
     # data string containing molecule ID, type, dia, rho, x, y, z, 0 0 0 
@@ -24,9 +24,9 @@ class DatafileGenerator():
     activecount = 0
 
     x0 = 0.0
-    x1 = scale*50*dia
+    x1 = scale*100*dia
     y0 = 0.0
-    y1 = scale*50*dia
+    y1 = scale*100*dia
     z0 = 0
     z1 = scale*300*dia
     

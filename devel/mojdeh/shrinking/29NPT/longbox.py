@@ -18,17 +18,17 @@ class DatafileGenerator():
     cbd_type,active_type,solvent_type,wall_type = 1,2,3,4
 
     scale = 1.00
-
+    activecount_multiplier = 56
     solventcount = 0
     cbdcount = 0
     activecount = 0
 
     x0 = 0.0
-    x1 = scale*30*dia
+    x1 = scale*50*dia
     y0 = 0.0
-    y1 = scale*30*dia
+    y1 = scale*50*dia
     z0 = 0
-    z1 = scale*150*dia
+    z1 = scale*300*dia
     
     
     ID = 0
@@ -59,7 +59,7 @@ class DatafileGenerator():
 
         
 
-        vertexA = (0,zlen*0.05/2)
+        vertexA = (0,zlen*0.03/2)
         vertexB = (xlen,zlen*0.05/2)
 
         
@@ -89,21 +89,19 @@ class DatafileGenerator():
         zl = min(z,z2)
         zh = max(z,z2)
         radius = self.act_dia/2
-        for yi in np.arange(yl,yh-self.dia,self.dia*5):
-            for zi in np.arange(zl,zh-self.dia,self.dia*5):
-                for xi in np.arange(xl,xh-self.dia*2,self.dia*5):
-                    val = random.randint(0,87)
-                    if val >= 3 and val < 17:
+        for yi in np.arange(yl+self.dia*3,yh-self.dia,self.dia*7):
+            for zi in np.arange(zl--self.dia*5,zh-self.dia*7,self.dia*7):
+                for xi in np.arange(xl+self.dia*3,xh-self.dia*2,self.dia*7):
+                    val = random.randint(0,278)
+                    if val == 0:
                         self.activecount += 1
-                        value = random.randint(0,2)
-                        if value == 0:
-                            self.drawRaspberry(xi,yi,zi,radius)
+                        self.drawRaspberry(xi,yi,zi,radius)
                         
-                    elif val >= 17 and val < 33:
+                    elif val >= 1 and val < 45:
                         self.cbdcount += 1
                         atom_type = self.cbd_type
-                        self.appendLine(atom_type,xi+self.dia*3/2,yi+self.dia/2,zi+self.dia/2)
-                    else:
+                        self.appendLine(atom_type,xi+self.dia*5/2,yi+self.dia/2,zi+self.dia/2)
+                    elif val >= 46 and val < 279:
                         self.solventcount += 1
                         atom_type = self.solvent_type
                         self.appendLine(atom_type,xi+self.dia*1/2,yi+self.dia/2,zi+self.dia/2)
@@ -214,7 +212,7 @@ class DatafileGenerator():
             for line in particleLines:
                 if line.split()[2] == str(self.active_type):
                     activeParticleLines.append(line)
-            print("Active particles:", len(activeParticleLines)*(3/4))
+            print("Active particles:", len(activeParticleLines))
             minDistance = self.dia**2
             for i in range(int(x_range)):
                 for j in range(int(y_range)):
@@ -267,7 +265,7 @@ class DatafileGenerator():
         self.molID += 1
         print("molID for wall is:", self.molID)
         length = math.sqrt((x2-x)**2 + (z2-z)**2)
-        numPoints = math.ceil(length/(self.dia*1))
+        numPoints = math.ceil(length/(self.dia*3))
         delta_x = (x2-x)/numPoints
         delta_z = (z2-z)/numPoints
         for i in range(numPoints):
@@ -297,7 +295,7 @@ class DatafileGenerator():
         for xi in np.arange(x-radius,x+radius,self.dia):
             for yi in np.arange(y-radius,y+radius,self.dia):
                 for zi in np.arange(z-radius,z+radius,self.dia):
-                    if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) < radius**2:
+                    if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) < radius**1.8:
                         #if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) > radius**1:  # making hollow
                             self.appendLine(self.active_type,xi,yi,zi)
 
@@ -375,13 +373,15 @@ class DatafileGenerator():
         self.appendLine(self.active_type,x+self.dia/2,y,z)
 
     def writeFile(self):
+
+        true_activecount = self.activecount*self.activecount_multiplier
         print("Number of CBD particles =",self.cbdcount)
         print("Number of Solvent particles =",self.solventcount)
-        print("Number of Active Particles =", self.activecount)
+        print("Number of Active Particles =", true_activecount)
 
-        volact = self.activecount/(self.cbdcount+self.solventcount+self.activecount)
-        volcbd = self.cbdcount/(self.cbdcount+self.solventcount+self.activecount)
-        volsol = self.solventcount/(self.cbdcount+self.solventcount+self.activecount)
+        volact = true_activecount/(self.cbdcount+self.solventcount+true_activecount)
+        volcbd = self.cbdcount/(self.cbdcount+self.solventcount+true_activecount)
+        volsol = self.solventcount/(self.cbdcount+self.solventcount+true_activecount)
 
         print("Volume fraction of CBD particles =",volcbd)
         print("Volume fraction of Solvent particles =",volsol)

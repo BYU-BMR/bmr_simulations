@@ -7,6 +7,7 @@ wallStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
 #wallStr = "%d %d %d %f %f %f\n"
 
 atomsline = 2
+m_wall = 3.72
 walldia = 2
 ID = 0
 wallmolID = 200
@@ -15,7 +16,7 @@ wall_type = 5
 def appendLine(wallid,atomType,x,y,z):
 	linesToWrite.append(wallStr % (wallid,molID,atomType,x,y,z))
 
-readinFile = "finished_npt_shrink24.data"
+readinFile = "semifin_npt_shrink7_27.data"
 preparedFile = "readry.data"
 
 copyfile(readinFile,preparedFile)
@@ -48,10 +49,10 @@ with open(readinFile,"r") as inFile:
 			xlo = float(xline.split()[0])
 			yhi = float(yline.split()[1])
 			ylo = float(yline.split()[0])
-			zlo = float(zline.split()[0]) - 2*walldia
+			zlo = float(zline.split()[0]) - 10*walldia
 			zhi = float(zline.split()[1])
 			
-			plateheight = zlo + walldia
+			plateheight = zlo + 3*walldia
 			platelen = float(xhi) - float(xlo)
 			
 			vertex1 = (0,plateheight)
@@ -78,7 +79,8 @@ with open(readinFile,"r") as inFile:
 		# Go back and correct number of atoms
 		linesToWrite[atomsline] = str(int(atomCount)) + " atoms\n"
 		linesToWrite[7] = str(zlo) + " " + str(zhi) + " zlo" + " zhi\n"
-
+		linesToWrite[14] = "4 "+ str(m_wall) + "\n"
+		
 		for line in linesToWrite:
 			outFile.write(line)
 

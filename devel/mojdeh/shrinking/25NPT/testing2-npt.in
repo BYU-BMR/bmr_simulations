@@ -6,7 +6,7 @@ units              micro
 #boundary 		   p p f
 read_data          longbox.data
 
-variable		   trial	equal 3
+variable		   trial	equal 25
 
 
 variable           h equal 2.0
@@ -336,7 +336,6 @@ run 50000
 unfix cool19
 ######################
 fix npt_method20 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
-run 100000
 variable slurry_height_20 equal bound(slurry,zmax)
 
 print ${slurry_height_20}
@@ -348,6 +347,77 @@ fix cool20 all nvt temp 40000 40000 300
 run 50000
 unfix cool20
 ############
+
+######################
+fix npt_method21 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
+variable slurry_height_21 equal bound(slurry,zmax)
+
+print ${slurry_height_21}
+write_data semifin_npt_shrink21_${trial}.data
+
+unfix npt_method21
+
+fix cool21 all nvt temp 40000 40000 300
+run 50000
+unfix cool21
+############
+
+######################
+fix npt_method22 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
+variable slurry_height_22 equal bound(slurry,zmax)
+
+print ${slurry_height_22}
+write_data semifin_npt_shrink22_${trial}.data
+
+unfix npt_method22
+
+fix cool22 all nvt temp 40000 40000 300
+run 50000
+unfix cool22
+############
+
+######################
+fix npt_method23 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
+variable slurry_height_23 equal bound(slurry,zmax)
+
+print ${slurry_height_23}
+write_data semifin_npt_shrink23_${trial}.data
+
+unfix npt_method23
+
+fix cool23 all nvt temp 40000 40000 300
+run 50000
+unfix cool23
+############
+
+######################
+fix npt_method24 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
+variable slurry_height_24 equal bound(slurry,zmax)
+
+print ${slurry_height_24}
+write_data semifin_npt_shrink24_${trial}.data
+
+unfix npt_method24
+
+fix cool24 all nvt temp 40000 40000 300
+run 50000
+unfix cool24
+############
+
+######################
+fix npt_method25 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
+variable slurry_height_25 equal bound(slurry,zmax)
+
+print ${slurry_height_25}
+write_data semifin_npt_shrink25_${trial}.data
+
+unfix npt_method25
+
+fix cool25 all nvt temp 40000 40000 300
+run 50000
+unfix cool25
+############
+
 
 #fix npt_method2 all npt temp 4000 4000 1000.0 iso 100.0 100.0 1000.0 tloop 20
 

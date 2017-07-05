@@ -6,16 +6,18 @@ from shutil import copyfile
 wallStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
 #wallStr = "%d %d %d %f %f %f\n"
 
+
+
 atomsline = 2
 walldia = 1
 ID = 0
 wallmolID = 200
-wall_type = 5
+wall_type = 6
 
 def appendLine(wallid,atomType,x,y,z):
 	linesToWrite.append(wallStr % (wallid,molID,atomType,x,y,z))
 
-readinFile = "dried_piece.data"
+readinFile = "driedfall24_6.data"
 preparedFile = "calendering.data"
 
 copyfile(readinFile,preparedFile)

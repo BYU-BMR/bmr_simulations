@@ -24,11 +24,11 @@ class DatafileGenerator():
     activecount = 0
 
     x0 = 0.0
-    x1 = scale*30*dia
+    x1 = scale*50*dia
     y0 = 0.0
-    y1 = scale*30*dia
+    y1 = scale*50*dia
     z0 = 0
-    z1 = scale*150*dia
+    z1 = scale*300*dia
     
     
     ID = 0
@@ -59,7 +59,7 @@ class DatafileGenerator():
 
         
 
-        vertexA = (0,zlen*0.05/2)
+        vertexA = (0,zlen*0.03/2)
         vertexB = (xlen,zlen*0.05/2)
 
         
@@ -89,9 +89,9 @@ class DatafileGenerator():
         zl = min(z,z2)
         zh = max(z,z2)
         radius = self.act_dia/2
-        for yi in np.arange(yl,yh-self.dia,self.dia*5):
-            for zi in np.arange(zl,zh-self.dia,self.dia*5):
-                for xi in np.arange(xl,xh-self.dia*2,self.dia*5):
+        for yi in np.arange(yl+self.dia*3,yh-self.dia,self.dia*7):
+            for zi in np.arange(zl--self.dia*5,zh-self.dia*7,self.dia*7):
+                for xi in np.arange(xl+self.dia*3,xh-self.dia*2,self.dia*7):
                     val = random.randint(0,87)
                     if val >= 3 and val < 17:
                         self.activecount += 1
@@ -102,7 +102,7 @@ class DatafileGenerator():
                     elif val >= 17 and val < 33:
                         self.cbdcount += 1
                         atom_type = self.cbd_type
-                        self.appendLine(atom_type,xi+self.dia*3/2,yi+self.dia/2,zi+self.dia/2)
+                        self.appendLine(atom_type,xi+self.dia*5/2,yi+self.dia/2,zi+self.dia/2)
                     else:
                         self.solventcount += 1
                         atom_type = self.solvent_type
@@ -267,7 +267,7 @@ class DatafileGenerator():
         self.molID += 1
         print("molID for wall is:", self.molID)
         length = math.sqrt((x2-x)**2 + (z2-z)**2)
-        numPoints = math.ceil(length/(self.dia*1))
+        numPoints = math.ceil(length/(self.dia*3))
         delta_x = (x2-x)/numPoints
         delta_z = (z2-z)/numPoints
         for i in range(numPoints):
@@ -297,7 +297,7 @@ class DatafileGenerator():
         for xi in np.arange(x-radius,x+radius,self.dia):
             for yi in np.arange(y-radius,y+radius,self.dia):
                 for zi in np.arange(z-radius,z+radius,self.dia):
-                    if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) < radius**2:
+                    if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) < radius**1.8:
                         #if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) > radius**1:  # making hollow
                             self.appendLine(self.active_type,xi,yi,zi)
 

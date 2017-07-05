@@ -6,7 +6,7 @@ units              micro
 #boundary 		   p p f
 read_data          longbox.data
 
-variable		   trial	equal 3
+variable		   trial	equal 26
 
 
 variable           h equal 2.0
@@ -84,7 +84,7 @@ print ${slurry_height_1}
 write_data semifin_npt_shrink1_${trial}.data
 unfix npt_method1 
 fix cool1 all nvt temp 40000 40000 300
-run 50000
+run 5000
 unfix cool1
 variable slurry_height_1a equal bound(slurry,zmax)
 print ${slurry_height_1a}
@@ -98,7 +98,7 @@ write_data semifin_npt_shrink2_${trial}.data
 unfix npt_method2 
 fix cool2 all nvt temp 40000 40000 300
 
-run 50000
+run 5000
 unfix cool2
 ##############
 
@@ -111,7 +111,7 @@ print ${slurry_height_3}
 write_data semifin_npt_shrink3_${trial}.data
 unfix npt_method3
 fix cool3 all nvt temp 40000 40000 300
-run 50000
+run 5000
 unfix cool3
 ##############
 
@@ -123,7 +123,7 @@ print ${slurry_height_4}
 write_data semifin_npt_shrink4_${trial}.data
 unfix npt_method4 
 fix cool4 all nvt temp 40000 40000 300
-run 50000
+run 5000
 unfix cool4
 ##############
 
@@ -137,7 +137,7 @@ write_data semifin_npt_shrink5_${trial}.data
 unfix npt_method5
 
 fix cool5 all nvt temp 40000 40000 300
-run 50000
+run 5000
 unfix cool5
 ##############
 
@@ -151,7 +151,7 @@ write_data semifin_npt_shrink6_${trial}.data
 unfix npt_method6
 
 fix cool6 all nvt temp 40000 40000 300
-run 50000
+run 5000
 unfix cool6
 ##############
 
@@ -165,7 +165,7 @@ write_data semifin_npt_shrink7_${trial}.data
 unfix npt_method7
 
 fix cool7 all nvt temp 40000 40000 300
-run 50000
+run 5000
 unfix cool7
 ##############
 
@@ -179,7 +179,7 @@ write_data semifin_npt_shrink8_${trial}.data
 unfix npt_method8
 
 fix cool8 all nvt temp 40000 40000 300
-run 50000
+run 5000
 unfix cool8
 ##############
 
@@ -193,7 +193,7 @@ write_data semifin_npt_shrink9_${trial}.data
 unfix npt_method9
 
 fix cool9 all nvt temp 40000 40000 300
-run 50000
+run 5000
 unfix cool9
 ##############
 
@@ -207,7 +207,7 @@ write_data semifin_npt_shrink10_${trial}.data
 unfix npt_method10
 
 fix cool10 all nvt temp 40000 40000 300
-run 50000
+run 5000
 unfix cool10
 
 ##############
@@ -222,7 +222,7 @@ write_data semifin_npt_shrink11_${trial}.data
 unfix npt_method11
 
 fix cool11 all nvt temp 40000 40000 300
-run 50000
+run 5000
 unfix cool11
 
 ##############
@@ -236,7 +236,7 @@ write_data semifin_npt_shrink12_${trial}.data
 unfix npt_method12
 
 fix cool12 all nvt temp 40000 40000 300
-run 50000
+run 5000
 unfix cool12
 ##############
 
@@ -250,7 +250,7 @@ write_data semifin_npt_shrink13_${trial}.data
 unfix npt_method13
 
 fix cool13 all nvt temp 40000 40000 300
-run 50000
+run 5000
 unfix cool13
 
 ##############
@@ -264,7 +264,7 @@ write_data semifin_npt_shrink14_${trial}.data
 unfix npt_method14
 
 fix cool14 all nvt temp 40000 40000 300
-run 50000
+run 5000
 unfix cool14
 
 ##############
@@ -278,7 +278,7 @@ write_data semifin_npt_shrink15_${trial}.data
 unfix npt_method15
 
 fix cool15 all nvt temp 40000 40000 300
-run 50000
+run 5000
 unfix cool15
 
 ##############
@@ -292,7 +292,7 @@ write_data semifin_npt_shrink16_${trial}.data
 unfix npt_method16
 
 fix cool16 all nvt temp 40000 40000 300
-run 50000
+run 5000
 unfix cool16
 ############
 
@@ -306,7 +306,7 @@ write_data semifin_npt_shrink17_${trial}.data
 unfix npt_method17
 
 fix cool17 all nvt temp 40000 40000 300
-run 50000
+run 5000
 unfix cool17
 ################
 fix npt_method18 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
@@ -319,7 +319,7 @@ write_data semifin_npt_shrink18_${trial}.data
 unfix npt_method18
 
 fix cool18 all nvt temp 40000 40000 300
-run 50000
+run 5000
 unfix cool18
 ################
 fix npt_method19 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
@@ -332,11 +332,10 @@ write_data semifin_npt_shrink19_${trial}.data
 unfix npt_method19
 
 fix cool19 all nvt temp 40000 40000 300
-run 50000
+run 5000
 unfix cool19
 ######################
 fix npt_method20 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
-run 100000
 variable slurry_height_20 equal bound(slurry,zmax)
 
 print ${slurry_height_20}
@@ -345,9 +344,80 @@ write_data semifin_npt_shrink20_${trial}.data
 unfix npt_method20
 
 fix cool20 all nvt temp 40000 40000 300
-run 50000
+run 5000
 unfix cool20
 ############
+
+######################
+fix npt_method21 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
+variable slurry_height_21 equal bound(slurry,zmax)
+
+print ${slurry_height_21}
+write_data semifin_npt_shrink21_${trial}.data
+
+unfix npt_method21
+
+fix cool21 all nvt temp 40000 40000 300
+run 5000
+unfix cool21
+############
+
+######################
+fix npt_method22 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
+variable slurry_height_22 equal bound(slurry,zmax)
+
+print ${slurry_height_22}
+write_data semifin_npt_shrink22_${trial}.data
+
+unfix npt_method22
+
+fix cool22 all nvt temp 40000 40000 300
+run 5000
+unfix cool22
+############
+
+######################
+fix npt_method23 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
+variable slurry_height_23 equal bound(slurry,zmax)
+
+print ${slurry_height_23}
+write_data semifin_npt_shrink23_${trial}.data
+
+unfix npt_method23
+
+fix cool23 all nvt temp 40000 40000 300
+run 5000
+unfix cool23
+############
+
+######################
+fix npt_method24 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
+variable slurry_height_24 equal bound(slurry,zmax)
+
+print ${slurry_height_24}
+write_data semifin_npt_shrink24_${trial}.data
+
+unfix npt_method24
+
+fix cool24 all nvt temp 40000 40000 300
+run 5000
+unfix cool24
+############
+
+######################
+fix npt_method25 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
+variable slurry_height_25 equal bound(slurry,zmax)
+
+print ${slurry_height_25}
+write_data semifin_npt_shrink25_${trial}.data
+
+unfix npt_method25
+
+fix cool25 all nvt temp 40000 40000 300
+run 5000
+unfix cool25
+############
+
 
 #fix npt_method2 all npt temp 4000 4000 1000.0 iso 100.0 100.0 1000.0 tloop 20
 

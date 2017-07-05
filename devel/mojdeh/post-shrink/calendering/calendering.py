@@ -12,7 +12,7 @@ atomsline = 2
 walldia = 1
 ID = 0
 wallmolID = 200
-wall_type = 5
+wall_type = 6
 
 def appendLine(wallid,atomType,x,y,z):
 	linesToWrite.append(wallStr % (wallid,molID,atomType,x,y,z))

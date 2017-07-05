@@ -1,29 +1,30 @@
+
 atom_style         meso-molecular
 dimension          3
 newton             on
 units              micro
-read_data          shrink_1_wall.data
+read_data          semifin_npt_shrink6_3.data
 
-variable		   trial	equal 1
+variable trial equal 3
 
 variable           hsol     equal .5
 variable           hcbd     equal .5
 variable           hact     equal 3.0
-variable		   hwall    equal 2.0
 variable           hcbdsol  equal ((${hcbd}+${hsol})/2)
 variable           hcbdact  equal ((${hcbd}+${hact})/2)
 variable           hsolact  equal ((${hsol}+${hact})/2)
-variable		   hactwall equal ((${hact}+${hwall})/2)
 variable           c     equal 100.0             # soundspeed for Tait's EOS
 variable           dt    equal 0.0001
 variable		   visc  equal 2357.8			 # viscosity in g/m*s (avg visc should be 2.3578 kg/m*s)
 
 group              cbd type 1 
+group			   active type 3
 group			   solvent type 2
-group  			   active type 3
-group			   wall type 4
-group			   slurry type 1 2 3 
-group 			   bc type 4
+group  			   cbd_solvent type 1 2
+group      		   cbd_active type 1 3
+
+group              slurry type 1 2 3
+group              bc type 4
 
 pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater/morris
 pair_coeff		   * * sph/taitwater/morris 2.249 ${c} ${visc} 1.5
@@ -35,8 +36,6 @@ pair_coeff         2 2 sph/taitwater/morris 1.028 ${c} ${visc} ${hsol}
 
 pair_coeff         2 3 sph/taitwater/morris 2.6695 ${c} ${visc} ${hsolact}
 pair_coeff         3 3 sph/taitwater/morris 4.79 ${c} ${visc} ${hact}
-pair_coeff		   3 4 sph/taitwater/morris 4.9 ${c} ${visc} ${hactwall}
-pair_coeff		   4 4 sph/taitwater/morris 5.0 ${c} ${visc} ${hwall}
 pair_coeff         * * sph/rhosum 1.5
 
 pair_coeff         1 1 sph/rhosum 0.5
@@ -46,47 +45,37 @@ pair_coeff         1 3 sph/rhosum ${hcbdact}
 pair_coeff         2 2 sph/rhosum 1.0
 pair_coeff         2 3 sph/rhosum ${hsolact}
 pair_coeff         3 3 sph/rhosum 1.0
-pair_coeff		   3 4 sph/rhosum 0.5
-pair_coeff		   4 4 sph/rhosum 1.0
 
 
-
-
-timestep    ${dt}
+timestep 	      	${dt}
 
 # time-integrate position, velocities, internal energy and density of cbd particles
 fix                integrate_slurry_fix slurry meso
 # time-integrate only internal energy and density of boundary particles
 fix                integrate_bc_fix bc meso/stationary
 
-dump               dump_id all custom 10000 mix_${trial}.lammpstrj id type mol xs ys zs
-dump_modify        dump_id first yes
-dump_modify 	   dump_id sort 3
 
-#compute thermo_temp slurry temp
-#thermo_modify temp slurry
-uncompute thermo_temp
-compute thermo_temp slurry temp
-thermo             1000
+# dump files
+dump               dump_id all custom 10000 More_Shrink_${trial}.lammpstrj id type mol xs ys zs 
+dump_modify        dump_id first yes
+
+dump_modify 	   dump_id sort 3
+thermo             10000
 thermo_style       custom step time temp press density lx ly lz
+
 thermo_modify      norm no
 
 neigh_modify       every 5 delay 0 check no
 variable           skin equal 0.3*2
 neighbor           ${skin} bin # set Verlet list skin distance
 
-variable g equal 9.8/100
-fix add_gravity slurry gravity ${g} vector 0 0 -1  # Acceleration is micrometers/(microseconds)^2
 
-fix cool slurry langevin 3000 3000 10 13
+fix npt_method16 all npt temp 50000000 50000000 1000.0 iso 100.0 2000.0 10.0 tloop 20
+run 100000
 
-run 10000000
-unfix add_gravity
-variable g2 equal 9.8/100000
-fix add_gravity2 slurry gravity ${g2} vector 0 0 -1
-run 3000000
+write_data semifin_Shrunk_${trial}.data
 
-write_data mix_${trial}.data
+fix cool4 all nvt temp 40000 40000 300
+run 50000
 
-
-
+write_data Shrunk_${trial}.data

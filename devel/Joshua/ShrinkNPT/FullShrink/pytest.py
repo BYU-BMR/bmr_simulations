@@ -25,6 +25,9 @@ class DatafileGenerator():
 
     scale = 1.00
 
+    active_multiplier = 343 #how many times bigger active is than a CBD and Solvent particle
+
+    activecount = 0
     solventcount = 0
     cbdcount = 0
 
@@ -68,16 +71,19 @@ class DatafileGenerator():
         for yi in np.arange(yl,yh-self.dia,self.dia*2):
             for zi in np.arange(zl,zh-self.dia,self.dia*2):
                 for xi in np.arange(xl,xh-self.dia*2,self.dia*2):
-                    val = random.randint(0,90)
-                    if val >= 17 and val < 18:
+                    val = random.randint(0,1510)
+                    if val == 0:
                         self.molID += 1
+                        self.activecount += 1
                         atom_type = self.active_type
                         self.appendLine(atom_type,xi+self.dia*1/2,yi+self.dia/2,zi+self.dia/2)
 
-                    elif val >= 18 and val < 36:
+                    elif val >= 1 and val < 251:
+                        self.cbdcount += 1
                         atom_type = self.cbd_type
                         self.appendLine(atom_type,xi+self.dia*1/2,yi+self.dia/2,zi+self.dia/2)
                     else:
+                        self.solventcount += 1
                         atom_type = self.solvent_type
                         self.appendLine(atom_type,xi+self.dia*1/2,yi+self.dia/2,zi+self.dia/2)
 
@@ -93,8 +99,20 @@ class DatafileGenerator():
 
     
     def writeFile(self):
+        True_activecount = self.activecount*self.active_multiplier
+
+        print("Number of Active particles =",True_activecount)
         print("Number of CBD particles =",self.cbdcount)
         print("Number of Solvent particles =",self.solventcount)
+        
+        Vol_Act  = True_activecount/(True_activecount+self.cbdcount+self.solventcount)
+        Vol_CBD  = self.cbdcount/(True_activecount+self.cbdcount+self.solventcount)
+        Vol_Solv = self.solventcount/(True_activecount+self.cbdcount+self.solventcount)
+
+        print("Volume Fraction of Active =",Vol_Act)
+        print("Volume Fraction of CBD =",Vol_CBD)
+        print("Volume Fraction of Solvent =",Vol_Solv)
+
         print("Writing new file: %s" % self.newFileName)
 
         xmin = self.x0

@@ -333,7 +333,7 @@ class DatafileGenerator():
         self.molID += 1
         spacer = self.dia/2
         multiplier = 10
-        for xi in np.arange(x-radius,x+radius,self.dia/multiplier):
+        for xi in np.arange(x-radius,x+3*radius,self.dia/multiplier):
             for yi in np.arange(y-radius,y+radius,self.dia/multiplier):
                 for zi in np.arange(z-radius+spacer,z+radius-spacer,self.dia/multiplier):
                     if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) < radius**2:
@@ -345,7 +345,7 @@ class DatafileGenerator():
         thickness = (self.dia/2)*1
         for xi in np.arange(x-radius,x+radius,self.dia):
             for yi in np.arange(y-radius,y+radius,self.dia):
-                for zi in np.arange(z-thickness,z+thickness,self.dia):
+                for zi in np.arange(z-thickness,z+2*thickness,self.dia):
                     if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) < radius**1.5:
                         self.appendLine(self.active_type,xi,yi,zi)
 

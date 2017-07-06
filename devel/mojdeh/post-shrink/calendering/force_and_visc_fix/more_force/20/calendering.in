@@ -100,7 +100,7 @@ run 1000
 
 variable wall_speed equal 0.04
 variable surface_speed equal abs(${wall_speed}*3)
-fix calendering moving_wall move linear  0.0 0.0 -50
+fix calendering moving_wall move linear  0.0 0.0 -20
 
 
 

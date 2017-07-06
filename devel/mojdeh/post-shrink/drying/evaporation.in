@@ -3,9 +3,9 @@ dimension          3
 newton             on
 units              micro
 
-read_data          30_fell.data
+read_data          33_fell.data
 
-variable		   trial	equal 30
+variable		   trial	equal 33
 
 variable           h         equal 2.0
 variable           h_act     equal 3.0

@@ -2,7 +2,7 @@ atom_style         meso-molecular
 dimension          3
 newton             on
 units              micro
-read_data          readry33_2.data
+read_data          readry.data
 
 
 
@@ -63,7 +63,7 @@ fix add_gravity slurry gravity ${g} vector 0 0 -1  # Acceleration is micrometers
 
 
 
-run 74000
+run 740000
 
 
 write_data longboxfall.data

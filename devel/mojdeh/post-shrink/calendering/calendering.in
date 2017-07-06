@@ -24,8 +24,8 @@ variable 		   visc_mix3     equal (${visc_CBD}+${visc_solvent})/2.0
 group              cbd type 1 
 group			   active type 2
 group              slurry type 1 2 
-group              fixed_wall type 6
-group			   moving_wall type 5
+group              fixed_wall type 5
+group			   moving_wall type 6
 group              bc type 5 6
 
 pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater/morris
@@ -47,6 +47,7 @@ timestep    ${dt}
 
 
 fix make_rigid active rigid molecule
+
 
 
 # time-integrate position, velocities, internal energy and density of cbd particles
@@ -100,14 +101,15 @@ run 30000
 
 variable wall_speed equal 0.04
 variable surface_speed equal abs(${wall_speed}*3)
+
 fix calendering moving_wall move linear  0.0 0.0 -10
 
 
-variable zdisplace equal 50
-variable zvelocity equal -10
-#fix calendering moving_wall move variable NULL NULL zdisplace NULL NULL zvelocity
-#fix pushing slurry addforce 0 0 -1000
 
+
+variable before_height equal bound(slurry,zmax)
+
+print ${before_height}
 
 
 run 50000
@@ -115,18 +117,93 @@ run 50000
 unfix calendering 
 
 fix rest moving_wall move linear  0.0 0.0 15
-delete_atoms group	moving_wall	
+
+
+####################
+variable rest_height_1 equal bound(slurry,zmax)
+
+print ${rest_height_1}
 
 run 50000
 
+################
+
+variable rest_height_2 equal bound(slurry,zmax)
+
+print ${rest_height_2}
+
+run 50000
+
+################
+
+variable rest_height_3 equal bound(slurry,zmax)
+
+print ${rest_height_3}
+
+run 50000
+
+################
+variable rest_height_4 equal bound(slurry,zmax)
+
+print ${rest_height_4}
+
+run 50000
+
+################
+variable rest_height_5 equal bound(slurry,zmax)
+
+print ${rest_height_5}
+
+run 50000
+
+################
+
+variable rest_height_6 equal bound(slurry,zmax)
+
+print ${rest_height_6}
+
+run 50000
+
+################
+variable rest_height_7 equal bound(slurry,zmax)
+
+print ${rest_height_7}
+
+run 50000
+
+################
+variable rest_height_8equal bound(slurry,zmax)
+
+print ${rest_height_8}
+
+run 50000
+
+################
+variable rest_height_9 equal bound(slurry,zmax)
+
+print ${rest_height_9}
+
+run 50000
+
+################
+
+variable rest_height_10 equal bound(slurry,zmax)
+
+print ${rest_height_10}
+
+run 50000
+
+################
+
 #unfix pushing
+delete_atoms group	moving_wall	
+run 5000
+
+variable finished_height} equal bound(slurry,zmax)
+
+print ${finished_height}
 
 
 #delete_atoms group	moving_wall
 
-write_data calendered__${trial}.data
-
-
-
-
-
+write_data thermo_9000_calendered__${trial}.data

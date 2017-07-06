@@ -4,7 +4,7 @@ from shutil import copyfile
 
 #data string containing molecule ID, type, walldia, rho, x, y, z, 0 0 0
 wallStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
-#wallStr = "%d %d %d %f %f %f\n"
+#allStr = "%d %d %d %f %f %f\n"
 
 atomsline = 2
 m_wall = 3.72
@@ -16,7 +16,7 @@ wall_type = 5
 def appendLine(wallid,atomType,x,y,z):
 	linesToWrite.append(wallStr % (wallid,molID,atomType,x,y,z))
 
-readinFile = "semifin_npt_shrink7_27.data"
+readinFile = "finished_npt_shrink_33.data"
 preparedFile = "readry.data"
 
 copyfile(readinFile,preparedFile)
@@ -49,7 +49,7 @@ with open(readinFile,"r") as inFile:
 			xlo = float(xline.split()[0])
 			yhi = float(yline.split()[1])
 			ylo = float(yline.split()[0])
-			zlo = float(zline.split()[0]) - 10*walldia
+			zlo = float(zline.split()[0]) - 5*walldia
 			zhi = float(zline.split()[1])
 			
 			plateheight = zlo + 3*walldia

@@ -4,12 +4,12 @@ import numpy as np
 import random, math, copy
 
 class DatafileGenerator():
-    newFileName = "disc.data"
+    newFileName = "test.data"
     positionLines = []
 
     # data string containing molecule ID, type, dia, rho, x, y, z, 0 0 0 
-    #cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
-    cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
+    cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
+    #cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
 
     m_cbd = 3.72
     dia = 2.0
@@ -95,7 +95,7 @@ class DatafileGenerator():
                     val = random.randint(0,150)
                     if val == 0:
                         self.activecount += 1
-                        self.drawDisc(xi,yi,zi,radius)
+                        self.drawRaspberry(xi,yi,zi,radius)
                         
                     elif val >= 1 and val < 23:
                         self.cbdcount += 1
@@ -333,7 +333,7 @@ class DatafileGenerator():
         self.molID += 1
         spacer = self.dia/2
         multiplier = 10
-        for xi in np.arange(x-radius,x+3*radius,self.dia/multiplier):
+        for xi in np.arange(x-radius,x+radius,self.dia/multiplier):
             for yi in np.arange(y-radius,y+radius,self.dia/multiplier):
                 for zi in np.arange(z-radius+spacer,z+radius-spacer,self.dia/multiplier):
                     if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) < radius**2:
@@ -345,8 +345,8 @@ class DatafileGenerator():
         thickness = (self.dia/2)*1
         for xi in np.arange(x-radius,x+radius,self.dia):
             for yi in np.arange(y-radius,y+radius,self.dia):
-                for zi in np.arange(z-thickness,z+2*thickness,self.dia):
-                    if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) < radius**1.5:
+                for zi in np.arange(z-thickness,z+thickness,self.dia):
+                    if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) < radius**2:
                         self.appendLine(self.active_type,xi,yi,zi)
 
     def drawEllipsoid(self,x,y,z,rx,ry,rz):

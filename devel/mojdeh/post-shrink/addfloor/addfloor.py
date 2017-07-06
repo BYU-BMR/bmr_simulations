@@ -49,8 +49,8 @@ with open(readinFile,"r") as inFile:
 			xlo = float(xline.split()[0])
 			yhi = float(yline.split()[1])
 			ylo = float(yline.split()[0])
-			zlo = float(zline.split()[0]) - 5*walldia
-			zhi = float(zline.split()[1])
+			zlo = float(zline.split()[0]) - 3*walldia
+			zhi = float(zline.split()[1]) + 5*walldia
 			
 			plateheight = zlo + 3*walldia
 			platelen = float(xhi) - float(xlo)

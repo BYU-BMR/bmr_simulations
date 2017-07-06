@@ -53,6 +53,7 @@ neighbor           ${skin} bin # set Verlet list skin distance
 #change_box all boundary p p f
 fix make_rigid active rigid molecule
 
+run 30000
 variable g equal 9.8/100
 
 

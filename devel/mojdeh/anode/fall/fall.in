@@ -2,7 +2,7 @@ atom_style         meso-molecular
 dimension          3
 newton             on
 units              micro
-read_data          readry.data
+read_data          moredensewall.data
 
 
 

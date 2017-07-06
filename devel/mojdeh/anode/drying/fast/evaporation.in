@@ -3,7 +3,7 @@ dimension          3
 newton             on
 units              micro
 
-read_data          longboxfall.data
+read_data          moredense_fell.data
 
 
 variable           h         equal 2.0

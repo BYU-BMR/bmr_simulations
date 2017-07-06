@@ -70,7 +70,7 @@ with open(readinFile,"r") as inFile:
 				xi = x + i*delta_x
 				zi = z
 				y1 = float(yhi) - walldia/2
-				for yi in np.arange(ylo,yhi,walldia):
+				for yi in np.arange(ylo,yhi,walldia/3):
 					ID += 1
 					atomCount += 1
 					appendLine(ID,atomType,xi,yi,zi)

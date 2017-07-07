@@ -3,7 +3,7 @@ dimension          3
 newton             on
 units              micro
 
-read_data          moredense_fell.data
+read_data          densefell.data
 
 
 variable           h         equal 2.0
@@ -103,4 +103,4 @@ fix evap_upper_3 solvent evaporate 1000 100 evap_region_upper_3 139
 
 run 3000000
 
-write_data fast_dried_long33.data
+write_data fast_dried_dense33.data

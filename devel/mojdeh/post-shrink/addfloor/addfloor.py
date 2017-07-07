@@ -50,7 +50,7 @@ with open(readinFile,"r") as inFile:
 			yhi = float(yline.split()[1])
 			ylo = float(yline.split()[0])
 			zlo = float(zline.split()[0]) - 3*walldia
-			zhi = float(zline.split()[1]) + 5*walldia
+			zhi = float(zline.split()[1]) 
 			
 			plateheight = zlo + 3*walldia
 			platelen = float(xhi) - float(xlo)
@@ -70,7 +70,7 @@ with open(readinFile,"r") as inFile:
 				xi = x + i*delta_x
 				zi = z
 				y1 = float(yhi) - walldia/2
-				for yi in np.arange(ylo,yhi,walldia):
+				for yi in np.arange(ylo,yhi,walldia/4):
 					ID += 1
 					atomCount += 1
 					appendLine(ID,atomType,xi,yi,zi)

@@ -17,7 +17,7 @@ def appendLine(wallid,atomType,x,y,z):
 	linesToWrite.append(wallStr % (wallid,molID,atomType,x,y,z))
 
 readinFile = "finished_disc_shrink_33.data"
-preparedFile = "readry.data"
+preparedFile = "densewall.data"
 
 copyfile(readinFile,preparedFile)
 
@@ -70,7 +70,7 @@ with open(readinFile,"r") as inFile:
 				xi = x + i*delta_x
 				zi = z
 				y1 = float(yhi) - walldia/2
-				for yi in np.arange(ylo,yhi,walldia/3):
+				for yi in np.arange(ylo,yhi,walldia/4):
 					ID += 1
 					atomCount += 1
 					appendLine(ID,atomType,xi,yi,zi)

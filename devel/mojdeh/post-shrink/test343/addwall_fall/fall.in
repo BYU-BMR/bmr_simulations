@@ -2,7 +2,7 @@ atom_style         meso-molecular
 dimension          3
 newton             on
 units              micro
-read_data          dense_wall.data
+read_data          343fall.data
 
 
 
@@ -58,12 +58,12 @@ fix cool slurry langevin 100 100 1 13
 
 run 30000
 
-variable g equal 9.8/100
+variable g equal 9.8/10
 fix add_gravity slurry gravity ${g} vector 0 0 -1  # Acceleration is micrometers/(microseconds)^2
 
 
 
-run 740000
+run 800000
 
 
 write_data densewall_fell.data

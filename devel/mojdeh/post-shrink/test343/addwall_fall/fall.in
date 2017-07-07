@@ -64,7 +64,11 @@ fix add_gravity slurry gravity ${g} vector 0 0 -1  # Acceleration is micrometers
 
 
 run 800000
+unfix add_gravity
 
+fix more_gravity active gravity ${g} vector 0 0 -1  # 
+
+run 800000
 
 write_data densewall_fell.data
 

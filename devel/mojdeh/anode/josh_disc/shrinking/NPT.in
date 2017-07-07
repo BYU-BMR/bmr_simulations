@@ -35,6 +35,8 @@ timestep 	      	${dt}
 
 fix make_rigid active rigid molecule
 
+#run 10000
+
 # time-integrate position, velocities, internal energy and density of cbd particles
 fix                integrate_slurry_fix slurry meso
 # time-integrate only internal energy and density of boundary particles

@@ -94,7 +94,7 @@ class DatafileGenerator():
 		for yi in np.arange(yl+self.dia*3,yh-self.dia,self.dia*7):
 			for zi in np.arange(zl-self.dia*5,zh-self.dia*7,self.dia*7):
 				for xi in np.arange(xl+self.dia*3,xh-self.dia*2,self.dia*7):
-					val = random.randint(0,85)
+					val = random.randint(0,170)
 					
 					if val == 0:
 						self.activecount += 1
@@ -106,11 +106,11 @@ class DatafileGenerator():
 						else:
 							self.drawdisc3(self.active_type,xi,yi,zi)
 		   
-					elif val >= 1 and val < 14:
+					elif val >= 1 and val < 25:
 						self.cbdcount += 1
 						atom_type = self.cbd_type
 						self.appendLine(atom_type,xi+self.dia*5/2,yi+self.dia/2,zi+self.dia/2)
-					elif val >= 15 and val < 85:
+					elif val >= 25 and val < 181:
 						self.solventcount += 1
 						atom_type = self.solvent_type
 						self.appendLine(atom_type,xi+self.dia*1/2,yi+self.dia/2,zi+self.dia/2)

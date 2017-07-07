@@ -110,9 +110,9 @@ variable before_height equal bound(slurry,zmax)
 print ${before_height}
 
 
-run 50000
+run 20000
 
-fix more_gravity slurry gravity ${g} vector 0 0 -1
+#fix more_gravity slurry gravity ${g} vector 0 0 -1
 run 1000
 
 unfix calendering 
@@ -156,7 +156,6 @@ variable rest_height_5 equal bound(slurry,zmax)
 print ${rest_height_5}
 
 run 50000
-unfix rest
 
 ################
 

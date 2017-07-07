@@ -12,7 +12,7 @@ variable           h_act    	 equal 3.0
 variable 		   h_mix	     equal (${h}+${h_act})/2.0
 variable           c     	     equal 100.0             # soundspeed for Tait's EOS
 variable           dt            equal 0.00001
-variable		   visc_CBD      equal 25000			 # viscosity in g/m*s (avg visc should be 2.3578 kg/m*s)
+variable		   visc_CBD      equal 50000			 # viscosity in g/m*s (avg visc should be 2.3578 kg/m*s)
 variable 		   visc_active   equal 2357.8
 variable 		   visc_solvent  equal 2357.8
 variable 		   g             equal 9.8/100
@@ -58,7 +58,7 @@ fix                integrate_slurry_fix slurry meso
 
 fix add_gravity slurry gravity ${g} vector 0 0 -1  # Acceleration is micrometers/(microseconds)^2
 #fix fixed_temp slurry langevin 50 50 10 234 
-dump               dump_id all custom 1000 more_gravity_calendered_${trial}.lammpstrj id type x y z 
+dump               dump_id all custom 1000 more_visc_calendered_${trial}.lammpstrj id type x y z 
 dump_modify        dump_id first yes
 dump_modify 	   dump_id sort 3
 
@@ -100,7 +100,7 @@ run 30000
 
 variable wall_speed equal 0.04
 variable surface_speed equal abs(${wall_speed}*3)
-fix calendering moving_wall move linear  0.0 0.0 -20
+fix calendering moving_wall move linear  0.0 0.0 -100
 
 
 
@@ -110,9 +110,9 @@ variable before_height equal bound(slurry,zmax)
 print ${before_height}
 
 
-run 50000
+run 20000
 
-fix more_gravity slurry gravity ${g} vector 0 0 -1
+#fix more_gravity slurry gravity ${g} vector 0 0 -1
 run 1000
 
 unfix calendering 
@@ -156,7 +156,6 @@ variable rest_height_5 equal bound(slurry,zmax)
 print ${rest_height_5}
 
 run 50000
-unfix rest
 
 ################
 

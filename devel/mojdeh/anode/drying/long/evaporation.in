@@ -101,6 +101,6 @@ region evap_region_upper_3 block 0 EDGE 0 EDGE ${slurry_height_3} EDGE
 
 fix evap_upper_3 solvent evaporate 1000 10 evap_region_upper_3 139
 
-run 30000000
+run 5000000
 
-write_data dried_long__${trial}.data
+write_data dried_long_${trial}.data

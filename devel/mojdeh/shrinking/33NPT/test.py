@@ -1,10 +1,10 @@
-# Python code to extract equilibrium drop coordinates and add the dr blade
+ #Python code to extract equilibrium drop coordinates and add the dr blade
 import numpy as np
 #from PIL import Image
 import random, math, copy
 
 class DatafileGenerator():
-    newFileName = "longbox.data"
+    newFileName = "test.data"
     positionLines = []
 
     # data string containing molecule ID, type, dia, rho, x, y, z, 0 0 0 
@@ -18,15 +18,15 @@ class DatafileGenerator():
     cbd_type,active_type,solvent_type,wall_type = 1,2,3,4
 
     scale = 1.00
-    activecount_multiplier = 56
+    activecount_multiplier = 32
     solventcount = 0
     cbdcount = 0
     activecount = 0
 
     x0 = 0.0
-    x1 = scale*50*dia
+    x1 = scale*100*dia
     y0 = 0.0
-    y1 = scale*50*dia
+    y1 = scale*100*dia
     z0 = 0
     z1 = scale*300*dia
     
@@ -92,16 +92,16 @@ class DatafileGenerator():
         for yi in np.arange(yl+self.dia*3,yh-self.dia,self.dia*7):
             for zi in np.arange(zl--self.dia*5,zh-self.dia*7,self.dia*7):
                 for xi in np.arange(xl+self.dia*3,xh-self.dia*2,self.dia*7):
-                    val = random.randint(0,278)
+                    val = random.randint(0,150)
                     if val == 0:
                         self.activecount += 1
                         self.drawRaspberry(xi,yi,zi,radius)
                         
-                    elif val >= 1 and val < 45:
+                    elif val >= 1 and val < 23:
                         self.cbdcount += 1
                         atom_type = self.cbd_type
                         self.appendLine(atom_type,xi+self.dia*5/2,yi+self.dia/2,zi+self.dia/2)
-                    elif val >= 46 and val < 279:
+                    elif val >= 23 and val < 151:
                         self.solventcount += 1
                         atom_type = self.solvent_type
                         self.appendLine(atom_type,xi+self.dia*1/2,yi+self.dia/2,zi+self.dia/2)

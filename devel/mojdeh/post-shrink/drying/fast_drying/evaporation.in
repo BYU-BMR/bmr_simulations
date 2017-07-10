@@ -104,5 +104,8 @@ region evap_region_upper_3 block 0 EDGE 0 EDGE ${slurry_height_3} EDGE
 fix evap_upper_3 solvent evaporate 1000 100 evap_region_upper_3 139
 
 run 3000000
+variable slurry_height_4 equal bound(active,zmax)
+
+print ${slurry_height_4}
 
 write_data fast_dried_dense33.data

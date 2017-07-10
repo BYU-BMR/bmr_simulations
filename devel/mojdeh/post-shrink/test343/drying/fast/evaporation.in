@@ -35,7 +35,7 @@ fix                integrate_slurry_fix slurry meso
 # time-integrate only internal energy and density of boundary particles
 fix                integrate_bc_fix bc meso/stationary
 
-dump               dump_id all custom 10000 dense_long_dried_33.lammpstrj id type mol xs ys zs
+dump               dump_id all custom 10000 fast_dried_long33.lammpstrj id type mol xs ys zs
 dump_modify        dump_id first yes
 dump_modify 	   dump_id sort 3
 
@@ -71,12 +71,12 @@ print ${slurry_height}
 region evap_region_upper block 0 EDGE 0 EDGE ${slurry_height} EDGE
 region evap_region_lower block 0 EDGE 0 EDGE 0 ${slurry_height}
 
-fix evap_upper solvent evaporate 1000 10 evap_region_upper 139
-fix evap_lower solvent evaporate 10000 2 evap_region_lower 138
+fix evap_upper solvent evaporate 1000 100 evap_region_upper 139
+fix evap_lower solvent evaporate 10000 20 evap_region_lower 138
 
-#fix heat_solvent solvent langevin 100000000 100000000 10 234
+fix heat_solvent solvent langevin 100000000 100000000 10 234
 
-run 3000000
+run 300000
 
 unfix evap_upper
 
@@ -86,9 +86,9 @@ print ${slurry_height_2}
 
 region evap_region_upper_2 block 0 EDGE 0 EDGE ${slurry_height_2} EDGE
 
-fix evap_upper_2 solvent evaporate 1000 10 evap_region_upper_2 139
+fix evap_upper_2 solvent evaporate 1000 100 evap_region_upper_2 139
 
-run 3000000
+run 300000
 
 unfix evap_upper_2
 
@@ -99,9 +99,8 @@ print ${slurry_height_3}
 region evap_region_upper_3 block 0 EDGE 0 EDGE ${slurry_height_3} EDGE
 
 
-fix evap_upper_3 solvent evaporate 1000 10 evap_region_upper_3 139
+fix evap_upper_3 solvent evaporate 1000 100 evap_region_upper_3 139
 
-#run 20000000
-run 30000000
+run 3000000
 
-write_data dense_dried_long.data
+write_data fast_dried_dense33.data

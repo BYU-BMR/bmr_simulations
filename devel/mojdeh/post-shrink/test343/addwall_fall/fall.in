@@ -69,7 +69,7 @@ unfix add_gravity
 variable g equal 9.8
 fix more_gravity active gravity ${g} vector 0 0 -1  # 
 
-run 800000
+run 300000
 
 write_data densewall_fell.data
 

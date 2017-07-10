@@ -198,7 +198,7 @@ run 50000
 ################
 
 #unfix pushing
-delete_atoms group	moving_wall	
+#delete_atoms group	moving_wall	
 
 
 variable finished_height equal bound(slurry,zmax)

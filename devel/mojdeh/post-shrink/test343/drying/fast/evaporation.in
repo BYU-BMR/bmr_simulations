@@ -78,7 +78,7 @@ run 300000
 
 variable g1 equal 9.8/10
 fix add_gravity slurry gravity ${g1} vector 0 0 -1
-run 10000
+
 
 unfix evap_upper
 
@@ -94,7 +94,7 @@ run 300000
 
 variable g2 equal 9.8/100
 fix add_gravity slurry gravity ${g2} vector 0 0 -1
-run 100000
+
 
 unfix evap_upper_2
 

@@ -35,7 +35,7 @@ fix                integrate_slurry_fix slurry meso
 # time-integrate only internal energy and density of boundary particles
 fix                integrate_bc_fix bc meso/stationary
 
-dump               dump_id all custom 10000 dense_dried_33.lammpstrj id type mol xs ys zs
+dump               dump_id all custom 10000 long_supergravity_343.lammpstrj id type mol xs ys zs
 dump_modify        dump_id first yes
 dump_modify 	   dump_id sort 3
 
@@ -53,8 +53,8 @@ neighbor           ${skin} bin # set Verlet list skin distance
 #change_box all boundary p p f
 fix make_rigid active rigid molecule
 
-run 30000
-variable g equal 9.8/100
+#run 30000
+variable g equal 9.8
 
 
 fix add_gravity slurry gravity ${g} vector 0 0 -1
@@ -78,6 +78,11 @@ fix evap_lower solvent evaporate 10000 2 evap_region_lower 138
 
 run 3000000
 
+variable g1 equal 9.8/10
+
+
+fix add_gravity slurry gravity ${g1} vector 0 0 -1
+
 unfix evap_upper
 
 variable slurry_height_2 equal bound(active,zmax)
@@ -89,6 +94,10 @@ region evap_region_upper_2 block 0 EDGE 0 EDGE ${slurry_height_2} EDGE
 fix evap_upper_2 solvent evaporate 1000 10 evap_region_upper_2 139
 
 run 3000000
+
+variable g2 equal 9.8/100
+fix add_gravity slurry gravity ${g2} vector 0 0 -1
+
 
 unfix evap_upper_2
 

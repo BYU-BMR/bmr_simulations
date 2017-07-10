@@ -57,8 +57,8 @@ fix                integrate_bc_fix bc meso/stationary
 fix                integrate_slurry_fix slurry meso
 
 fix add_gravity slurry gravity ${g} vector 0 0 -1  # Acceleration is micrometers/(microseconds)^2
-#fix fixed_temp slurry langevin 50 50 10 234 
-dump               dump_id all custom 1000 20_25k_calendered_${trial}.lammpstrj id type x y z 
+fix fixed_temp slurry langevin 3000 3000 10 234 
+dump               dump_id all custom 1000 100_25k_highlang_calendered_${trial}.lammpstrj id type x y z 
 dump_modify        dump_id first yes
 dump_modify 	   dump_id sort 3
 
@@ -100,7 +100,7 @@ run 30000
 
 variable wall_speed equal 0.04
 variable surface_speed equal abs(${wall_speed}*3)
-fix calendering moving_wall move linear  0.0 0.0 -20
+fix calendering moving_wall move linear  0.0 0.0 -100
 
 
 
@@ -208,4 +208,4 @@ print ${finished_height}
 
 #delete_atoms group	moving_wall
 
-write_data 20_25k_calendered_${trial}.data
+write_data 100_25k_highlang_calendered_${trial}.data

@@ -58,7 +58,7 @@ fix                integrate_slurry_fix slurry meso
 
 fix add_gravity slurry gravity ${g} vector 0 0 -1  # Acceleration is micrometers/(microseconds)^2
 fix fixed_temp slurry langevin 3000 3000 10 234 
-dump               dump_id all custom 1000 20_25k_fasthighlang_${trial}.lammpstrj id type x y z 
+dump               dump_id all custom 1000 20_35k_highlang_calendered_${trial}.lammpstrj id type x y z 
 dump_modify        dump_id first yes
 dump_modify 	   dump_id sort 3
 
@@ -110,7 +110,7 @@ variable before_height equal bound(slurry,zmax)
 print ${before_height}
 
 
-run 25000
+run 35000
 
 #fix more_gravity slurry gravity ${g} vector 0 0 -1
 #run 1000
@@ -208,4 +208,4 @@ print ${finished_height}
 
 #delete_atoms group	moving_wall
 
-write_data 20_25k_longdried_highlang_calendered_${trial}.data
+write_data 20_35k_highlang_calendered_${trial}.data

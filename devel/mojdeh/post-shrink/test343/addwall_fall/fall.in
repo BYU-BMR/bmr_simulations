@@ -66,6 +66,7 @@ fix add_gravity slurry gravity ${g} vector 0 0 -1  # Acceleration is micrometers
 run 800000
 unfix add_gravity
 
+variable g equal 9.8
 fix more_gravity active gravity ${g} vector 0 0 -1  # 
 
 run 800000

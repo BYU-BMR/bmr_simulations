@@ -16,7 +16,7 @@ wall_type = 5
 def appendLine(wallid,atomType,x,y,z):
 	linesToWrite.append(wallStr % (wallid,molID,atomType,x,y,z))
 
-readinFile = "finished_disc_shrink_33.data"
+readinFile = "good1_fell.data"
 preparedFile = "densewall.data"
 
 copyfile(readinFile,preparedFile)

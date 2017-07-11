@@ -67,7 +67,7 @@ print ${slurry_height}
 variable half_slurry_height equal ${slurry_height}/2
 
 print ${half_slurry_height}
-region 1 block 0 EDGE 0 EDGE 0 ${half_slurry_height} 
+region 1 block 0 EDGE 0 EDGE ${half_slurry_height} EDGE
 
 
 fix pushup all addforce 0 0 10 region 1
@@ -78,7 +78,7 @@ variable upper_half_slurry_height equal bound(active,zmax)
 
 
 
-region 2 block 0 EDGE 0 EDGE ${half_slurry_height} ${upper_half_slurry_height} 
+region 2 block 0 EDGE 0 EDGE ${upper_half_slurry_height} EDGE
 
 
 fix pulldown all addforce 0 0 -10 region 2

@@ -2,8 +2,8 @@ atom_style         meso-molecular
 dimension          3
 newton             on
 units              micro
+read_data          semifin_npt_shrink8_343.data
 
-read_data          densefell.data
 
 
 variable           h         equal 2.0
@@ -35,10 +35,9 @@ fix                integrate_slurry_fix slurry meso
 # time-integrate only internal energy and density of boundary particles
 fix                integrate_bc_fix bc meso/stationary
 
-dump               dump_id all custom 10000 fast_dried_long33.lammpstrj id type mol xs ys zs
+dump               dump_id all custom 10000 dragtocenter.lammpstrj id type mol xs ys zs
 dump_modify        dump_id first yes
 dump_modify 	   dump_id sort 3
-
 #compute thermo_temp slurry temp
 #thermo_modify temp slurry
 uncompute thermo_temp
@@ -50,57 +49,46 @@ thermo_modify      norm no
 neigh_modify       every 5 delay 0 check no
 variable           skin equal 0.3*${h}
 neighbor           ${skin} bin # set Verlet list skin distance
-#change_box all boundary p p f
+
 fix make_rigid active rigid molecule
 
-#run 30000
-variable g equal 9.8/100
+run 30000
+
+fix cool slurry langevin 3000 3000 1 13
+
+run 30000
 
 
-fix add_gravity slurry gravity ${g} vector 0 0 -1
-run 100000
-
-
-#fix add_gravity1 slurry gravity ${g} vector 0 0 -1  # Acceleration is micrometers/(microseconds)^2
 
 
 variable slurry_height equal bound(active,zmax)
-
 print ${slurry_height}
 
-region evap_region_upper block 0 EDGE 0 EDGE ${slurry_height} EDGE
-region evap_region_lower block 0 EDGE 0 EDGE 0 ${slurry_height}
+variable half_slurry_height equal ${slurry_height}/2
 
-fix evap_upper solvent evaporate 1000 100 evap_region_upper 139
-fix evap_lower solvent evaporate 10000 20 evap_region_lower 138
+print ${half_slurry_height}
+region 1 block 0 EDGE 0 EDGE ${half_slurry_height} EDGE
 
-fix heat_solvent solvent langevin 100000000 100000000 10 234
 
+fix pushup all addforce 0 0 10 region 1
+
+run 30000
+
+variable upper_half_slurry_height equal bound(active,zmax)
+
+
+
+region 2 block 0 EDGE 0 EDGE ${upper_half_slurry_height} EDGE
+
+
+fix pulldown all addforce 0 0 -10 region 2
+
+run 30000
+
+variable g equal 9.8/100
+fix add_gravity slurry gravity ${g} vector 0 0 -1  # Acceleration is micrometers/(microseconds)^
 run 300000
-
-unfix evap_upper
-
-variable slurry_height_2 equal bound(active,zmax)
-
-print ${slurry_height_2}
-
-region evap_region_upper_2 block 0 EDGE 0 EDGE ${slurry_height_2} EDGE
-
-fix evap_upper_2 solvent evaporate 1000 100 evap_region_upper_2 139
-
-run 300000
-
-unfix evap_upper_2
-
-variable slurry_height_3 equal bound(active,zmax)
-
-print ${slurry_height_3}
-
-region evap_region_upper_3 block 0 EDGE 0 EDGE ${slurry_height_3} EDGE
+write_data dragtocenter_fell.data
 
 
-fix evap_upper_3 solvent evaporate 1000 100 evap_region_upper_3 139
 
-run 3000000
-
-write_data fast_dried_dense33.data

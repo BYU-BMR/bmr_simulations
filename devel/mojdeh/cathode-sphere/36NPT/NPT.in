@@ -4,9 +4,9 @@ dimension          3
 newton             on
 units              micro
 #boundary 		   p p f
-read_data          goodone.data
+read_data          good.data
 
-variable		   trial	equal 343
+variable		   trial	equal 36
 
 
 variable           h equal 2.0
@@ -61,7 +61,7 @@ variable slurry_height equal bound(slurry,zmax)
 
 print ${slurry_height}
 
-fix stir slurry langevin 500000000 500000000 100 234 
+fix stir slurry langevin 100 100 100 234 
 
 
 
@@ -75,7 +75,7 @@ run 100000
 
 unfix stir 
 
-fix npt_method1 all npt temp 50000000 50000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
+fix npt_method1 all npt temp 500000000 500000000 1000.0 iso 100.0 100.0 1000.0 tloop 20
 
 run 400000
 variable slurry_height_1 equal bound(slurry,zmax)
@@ -83,7 +83,7 @@ print ${slurry_height_1}
 
 write_data semifin_npt_shrink1_${trial}.data
 unfix npt_method1 
-fix cool1 all nvt temp 40000 40000 300
+fix cool1 all nvt temp 400000 400000 300
 run 5000
 unfix cool1
 variable slurry_height_1a equal bound(slurry,zmax)

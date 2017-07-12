@@ -49,7 +49,7 @@ with open(readinFile,"r") as inFile:
 			xlo = float(xline.split()[0])
 			yhi = float(yline.split()[1])
 			ylo = float(yline.split()[0])
-			zlo = float(zline.split()[0]) - 5*walldia
+			zlo = float(zline.split()[0]) - 3*walldia
 			zhi = float(zline.split()[1])
 			
 			plateheight = zlo + 3*walldia

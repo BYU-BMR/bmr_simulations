@@ -100,7 +100,7 @@ run 30000
 
 variable wall_speed equal 0.04
 variable surface_speed equal abs(${wall_speed}*3)
-fix calendering moving_wall move linear  0.0 0.0 -20
+fix calendering moving_wall move linear  0.0 0.0 -10
 
 
 
@@ -110,7 +110,7 @@ variable before_height equal bound(slurry,zmax)
 print ${before_height}
 
 
-run 35000
+run 70000
 
 #fix more_gravity slurry gravity ${g} vector 0 0 -1
 #run 1000

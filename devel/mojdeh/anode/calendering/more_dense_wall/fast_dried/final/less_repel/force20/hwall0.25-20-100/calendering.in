@@ -5,11 +5,11 @@ units              micro
               
 read_data          calendering.data
 
-variable		   trial	equal 34
+variable		   trial	equal 0.25
 
 variable           h        	 equal 2.0
-variable           h_act    	 equal 3.0
-variable 		   h_mix	     equal (${h}+${h_act})/2.0
+variable           h_wall    	 equal 0.25
+variable 		   h_mix	     equal (${h}+${h_wall})/2.0
 variable           c     	     equal 100.0             # soundspeed for Tait's EOS
 variable           dt            equal 0.00001
 variable		   visc_CBD      equal 25000			 # viscosity in g/m*s (avg visc should be 2.3578 kg/m*s)
@@ -30,7 +30,7 @@ group              bc type 5 6
 
 pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater/morris
 pair_coeff         * * sph/taitwater/morris 0.93 ${c} ${visc_CBD} ${h}
-#pair_coeff         1 1 sph/taitwater/morris 0.93 ${c} ${visc_CBD} ${h}
+#pair_coeff         5 * sph/taitwater/morris 0.93 ${c} ${visc_CBD} ${h_wall}
 #pair_coeff         2 2 sph/taitwater/morris 0.93 ${c} ${visc_active} ${h}
 #pair_coeff         3 3 sph/taitwater/morris 0.93 ${c} ${visc_solvent} ${h}
 
@@ -39,7 +39,7 @@ pair_coeff         * * sph/taitwater/morris 0.93 ${c} ${visc_CBD} ${h}
 #pair_coeff         1 3 sph/taitwater/morris 0.93 ${c} ${visc_mix3} ${h_mix}
 
 pair_coeff         * * sph/rhosum ${h}
-#pair_coeff         2 * sph/rhosum ${h_act}
+pair_coeff         5 * sph/rhosum ${h_wall}
 #pair_coeff         2 2 sph/rhosum ${h_act}
 
 
@@ -57,8 +57,8 @@ fix                integrate_bc_fix bc meso/stationary
 fix                integrate_slurry_fix slurry meso
 
 fix add_gravity slurry gravity ${g} vector 0 0 -1  # Acceleration is micrometers/(microseconds)^2
-#fix fixed_temp slurry langevin 3000 3000 10 234 
-dump               dump_id all custom 1000 20_35k_highlang_calendered_${trial}.lammpstrj id type x y z 
+fix fixed_temp slurry langevin 3000 3000 10 234 
+dump               dump_id all custom 1000 less_repel_${trial}.lammpstrj id type x y z 
 dump_modify        dump_id first yes
 dump_modify 	   dump_id sort 3
 
@@ -100,7 +100,7 @@ run 30000
 
 variable wall_speed equal 0.04
 variable surface_speed equal abs(${wall_speed}*3)
-fix calendering moving_wall move linear  0.0 0.0 -10
+fix calendering moving_wall move linear  0.0 0.0 -20
 
 
 
@@ -110,14 +110,14 @@ variable before_height equal bound(slurry,zmax)
 print ${before_height}
 
 
-run 50000
+run 100000
 
 #fix more_gravity slurry gravity ${g} vector 0 0 -1
 #run 1000
 
 unfix calendering 
 
-fix rest moving_wall move linear  0.0 0.0 15
+fix rest moving_wall move linear  0.0 0.0 30
 
 
 ####################
@@ -164,28 +164,28 @@ variable rest_height_6 equal bound(slurry,zmax)
 
 print ${rest_height_6}
 
-run 5000
+run 10000
 
 ################
 variable rest_height_7 equal bound(slurry,zmax)
 
 print ${rest_height_7}
 
-run 5000
+run 10000
 
 ################
 variable rest_height_8 equal bound(slurry,zmax)
 
 print ${rest_height_8}
 
-run 5000
+run 10000
 
 ################
 variable rest_height_9 equal bound(slurry,zmax)
 
 print ${rest_height_9}
 
-run 5000
+run 10000
 
 ################
 
@@ -193,7 +193,7 @@ variable rest_height_10 equal bound(slurry,zmax)
 
 print ${rest_height_10}
 
-run 5000
+run 10000
 
 ################
 
@@ -208,4 +208,4 @@ print ${finished_height}
 
 #delete_atoms group	moving_wall
 
-write_data 20_35k_highlang_calendered_${trial}.data
+write_data less_repel_calendered_${trial}.data

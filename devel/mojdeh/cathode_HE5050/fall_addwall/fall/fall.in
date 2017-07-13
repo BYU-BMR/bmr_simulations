@@ -87,7 +87,7 @@ run 30000
 
 variable g equal 9.8/100
 fix add_gravity slurry gravity ${g} vector 0 0 -1  # Acceleration is micrometers/(microseconds)^
-run 100000
+run 900000
 write_data HE5050_fell.data
 
 

@@ -4,7 +4,7 @@
 #SBATCH --ntasks=12   # number of processor cores (i.e. tasks)
 #SBATCH --nodes=1   # number of nodes
 #SBATCH --mem=4096M   # memory per CPU core
-#SBATCH -J "fall"   # job name
+#SBATCH -J "25kless_repel"   # job name
 #MACHINEFILE=`/fslapps/fslutils/generate_pbs_nodefile`
 #SBATCH --mail-user=mojdeh_n87@yahoo.com   # email address
 #SBATCH --mail-type=BEGIN
@@ -48,4 +48,4 @@ module load python/3/4
 #mpirun -np 16 lammps -in in.granular
 #lammps -in in.granular
 # mpirun -np $SLURM_NTASKS /fslgroup/fslg_bmr_wheeler/lammps-30Jul16/src/lmp_mpi -in in.drop
-time python longbox.py && mpirun -np $SLURM_NTASKS lammps -in fall.in
+time python calendering.py && mpirun -np $SLURM_NTASKS lammps -in calendering.in

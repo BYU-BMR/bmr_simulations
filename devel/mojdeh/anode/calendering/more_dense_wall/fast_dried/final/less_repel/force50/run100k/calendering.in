@@ -5,7 +5,7 @@ units              micro
               
 read_data          calendering.data
 
-variable		   trial	equal 6_50force
+variable		   trial	equal 6
 
 variable           h        	 equal 2.0
 variable           h_wall    	 equal 6.0

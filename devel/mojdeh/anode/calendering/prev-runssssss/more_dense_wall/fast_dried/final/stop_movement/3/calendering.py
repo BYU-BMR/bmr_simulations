@@ -4,20 +4,21 @@ from shutil import copyfile
 
 #data string containing molecule ID, type, walldia, rho, x, y, z, 0 0 0
 wallStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
-#allStr = "%d %d %d %f %f %f\n"
+#wallStr = "%d %d %d %f %f %f\n"
+
+
 
 atomsline = 2
-m_wall = 3.72
-walldia = 2
+walldia = 1
 ID = 0
 wallmolID = 200
-wall_type = 5
+wall_type = 6
 
 def appendLine(wallid,atomType,x,y,z):
 	linesToWrite.append(wallStr % (wallid,molID,atomType,x,y,z))
 
-readinFile = "HE5050_fell.data"
-preparedFile = "densewall.data"
+readinFile = "fast_dried_dense33.data"
+preparedFile = "calendering.data"
 
 copyfile(readinFile,preparedFile)
 
@@ -46,14 +47,11 @@ with open(readinFile,"r") as inFile:
 			zline = linesToWrite[7]
 			
 			xhi = float(xline.split()[1])
-			xlo = float(xline.split()[0])
 			yhi = float(yline.split()[1])
 			ylo = float(yline.split()[0])
-			zlo = float(zline.split()[0]) - 5*walldia
-			zhi = float(zline.split()[1])
 			
-			plateheight = zlo + 3*walldia
-			platelen = float(xhi) - float(xlo)
+			plateheight = float(zline.split()[1]) - walldia
+			platelen = float(xhi)
 			
 			vertex1 = (0,plateheight)
 			vertex2 = (platelen,plateheight)
@@ -70,7 +68,7 @@ with open(readinFile,"r") as inFile:
 				xi = x + i*delta_x
 				zi = z
 				y1 = float(yhi) - walldia/2
-				for yi in np.arange(ylo,yhi,walldia/4):
+				for yi in np.arange(ylo,yhi,walldia):
 					ID += 1
 					atomCount += 1
 					appendLine(ID,atomType,xi,yi,zi)
@@ -78,9 +76,7 @@ with open(readinFile,"r") as inFile:
 
 		# Go back and correct number of atoms
 		linesToWrite[atomsline] = str(int(atomCount)) + " atoms\n"
-		linesToWrite[7] = str(zlo) + " " + str(zhi) + " zlo" + " zhi\n"
-		linesToWrite[14] = "4 "+ str(m_wall) + "\n"
-		
+
 		for line in linesToWrite:
 			outFile.write(line)
 

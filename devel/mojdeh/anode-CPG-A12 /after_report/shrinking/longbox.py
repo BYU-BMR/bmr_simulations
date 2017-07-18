@@ -1,15 +1,15 @@
- #Python code to extract equilibrium drop coordinates and add the dr blade
+# Python code to extract equilibrium drop coordinates and add the dr blade
 import numpy as np
 #from PIL import Image
 import random, math, copy
 
 class DatafileGenerator():
-    newFileName = "test.data"
+    newFileName = "potato.data"
     positionLines = []
 
     # data string containing molecule ID, type, dia, rho, x, y, z, 0 0 0 
-    #cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
-    cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
+    cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
+    #cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
 
     m_cbd = 3.72
     dia = 2.0
@@ -18,17 +18,17 @@ class DatafileGenerator():
     cbd_type,active_type,solvent_type,wall_type = 1,2,3,4
 
     scale = 1.00
-    activecount_multiplier = 32
+
     solventcount = 0
     cbdcount = 0
     activecount = 0
 
     x0 = 0.0
-    x1 = scale*100*dia
+    x1 = scale*300*dia
     y0 = 0.0
-    y1 = scale*100*dia
+    y1 = scale*300*dia
     z0 = 0
-    z1 = scale*300*dia
+    z1 = scale*1500*dia
     
     
     ID = 0
@@ -59,7 +59,7 @@ class DatafileGenerator():
 
         
 
-        vertexA = (0,zlen*0.03/2)
+        vertexA = (0,zlen*0.05/2)
         vertexB = (xlen,zlen*0.05/2)
 
         
@@ -89,19 +89,21 @@ class DatafileGenerator():
         zl = min(z,z2)
         zh = max(z,z2)
         radius = self.act_dia/2
-        for yi in np.arange(yl+self.dia*3,yh-self.dia,self.dia*7):
-            for zi in np.arange(zl-self.dia*5,zh-self.dia*7,self.dia*7):
-                for xi in np.arange(xl+self.dia*3,xh-self.dia*2,self.dia*7):
-                    val = random.randint(0,150)
-                    if val == 0:
+        for yi in np.arange(yl,yh-self.dia,self.dia*15):
+            for zi in np.arange(zl,zh-self.dia,self.dia*15):
+                for xi in np.arange(xl,xh-self.dia*2,self.dia*15):
+                    val = random.randint(0,87)
+                    if val >= 3 and val < 17:
                         self.activecount += 1
-                        self.drawRaspberry(xi,yi,zi-self.dia/2,radius)
+                        value = random.randint(0,2)
+                        if value == 0:
+                            self.drawpotato1(xi,yi,zi,radius)
                         
-                    elif val >= 1 and val < 23:
+                    elif val >= 17 and val < 33:
                         self.cbdcount += 1
                         atom_type = self.cbd_type
-                        self.appendLine(atom_type,xi+self.dia*5/2,yi+self.dia/2,zi+self.dia/2)
-                    elif val >= 23 and val < 151:
+                        self.appendLine(atom_type,xi+self.dia*3/2,yi+self.dia/2,zi+self.dia/2)
+                    else:
                         self.solventcount += 1
                         atom_type = self.solvent_type
                         self.appendLine(atom_type,xi+self.dia*1/2,yi+self.dia/2,zi+self.dia/2)
@@ -109,12 +111,12 @@ class DatafileGenerator():
 
 
 
-    '''def fillCubeWithActiveVtxs(self,v1,v2):
+    def fillCubeWithActiveVtxs(self,v1,v2):
         (x1,z1) = v1
         (x2,z2) = v2
         self.fillCubeWithActive(x1,self.y0,z1,x2,self.y1,z2)
         #self.fillCubeWithActive2(x1,self.y0,z1,x2,self.y1,z2)
-        #self.fillCubeWithActive3(x1,self.y0,z1,x2,self.y1,z2)'''
+        #self.fillCubeWithActive3(x1,self.y0,z1,x2,self.y1,z2)
 
     def fillCubeWithActive1(self,x,y,z,x2,y2,z2):
         xl = min(x,x2)
@@ -212,7 +214,7 @@ class DatafileGenerator():
             for line in particleLines:
                 if line.split()[2] == str(self.active_type):
                     activeParticleLines.append(line)
-            print("Active particles:", len(activeParticleLines))
+            print("Active particles:", len(activeParticleLines)*(3/4))
             minDistance = self.dia**2
             for i in range(int(x_range)):
                 for j in range(int(y_range)):
@@ -265,7 +267,7 @@ class DatafileGenerator():
         self.molID += 1
         print("molID for wall is:", self.molID)
         length = math.sqrt((x2-x)**2 + (z2-z)**2)
-        numPoints = math.ceil(length/(self.dia*3))
+        numPoints = math.ceil(length/(self.dia*1))
         delta_x = (x2-x)/numPoints
         delta_z = (z2-z)/numPoints
         for i in range(numPoints):
@@ -295,7 +297,7 @@ class DatafileGenerator():
         for xi in np.arange(x-radius,x+radius,self.dia):
             for yi in np.arange(y-radius,y+radius,self.dia):
                 for zi in np.arange(z-radius,z+radius,self.dia):
-                    if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) < radius**1.8:
+                    if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) < radius**2:
                         #if ((xi-x)**2 + (yi-y)**2 + (zi-z)**2) > radius**1:  # making hollow
                             self.appendLine(self.active_type,xi,yi,zi)
 
@@ -373,15 +375,13 @@ class DatafileGenerator():
         self.appendLine(self.active_type,x+self.dia/2,y,z)
 
     def writeFile(self):
-
-        true_activecount = self.activecount*self.activecount_multiplier
         print("Number of CBD particles =",self.cbdcount)
         print("Number of Solvent particles =",self.solventcount)
-        print("Number of Active Particles =", true_activecount)
+        print("Number of Active Particles =", self.activecount)
 
-        volact = true_activecount/(self.cbdcount+self.solventcount+true_activecount)
-        volcbd = self.cbdcount/(self.cbdcount+self.solventcount+true_activecount)
-        volsol = self.solventcount/(self.cbdcount+self.solventcount+true_activecount)
+        volact = self.activecount/(self.cbdcount+self.solventcount+self.activecount)
+        volcbd = self.cbdcount/(self.cbdcount+self.solventcount+self.activecount)
+        volsol = self.solventcount/(self.cbdcount+self.solventcount+self.activecount)
 
         print("Volume fraction of CBD particles =",volcbd)
         print("Volume fraction of Solvent particles =",volsol)

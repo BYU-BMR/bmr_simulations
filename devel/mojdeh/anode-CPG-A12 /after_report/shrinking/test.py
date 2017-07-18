@@ -8,8 +8,8 @@ class DatafileGenerator():
     positionLines = []
 
     # data string containing molecule ID, type, dia, rho, x, y, z, 0 0 0 
-    #cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
-    cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
+    cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
+    #cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
 
     m_cbd = 3.72
     dia = 2.0
@@ -90,12 +90,12 @@ class DatafileGenerator():
         zh = max(z,z2)
         radius = self.act_dia/2
         for yi in np.arange(yl+self.dia*3,yh-self.dia,self.dia*7):
-            for zi in np.arange(zl-self.dia*5,zh-self.dia*7,self.dia*7):
+            for zi in np.arange(zl--self.dia*5,zh-self.dia*7,self.dia*7):
                 for xi in np.arange(xl+self.dia*3,xh-self.dia*2,self.dia*7):
                     val = random.randint(0,150)
                     if val == 0:
                         self.activecount += 1
-                        self.drawRaspberry(xi,yi,zi-self.dia/2,radius)
+                        self.drawRaspberry(xi,yi,zi,radius)
                         
                     elif val >= 1 and val < 23:
                         self.cbdcount += 1
@@ -109,12 +109,12 @@ class DatafileGenerator():
 
 
 
-    '''def fillCubeWithActiveVtxs(self,v1,v2):
+    def fillCubeWithActiveVtxs(self,v1,v2):
         (x1,z1) = v1
         (x2,z2) = v2
         self.fillCubeWithActive(x1,self.y0,z1,x2,self.y1,z2)
         #self.fillCubeWithActive2(x1,self.y0,z1,x2,self.y1,z2)
-        #self.fillCubeWithActive3(x1,self.y0,z1,x2,self.y1,z2)'''
+        #self.fillCubeWithActive3(x1,self.y0,z1,x2,self.y1,z2)
 
     def fillCubeWithActive1(self,x,y,z,x2,y2,z2):
         xl = min(x,x2)

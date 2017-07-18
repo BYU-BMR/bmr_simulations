@@ -8,8 +8,8 @@ class DatafileGenerator():
     positionLines = []
 
     # data string containing molecule ID, type, dia, rho, x, y, z, 0 0 0 
-    #cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
-    cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
+    cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
+    #cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
 
     m_cbd = 3.72
     dia = 2.0
@@ -59,13 +59,14 @@ class DatafileGenerator():
 
         
 
-        vertexA = (0,zlen*0.03/2)
+        vertexA = (0,zlen*0.05/2)
         vertexB = (xlen,zlen*0.05/2)
 
         
         #Draw moving wall on bottom
-        #self.drawWallFromVtxs(vertexA,vertexB)
-
+        #self.drawWallFromVtxs(vertexA+self.dia,vertexB)
+        #self.drawWall(xlen*0.20,zlen*0.95,xlen*0.20,zlen*0.40)
+        self.drawWall(self.x0,self.z0,self.x1,self.z0)
         # Add particles to the simulation
         #self.fillCubeWithActiveVtxs(vertex1,vertex2)
         #self.fillCubeWithCBDVtxs(vertex1,vertex2,checkForOverlap=False)
@@ -95,7 +96,7 @@ class DatafileGenerator():
                     val = random.randint(0,150)
                     if val == 0:
                         self.activecount += 1
-                        self.drawRaspberry(xi,yi,zi-self.dia/2,radius)
+                        self.drawRaspberry(xi,yi,zi,radius)
                         
                     elif val >= 1 and val < 23:
                         self.cbdcount += 1
@@ -256,21 +257,21 @@ class DatafileGenerator():
         self.ID += 1
         self.positionLines.append(self.cbdStr % (self.ID, self.molID, atomType, x, y, z))
 
-    def drawWallFromVtxs(self,vtx1,vtx2,atomType=wall_type):
+    '''def drawWallFromVtxs(self,vtx1,vtx2,atomType=wall_type):
         (x,z)   = vtx1
         (x2,z2) = vtx2
-        self.drawWall(x,z,x2,z2,atomType)
+        self.drawWall(x,z,x2,z2,atomType)'''
 
     def drawWall(self,x,z,x2,z2,atomType=wall_type):
         self.molID += 1
         print("molID for wall is:", self.molID)
         length = math.sqrt((x2-x)**2 + (z2-z)**2)
-        numPoints = math.ceil(length/(self.dia*3))
+        numPoints = math.ceil(length*(self.dia))
         delta_x = (x2-x)/numPoints
-        delta_z = (z2-z)/numPoints
+        delta_z = (z2-z)*numPoints
         for i in range(numPoints):
             xi = x+i*delta_x
-            zi = z+i*delta_z
+            zi = z+i*delta_z/2
             for yi in np.arange(self.y0,self.y1,self.dia*1):
                 self.appendLine(atomType,xi,yi,zi)
 

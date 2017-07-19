@@ -59,14 +59,13 @@ class DatafileGenerator():
 
         
 
-        vertexA = (0,zlen*0.05/2)
+        vertexA = (0,zlen*0.03/2)
         vertexB = (xlen,zlen*0.05/2)
 
         
         #Draw moving wall on bottom
-        #self.drawWallFromVtxs(vertexA+self.dia,vertexB)
-        #self.drawWall(xlen*0.20,zlen*0.95,xlen*0.20,zlen*0.40)
-        self.drawWall(self.x0,self.z0,self.x1,self.z0)
+        #self.drawWallFromVtxs(vertexA,vertexB)
+
         # Add particles to the simulation
         #self.fillCubeWithActiveVtxs(vertex1,vertex2)
         #self.fillCubeWithCBDVtxs(vertex1,vertex2,checkForOverlap=False)
@@ -91,9 +90,9 @@ class DatafileGenerator():
         zh = max(z,z2)
         radius = self.act_dia/2
         for yi in np.arange(yl+self.dia*3,yh-self.dia,self.dia*7):
-            for zi in np.arange(zl-self.dia*5,zh-self.dia*7,self.dia*7):
+            for zi in np.arange(zl--self.dia*5,zh-self.dia*7,self.dia*7):
                 for xi in np.arange(xl+self.dia*3,xh-self.dia*2,self.dia*7):
-                    val = random.randint(0,150)
+                    val = random.randint(0,130)
                     if val == 0:
                         self.activecount += 1
                         self.drawRaspberry(xi,yi,zi,radius)
@@ -102,7 +101,7 @@ class DatafileGenerator():
                         self.cbdcount += 1
                         atom_type = self.cbd_type
                         self.appendLine(atom_type,xi+self.dia*5/2,yi+self.dia/2,zi+self.dia/2)
-                    elif val >= 23 and val < 151:
+                    elif val >= 23 and val < 131:
                         self.solventcount += 1
                         atom_type = self.solvent_type
                         self.appendLine(atom_type,xi+self.dia*1/2,yi+self.dia/2,zi+self.dia/2)
@@ -110,12 +109,12 @@ class DatafileGenerator():
 
 
 
-    '''def fillCubeWithActiveVtxs(self,v1,v2):
+    def fillCubeWithActiveVtxs(self,v1,v2):
         (x1,z1) = v1
         (x2,z2) = v2
         self.fillCubeWithActive(x1,self.y0,z1,x2,self.y1,z2)
         #self.fillCubeWithActive2(x1,self.y0,z1,x2,self.y1,z2)
-        #self.fillCubeWithActive3(x1,self.y0,z1,x2,self.y1,z2)'''
+        #self.fillCubeWithActive3(x1,self.y0,z1,x2,self.y1,z2)
 
     def fillCubeWithActive1(self,x,y,z,x2,y2,z2):
         xl = min(x,x2)
@@ -257,21 +256,21 @@ class DatafileGenerator():
         self.ID += 1
         self.positionLines.append(self.cbdStr % (self.ID, self.molID, atomType, x, y, z))
 
-    '''def drawWallFromVtxs(self,vtx1,vtx2,atomType=wall_type):
+    def drawWallFromVtxs(self,vtx1,vtx2,atomType=wall_type):
         (x,z)   = vtx1
         (x2,z2) = vtx2
-        self.drawWall(x,z,x2,z2,atomType)'''
+        self.drawWall(x,z,x2,z2,atomType)
 
     def drawWall(self,x,z,x2,z2,atomType=wall_type):
         self.molID += 1
         print("molID for wall is:", self.molID)
         length = math.sqrt((x2-x)**2 + (z2-z)**2)
-        numPoints = math.ceil(length*(self.dia))
+        numPoints = math.ceil(length/(self.dia*3))
         delta_x = (x2-x)/numPoints
-        delta_z = (z2-z)*numPoints
+        delta_z = (z2-z)/numPoints
         for i in range(numPoints):
             xi = x+i*delta_x
-            zi = z+i*delta_z/2
+            zi = z+i*delta_z
             for yi in np.arange(self.y0,self.y1,self.dia*1):
                 self.appendLine(atomType,xi,yi,zi)
 

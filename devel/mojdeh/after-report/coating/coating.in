@@ -14,12 +14,25 @@ variable           hact     equal 8.0
 variable           hsol     equal 2
 variable		   hwall    equal 2
 variable           hcbdsol  equal 2
+
+variable		   h1     equal (${h}/2)
+variable           hcbd1  equal (${hcbd}/2)
+variable 		   hact1  equal (${hact}/2)
+variable           hsol1  equal (${hsol}/2)
+variable		   hwall1 equal (${hwall}/2)
+
+
 variable           hcbdact  equal ((${hcbd}+${hact})/2)
 variable 		   hcbdwall	equal ((${hcbd}+${hwall})/2)
 variable           hsolact  equal ((${hsol}+${hact})/2)
 variable		   hsolwall equal ((${hsol}+${hwall})/2)
 variable		   hactwall equal ((${hact}+${hwall})/2)
 
+variable           hcbdact1  	equal ((${hcbd}+${hact})/4)
+variable 		   hcbdwall1	equal ((${hcbd}+${hwall})/4)
+variable           hsolact1 	equal ((${hsol}+${hact})/4)
+variable		   hsolwall1 	equal ((${hsol}+${hwall})/4)
+variable		   hactwall1 	equal ((${hact}+${hwall})/4)
 
 variable           c     equal 100.0             # soundspeed for Tait's EOS
 variable           dt    equal 0.001			 # size of timestep, microseconds
@@ -38,33 +51,33 @@ pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater/morris
 
 pair_coeff         * * sph/taitwater/morris 2.0 ${c} ${visc} ${h}
 
-#pair_coeff         1 1 sph/taitwater/morris 0.93 ${c} ${visc} ${hcbd}
-#pair_coeff         2 2 sph/taitwater/morris 4.79 ${c} ${visc} ${hact}
-#pair_coeff         3 3 sph/taitwater/morris 1.028 ${c} ${visc} ${hsol}
+pair_coeff         1 1 sph/taitwater/morris 0.93 ${c} ${visc} ${hcbd}
+pair_coeff         2 2 sph/taitwater/morris 4.79 ${c} ${visc} ${hact}
+pair_coeff         3 3 sph/taitwater/morris 1.028 ${c} ${visc} ${hsol}
 
-#pair_coeff		   4 4 sph/taitwater/morris 5.0 ${c} ${visc} ${hwall}
+pair_coeff		   4 4 sph/taitwater/morris 5.0 ${c} ${visc} ${hwall}
 
-#pair_coeff		   1 2 sph/taitwater/morris 2.86 ${c} ${visc} ${hcbdact}
-#pair_coeff         1 3 sph/taitwater/morris 0.979 ${c} ${visc} ${hcbdsol}
-#pair_coeff		   1 4 sph/taitwater/morris 2.965 ${c} ${visc} ${hcbdwall}
-#pair_coeff         2 3 sph/taitwater/morris 2.670 ${c} ${visc} ${hsolact}
-#pair_coeff		   2 4 sph/taitwater/morris 4.9 ${c} ${visc} ${hactwall}
-#pair_coeff         3 4 sph/taitwater/morris 3.014 ${c} ${visc} ${hsolwall}
+pair_coeff		   1 2 sph/taitwater/morris 2.86 ${c} ${visc} ${hcbdact}
+pair_coeff         1 3 sph/taitwater/morris 0.979 ${c} ${visc} ${hcbdsol}
+pair_coeff		   1 4 sph/taitwater/morris 2.965 ${c} ${visc} ${hcbdwall}
+pair_coeff         2 3 sph/taitwater/morris 2.670 ${c} ${visc} ${hsolact}
+pair_coeff		   2 4 sph/taitwater/morris 4.9 ${c} ${visc} ${hactwall}
+pair_coeff         3 4 sph/taitwater/morris 3.014 ${c} ${visc} ${hsolwall}
 
 
-pair_coeff         * * sph/rhosum ${h}
+pair_coeff         * * sph/rhosum ${h1}
 
-#pair_coeff         1 1 sph/rhosum ${hcbd}
-#pair_coeff         2 2 sph/rhosum ${hact}
-#pair_coeff         3 3 sph/rhosum ${hsol}
-#pair_coeff		   4 4 sph/rhosum ${hwall}
+pair_coeff         1 1 sph/rhosum ${hcbd1}
+pair_coeff         2 2 sph/rhosum ${hact1}
+pair_coeff         3 3 sph/rhosum ${hsol1}
+pair_coeff		   4 4 sph/rhosum ${hwall1}
 
-#pair_coeff         1 2 sph/rhosum ${hcbdact}
-#pair_coeff         1 3 sph/rhosum ${hcbdsol}
-#pair_coeff         1 4 sph/rhosum ${hcbdwall}
-#pair_coeff         2 3 sph/rhosum ${hsolact}
-#pair_coeff		   2 4 sph/rhosum ${hactwall}
-#pair_coeff         3 4 sph/rhosum ${hsolwall}
+pair_coeff         1 2 sph/rhosum ${hcbdact1}
+pair_coeff         1 3 sph/rhosum ${hcbdsol1}
+pair_coeff         1 4 sph/rhosum ${hcbdwall1}
+pair_coeff         2 3 sph/rhosum ${hsolact1}
+pair_coeff		   2 4 sph/rhosum ${hactwall1}
+pair_coeff         3 4 sph/rhosum ${hsolwall1}
 
 
 
@@ -130,7 +143,7 @@ variable surface_speed equal abs(${piston_speed}*3)
 #unfix cool
 
 # Apply extra gravity
-fix extra_gravity slurry addforce 0.0 0.0 -0.08
+fix extra_gravity slurry addforce 0.0 0.0 -0.0008
 run 300000
 
 

@@ -26,6 +26,7 @@ class DatafileGenerator():
     sol_dia = 2.0
     act_dia = 8.0
     wall_dia = 2.0
+    dia = 2.0
 
     cbd_type,solvent_type,active_type,wall_type = 1,2,3,4
 

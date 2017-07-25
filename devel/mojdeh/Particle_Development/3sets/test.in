@@ -37,10 +37,10 @@ pair_coeff         2 2 sph/taitwater/morris 0.93 ${c} ${visc} ${hact}
 pair_coeff         3 3 sph/taitwater/morris 0.93 ${c} ${visc} ${hsol}
 #pair_coeff		   4 4 sph/taitwater/morris 0.93 ${c} ${visc} ${hwall}
 
-pair_coeff        1 3 sph/taitwater/morris 0.979 ${c} ${visc} ${hcbdsol}
-pair_coeff		   1 2 sph/taitwater/morris 2.86 ${c} ${visc} ${hcbdact}
-pair_coeff        2 3 sph/taitwater/morris 2.6695 ${c} ${visc} ${hsolact}
-#pair_coeff		   2 4 sph/taitwater/morris 4.9 ${c} ${visc} ${hactwall}
+pair_coeff        1 3 sph/taitwater/morris 0.93 ${c} ${visc} ${hcbdsol}
+pair_coeff		   1 2 sph/taitwater/morris 0.93 ${c} ${visc} ${hcbdact}
+pair_coeff        2 3 sph/taitwater/morris 0.93 ${c} ${visc} ${hsolact}
+#pair_coeff		   2 4 sph/taitwater/morris 0.93 ${c} ${visc} ${hactwall}
 
 
 pair_coeff         * * sph/rhosum ${h}

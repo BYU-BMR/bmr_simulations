@@ -1,0 +1,63 @@
+atom_style         meso
+dimension          3
+newton             on
+units              micro
+read_data          different_particles.data
+
+variable           h_cbd equal 2.0
+variable		   h_act equal 4.0
+variable		   h_mix equal (${h_cbd}+${h_act})/2
+variable           c     equal 100.0 # soundspeed for Tait's EOS
+variable 		   dt    equal 0.00001
+variable           tdamp equal 100000000.0*${dt}
+variable 	       T     equal	300.0
+
+group              cbd type 1 # assign group name "cbd" to cbd particles (type 1)
+group			   act2 type 2 # assign group name "act2" to active particles (type 2)
+group			   slurry type 1 2
+
+variable			nu_cbd  equal  1
+variable			nu_act  equal  40000
+variable			nu_mix	equal  (${nu_cbd}+${nu_act})/2
+
+# use hybrid pairstyle which does density summation with cutoff ${h} every timestep (1)
+pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater
+pair_coeff         1 1 sph/taitwater 0.93 ${c} ${nu_cbd} ${h_cbd} # use target density of 0.93, soundspeed ${c} for Tait's EOS
+pair_coeff         1 2 sph/taitwater 0.93 ${c} ${nu_mix} ${h_mix}
+pair_coeff         2 2 sph/taitwater 0.93 ${c} ${nu_act} ${h_act}		   
+pair_coeff         1 1 sph/rhosum ${h_cbd}
+pair_coeff         1 2 sph/rhosum ${h_mix}
+pair_coeff         2 2 sph/rhosum ${h_act}
+
+compute            rho_peratom all meso/rho/atom
+compute            e_peratom all meso/e/atom
+compute            esph all reduce sum c_e_peratom
+compute            ke all ke
+variable           etot equal c_esph+c_ke+f_gfix
+
+timestep 	${dt}
+
+# time-integrate position, velocities, internal energy and density of cbd particles
+fix                integrate_slurry_fix slurry meso
+
+# time-integrate only internal energy and density of boundary particles
+#fix                integrate_bc_fix bc meso/stationary
+
+# dump files
+dump               dump_id all custom 10000 different_particles4.lammpstrj id type xs ys zs c_rho_peratom c_e_peratom fx fy
+dump_modify        dump_id first yes
+thermo             10000
+thermo_style       custom step time temp press density lx ly lz
+
+thermo_modify      norm no
+
+neigh_modify       every 5 delay 0 check no
+variable           skin equal 0.3*${h_cbd}
+neighbor           ${skin} bin # set Verlet list skin distance
+
+
+
+run 5000000
+
+# reset_timestep 		0
+# write_restart restart_tutorial

@@ -9,8 +9,8 @@ class DatafileGenerator():
 
    # data string containing molecule ID, type, dia, rho, x, y, z, 0 0 0 
     cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
-    actStr = "%d %d %d 4.79 0.0 1.0 %f %f %f\n" #string for active particles
     solStr = "%d %d %d 1.028 0.0 1.0 %f %f %f\n" #string for solvent particles
+    actStr = "%d %d %d 4.79 0.0 1.0 %f %f %f\n" #string for active particles
     wallStr = "%d %d %d 5.0 0.0 1.0 %f %f %f\n" #string for wall particles
     #cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
     #solStr = "%d %d %d %f %f %f\n" #string for solvent particles
@@ -22,13 +22,13 @@ class DatafileGenerator():
     m_act = 249.3
     m_wall = 20.94
 
+    dia = 2.0
     cbd_dia = 2.0
     sol_dia = 2.0
     act_dia = 8.0
     wall_dia = 2.0
-    dia = 2.0
 
-    cbd_type,active_type,solvent_type,wall_type = 1,2,3,4
+    cbd_type,solvent_type,active_type,wall_type = 1,2,3,4
 
     active_thickness_factor = 1
 
@@ -37,7 +37,7 @@ class DatafileGenerator():
     solventcount = 0
     cbdcount = 0
 
-    activeShapes = ['sphere','ellipsoid','rod','single','diparticle']
+    '''activeShapes = ['sphere','ellipsoid','rod','single','diparticle']
     activeShape = activeShapes[4]
     if activeShape == 'sphere':
         active_dia = 8.0
@@ -48,7 +48,7 @@ class DatafileGenerator():
     elif activeShape == 'single':
         active_dia = 3.0
     elif activeShape == 'diparticle':
-        active_dia = 4.0
+        active_dia = 4.0'''
 
     scale = 0.50
 
@@ -57,7 +57,7 @@ class DatafileGenerator():
     x0 = 0.0
     x1 = scale*3*50.0*dia
     y0 = 0.0
-    y1 = scale*1*8.0*dia
+    y1 = scale*1*20.0*dia
     z0 = 0
     z1 = scale*4*50.0*dia*shrink
 
@@ -84,39 +84,52 @@ class DatafileGenerator():
         # vertex7 = (xlen*(1.0-0.40),zlen*0.20)
         # vertex8 = (xlen*(1.0-0.40),zlen*0.10)
 
-        opening_width = zlen*0.075
+        opening_width = 2*self.act_dia
         print("opening_width:",opening_width)
         side_thickness = zlen*(7/4)*0.04
         xi = zlen*(7/4)*0.04
         xf = xi + side_thickness
+
         vertex1 = (xi,zlen*(self.shrink - .05))
         vertex2 = (xi,zlen*0.35/2)
         vertex3 = (xf,zlen*0.25/2)
         vertex4 = (xf,zlen*0.05/2+opening_width)
-        
+    
+        ai = xi
         xi = xf + opening_width
         xf = xi + side_thickness
+
         vertex5 = (xf,zlen*(self.shrink - .05))
         vertex6 = (xf,zlen*0.35/2)
         vertex7 = (xi,zlen*0.25/2)
         vertex8 = (xi,zlen*0.05/2+opening_width)
+       
+        bi = xf
 
         vertex9 = (0,zlen*0.05/2)
         vertex10 = (xlen,zlen*0.05/2)
 
+        ci = math.floor(bi-ai) + 1
+        di = opening_width
+
+        vertex11 = (vertex1[0]+ci,vertex1[1])
+        vertex41 = (vertex4[0]+di,vertex4[1])
+        vertex51 = (vertex5[0]+ci,vertex5[1])
+        vertex81 = (vertex8[0]+di,vertex8[1])
+
+        
         
         # Draw moving wall on bottom
-        #self.fillCubeWithRandomMixVtxs(vertex1,vertex6)
         self.drawWallFromVtxs(vertex9,vertex10)
 
         # Only include the active particles if the opening_width is wide enough
-        self.fillCubeWithActiveVtxs(vertex1,vertex6)
-        self.fillCubeWithCBDVtxs(vertex1,vertex6,checkForOverlap=True)
-
+        #self.fillCubeWithActiveVtxs(vertex1,vertex6)
+        #self.fillCubeWithCBDVtxs(vertex1,vertex6,checkForOverlap=True)
+        self.fillCubeWithRandomMixVtxs(vertex1,vertex6)
          # Draw top wall
         self.drawWallFromVtxs(vertex1,vertex5,atomType=5)
         # Draw bottom wall
-        self.drawWallFromVtxs(vertex4,(vertex8[0]+self.dia,vertex8[1]),atomType=6)
+        self.drawWallFromVtxs(vertex4,vertex8,atomType=6)
 
         # Draw left walls
         self.drawWallFromVtxs(vertex1,vertex2)
@@ -146,27 +159,38 @@ class DatafileGenerator():
         (x1,z1) = v1
         (x2,z2) = v2
         self.fillCubeWithRandomMix(x1,self.y0,z1,x2,self.y1,z2)
+       
 
     def fillCubeWithRandomMix(self,x,y,z,x2,y2,z2):
+        cbd_to_active_ratio = math.floor(self.act_dia/self.cbd_dia)
         xl = min(x,x2)
         xh = max(x,x2)
         yl = min(y,y2)
         yh = max(y,y2)
         zl = min(z,z2)
         zh = max(z,z2)
-        for yi in np.arange(yl,yh-self.dia,self.dia):
-            for zi in np.arange(zl,zh-self.dia,self.dia):
-                for xi in np.arange(xl,xh-self.dia*2,self.dia*2):
+        for yi in np.arange(yl+self.act_dia/2+self.cbd_dia/2,yh-self.act_dia/2-self.cbd_dia/2,self.act_dia):
+            for zi in np.arange(zl+self.act_dia/2+self.cbd_dia/2,zh-self.act_dia/2-self.cbd_dia/2,self.act_dia):
+                for xi in np.arange(xl+self.act_dia/2+self.cbd_dia/2,xh-self.act_dia/2-self.cbd_dia/2,self.act_dia):
                     val = random.randint(0,99)
                     if val >= 0 and val < 18:
                         atom_type = self.active_type
                         self.molID += 1
-                    elif val >= 18 and val < 32:
-                        atom_type = self.cbd_type
+                        self.appendLine(atom_type,xi,yi,zi)
+                        
                     else:
-                        atom_type = self.solvent_type
-                    self.appendLine(atom_type,xi+self.dia*1/2,yi+self.dia/2,zi+self.dia/2)
-                    self.appendLine(atom_type,xi+self.dia*3/2,yi+self.dia/2,zi+self.dia/2)
+                        for y in np.arange(yi-self.act_dia/2 + self.cbd_dia/2,yi + self.act_dia/2,self.cbd_dia):
+                            for z in np.arange(zi-self.act_dia/2 + self.cbd_dia/2,zi + self.act_dia/2,self.cbd_dia):
+                                for x in np.arange(xi-self.act_dia/2 + self.cbd_dia/2,xi + self.act_dia/2,self.cbd_dia):
+                                    value = random.randint(0,99)
+                                    if value >=0 and value < 50:
+                                        atom_type = self.solvent_type
+                                        self.appendLine(atom_type,x,y,z)
+                                    else:
+                                        atom_type = self.cbd_type
+                                        self.appendLine(atom_type,x,y,z)
+
+                    
 
 
 

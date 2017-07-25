@@ -2,8 +2,9 @@ atom_style         meso-molecular
 dimension          3
 newton             on
 units              micro
+print              hi
 read_data          coating.data
-
+print              there
 variable           trial equal 1
 
 variable		   h        equal 2.0
@@ -21,7 +22,7 @@ variable		   hactwall equal ((${hact}+${hwall})/2)
 
 
 variable           c     equal 100.0             # soundspeed for Tait's EOS
-variable           dt    equal 0.01			 # size of timestep, microseconds
+variable           dt    equal 0.001			 # size of timestep, microseconds
 variable		   visc  equal 2357.8			 # viscosity in g/m*s (avg visc should be 2.3578 kg/m*s)
 
 
@@ -30,7 +31,7 @@ group			   solvent type 3
 group  			   active type 2
 group			   wall type 4
 group			   slurry type 1 2 3 
-group 			   bc type 4
+group 			   bc type 5
 
 pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater/morris
 
@@ -95,7 +96,7 @@ neighbor           ${skin} bin # set Verlet list skin distance
 
 fix make_rigid active rigid molecule
 
-variable g equal 9.8/1000000
+variable g equal 9.8/1000000000
 fix add_gravity slurry gravity ${g} vector 0 0 -1  # Acceleration is micrometers/(microseconds)^2
 
 #variable wiggle_s equal swiggle(0,2000,10)
@@ -108,20 +109,20 @@ fix add_gravity slurry gravity ${g} vector 0 0 -1  # Acceleration is micrometers
 #fix stir cbd addforce v_wiggle_s 0.0 v_wiggle_c
 #fix stir slurry langevin 10000000000 10000000000 10 234 
 #fix stir slurry nvt temp 10000000000 10000000000 10
-#group moving_surface molecule 1
-#fix move_surface moving_surface move linear 0.09 0 0 # Speed is in m/s (coating speeds vary from 1/60 m/s to 10/60 m/s)
+group moving_surface molecule 1
+fix move_surface moving_surface move linear 0.009 0 0 # Speed is in m/s (coating speeds vary from 1/60 m/s to 10/60 m/s)
 
 group bottom_wall type 6
 group piston_wall type 5
 
-variable piston_speed equal -0.0006
-variable surface_speed equal abs(${piston_speed}*3)
+#variable piston_speed equal -0.0006
+#variable surface_speed equal abs(${piston_speed}*3)
 
 # Stir
-run 3000
+#run 3000
 
 
-unfix stir
+#unfix stir
 #unfix stir_the_bar
 
 # Cool
@@ -130,20 +131,20 @@ unfix stir
 #unfix cool
 
 # Apply extra gravity
-fix extra_gravity slurry addforce 0.0 0.0 -0.08
-run 3000
+#fix extra_gravity slurry addforce 0.0 0.0 -0.08
+#run 3000
 
 
-unfix extra_gravity
+#unfix extra_gravity
 
 # Move piston wall to starting position
-variable dz equal bound(slurry,zmax)-bound(piston_wall,zmin)+0.2
+variable dz equal (bound(slurry,zmax)-bound(piston_wall,zmin)+0.2)/100
 displace_atoms piston_wall move 0 0 ${dz}
-run 10
+run 100
 
 
 # Expansion step
-run 500
+run 5000
 
 #unfix active_temp
 # Cooling step
@@ -153,7 +154,7 @@ unfix cbd_sovent_temp
 fix cool cbd_solvent nvt temp 30000 30000 30
 #fix cool active nvt temp 10000 10000 30
 
-run 500
+run 5000
 
 
 #unfix cool
@@ -173,7 +174,7 @@ group hopper subtract walls moving_surface
 fix move_hopper hopper move linear ${surface_speed} 0.0 0.0
 print ${run_length}
 
-run 20000
+run 200000
 write_data semi_newtest30000.data
 run ${run_length}
 unfix push_piston

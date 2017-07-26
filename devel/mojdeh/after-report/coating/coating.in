@@ -162,7 +162,7 @@ run 50000
 #unfix active_temp
 # Cooling step
 #fix cool slurry langevin 30000 30000 10 234
-unfix cbd_sovent_temp
+#unfix cbd_sovent_temp
 
 fix cool cbd_solvent nvt temp 30000 30000 30
 #fix cool active nvt temp 10000 10000 30

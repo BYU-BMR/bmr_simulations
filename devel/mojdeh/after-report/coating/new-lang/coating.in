@@ -107,7 +107,7 @@ variable           skin equal 0.3*${h}
 neighbor           ${skin} bin # set Verlet list skin distance
 
 #fix make_rigid active rigid/nvt molecule temp 30000 30000 30
-#fix cbd_sovent_temp cbd_solvent nvt temp 30000 30000 30
+fix cbd_sovent_temp slurry nvt temp 30000 30000 30
 #fix make_rigid active rigid molecule 
 variable g equal 9.8/1000000
 fix add_gravity slurry gravity ${g} vector 0 0 -1  # Acceleration is micrometers/(microseconds)^2
@@ -120,7 +120,7 @@ variable wiggle_c equal cwiggle(0,-2000,10)
 group stir_bar molecule 2
 #fix stir_the_bar stir_bar addforce v_wiggle_s 0.0 v_wiggle_c
 #fix stir cbd addforce v_wiggle_s 0.0 v_wiggle_c
-fix stir slurry langevin 100000 100000 10 234 
+#fix stir slurry langevin 100000 100000 10 234 
 #fix stir slurry nvt temp 10000000000 10000000000 10
 group moving_surface molecule 1
 #fix move_surface moving_surface move linear 0.09 0 0 # Speed is in m/s (coating speeds vary from 1/60 m/s to 10/60 m/s)
@@ -135,7 +135,7 @@ variable surface_speed equal abs(${piston_speed}*3)
 run 300000
 
 
-unfix stir
+#unfix stir
 #unfix stir_the_bar
 
 # Cool
@@ -151,7 +151,7 @@ run 300000
 unfix extra_gravity
 
 # Move piston wall to starting position
-variable dz equal bound(slurry,zmax)-bound(piston_wall,zmin)+0.2
+variable dz equal (bound(slurry,zmax)-bound(piston_wall,zmin)+0.2)/10
 displace_atoms piston_wall move 0 0 ${dz}
 run 1000
 
@@ -164,7 +164,7 @@ run 50000
 #fix cool slurry langevin 30000 30000 10 234
 #unfix cbd_sovent_temp
 
-fix cool cbd_solvent nvt temp 30000 30000 30
+fix cool cbd_solvent nvt temp 300 300 30
 #fix cool active nvt temp 10000 10000 30
 
 run 50000

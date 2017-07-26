@@ -84,7 +84,7 @@ class DatafileGenerator():
         # vertex7 = (xlen*(1.0-0.40),zlen*0.20)
         # vertex8 = (xlen*(1.0-0.40),zlen*0.10)
 
-        opening_width = 2*self.act_dia
+        opening_width = 4*self.act_dia
         print("opening_width:",opening_width)
         side_thickness = zlen*(7/4)*0.04
         xi = zlen*(7/4)*0.04
@@ -93,7 +93,7 @@ class DatafileGenerator():
         vertex1 = (xi,zlen*(self.shrink - .05))
         vertex2 = (xi,zlen*0.35/2)
         vertex3 = (xf,zlen*0.25/2)
-        vertex4 = (xf,zlen*0.05/2+opening_width)
+        vertex4 = (xf,zlen*0.05/4+opening_width/2)
     
         ai = xi
         xi = xf + opening_width
@@ -102,12 +102,12 @@ class DatafileGenerator():
         vertex5 = (xf,zlen*(self.shrink - .05))
         vertex6 = (xf,zlen*0.35/2)
         vertex7 = (xi,zlen*0.25/2)
-        vertex8 = (xi,zlen*0.05/2+opening_width)
+        vertex8 = (xi,zlen*0.05/4+opening_width/2)
        
         bi = xf
 
-        vertex9 = (0,zlen*0.05/2)
-        vertex10 = (xlen,zlen*0.05/2)
+        vertex9 = (0,zlen*0.05/4)
+        vertex10 = (xlen,zlen*0.05/4)
 
         ci = math.floor(bi-ai) + 1
         di = opening_width

@@ -30,12 +30,13 @@ variable		   hactwall equal ((${hact}+${hwall})/2)
 
 variable           hcbdact1  	equal ((${hcbd}+${hact})/4)
 variable 		   hcbdwall1	equal ((${hcbd}+${hwall})/4)
+variable 		   hcbdsol1 	equal ((${hcbd}+${hsol})/4)
 variable           hsolact1 	equal ((${hsol}+${hact})/4)
 variable		   hsolwall1 	equal ((${hsol}+${hwall})/4)
 variable		   hactwall1 	equal ((${hact}+${hwall})/4)
 
 variable           c     equal 100.0             # soundspeed for Tait's EOS
-variable           dt    equal 0.001			 # size of timestep, microseconds
+variable           dt    equal 0.0001			 # size of timestep, microseconds
 variable		   visc  equal 2357.8			 # viscosity in g/m*s (avg visc should be 2.3578 kg/m*s)
 
 
@@ -119,7 +120,7 @@ variable wiggle_c equal cwiggle(0,-2000,10)
 group stir_bar molecule 2
 #fix stir_the_bar stir_bar addforce v_wiggle_s 0.0 v_wiggle_c
 #fix stir cbd addforce v_wiggle_s 0.0 v_wiggle_c
-#fix stir slurry langevin 10000000000 10000000000 10 234 
+#fix stir slurry langevin 1000 1000 10 234 
 #fix stir slurry nvt temp 10000000000 10000000000 10
 group moving_surface molecule 1
 #fix move_surface moving_surface move linear 0.09 0 0 # Speed is in m/s (coating speeds vary from 1/60 m/s to 10/60 m/s)
@@ -141,9 +142,9 @@ variable surface_speed equal abs(${piston_speed}*3)
 #fix cool slurry langevin 300 300 10 234
 #run 10000
 #unfix cool
-
+fix 1 slurry nve
 # Apply extra gravity
-fix extra_gravity slurry addforce 0.0 0.0 -0.0008
+#fix extra_gravity slurry addforce 0.0 0.0 -0.00008
 run 300000
 
 
@@ -193,7 +194,7 @@ unfix push_piston
 
 delete_atoms group piston_wall
 delete_atoms group hopper
-write_data newtest_30000.data
+write_data finished coated.data
 
 # Run with piston stopped
 run ${run_length}

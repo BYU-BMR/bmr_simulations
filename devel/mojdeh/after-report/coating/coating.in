@@ -139,10 +139,10 @@ variable surface_speed equal abs(${piston_speed}*3)
 #unfix stir_the_bar
 
 # Cool
-#fix cool slurry langevin 300 300 10 234
+fix cool slurry langevin 300 300 10 234
 #run 10000
 #unfix cool
-fix 1 slurry nve
+#fix 1 slurry nve
 # Apply extra gravity
 #fix extra_gravity slurry addforce 0.0 0.0 -0.00008
 run 300000

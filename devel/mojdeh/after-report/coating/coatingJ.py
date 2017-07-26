@@ -9,8 +9,8 @@ class DatafileGenerator():
 
    # data string containing molecule ID, type, dia, rho, x, y, z, 0 0 0 
     cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
-    solStr = "%d %d %d 1.028 0.0 1.0 %f %f %f\n" #string for solvent particles
     actStr = "%d %d %d 4.79 0.0 1.0 %f %f %f\n" #string for active particles
+    solStr = "%d %d %d 1.028 0.0 1.0 %f %f %f\n" #string for solvent particles
     wallStr = "%d %d %d 5.0 0.0 1.0 %f %f %f\n" #string for wall particles
     #cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
     #solStr = "%d %d %d %f %f %f\n" #string for solvent particles
@@ -18,17 +18,17 @@ class DatafileGenerator():
     #wallStr = "%d %d %d %f %f %f\n" #string for wall particles
 
     m_cbd = 3.896
-    m_sol = 3.896
-    m_act = 249.3
-    m_wall = 20.94
+    m_sol = 4.31
+    m_act = 1284.11
+    m_wall = 2.61
 
     dia = 2.0
     cbd_dia = 2.0
-    sol_dia = 2.0
     act_dia = 8.0
+    sol_dia = 2.0
     wall_dia = 2.0
 
-    cbd_type,solvent_type,active_type,wall_type = 1,2,3,4
+    cbd_type,active_type,solvent_type,wall_type = 1,2,3,4
 
     active_thickness_factor = 1
 
@@ -512,8 +512,8 @@ class DatafileGenerator():
             outFile.write("Masses\n")
             outFile.write("\n")
             outFile.write("1 %f\n" % self.m_cbd)
-            outFile.write("2 %f\n" % self.m_sol)
-            outFile.write("3 %f\n" % self.m_act)
+            outFile.write("2 %f\n" % self.m_act)
+            outFile.write("3 %f\n" % self.m_sol)
             outFile.write("4 %f\n" % self.m_wall)
             outFile.write("5 %f\n" % self.m_wall)
             outFile.write("6 %f\n" % self.m_wall)

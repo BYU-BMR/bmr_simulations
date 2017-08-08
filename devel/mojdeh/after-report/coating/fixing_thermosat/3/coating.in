@@ -5,13 +5,13 @@ units              micro
 read_data          coating.data
 variable           trial equal 1
 
-variable		   h        equal 2.0
+variable		   h        equal 3.0
 
-variable           hcbd     equal 2
+variable           hcbd     equal 3
 variable           hact     equal 3.0
-variable           hsol     equal 2
-variable		   hwall    equal 2
-variable           hcbdsol  equal 2
+variable           hsol     equal 3
+variable		   hwall    equal 3
+variable           hcbdsol  equal 3
 
 variable		   h1     equal (${h}/2)
 variable           hcbd1  equal (${hcbd}/2)

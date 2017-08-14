@@ -2,12 +2,12 @@ atom_style         meso-molecular
 dimension          3
 newton             on
 units              micro
-read_data          coating.data
+read_data          mixing.data
 #variable           trial equal 1
 
 variable		   h        equal 3.0
 
-variable           hcbd     equal 3
+variable           hcbd     equal 2
 variable           hact     equal 1.0
 variable           hsol     equal 3
 variable		   hwall    equal 1
@@ -100,6 +100,8 @@ dump_modify 	   dump_id sort 3
 
 #compute thermo_temp slurry temp
 #thermo_modify temp slurry
+fix 5 all dt/reset 10 1.0e-5  2.0 0.2 units box
+
 
 compute my_temp slurry temp/profile 1 1 1 xyz 5 5 5
 
@@ -116,10 +118,9 @@ neighbor           ${skin} bin # set Verlet list skin distance
 #fix cbd_sovent_temp cbd_solvent nvt temp 30000 30000 30
 #fix make_rigid active rigid molecule 
 
-fix stir slurry langevin 30000 30000 10 233
+fix stir slurry langevin 300000 300000 10 233
 
-variable g equal 9.8/100
-fix add_gravity slurry gravity ${g} vector 0 0 -1  # Acceleration is micrometers/(microseconds)^2
+
 
 
 group bottom_wall type 6
@@ -129,36 +130,10 @@ group moving_surface type 8
 variable piston_speed equal -0.02
 variable surface_speed equal abs(${piston_speed}*2)
 # Stir
-run 300000
-
-run 300000
-# Move piston wall to start ing position
-variable dz equal bound(slurry,zmax)-bound(piston_wall,zmin)+1
-displace_atoms piston_wall move 0 0 ${dz}
-run 1000
-
-# Expansion step
-run 50000
-
-fix push_piston piston_wall move linear 0.0 0.0 ${piston_speed}
-variable z_max equal bound(piston_wall,zmax)
-variable z_min equal bound(bottom_wall,zmin)
-variable run_length equal abs(floor((${z_max}-${z_min}-3)/(${piston_speed}*${dt})))
-delete_atoms group bottom_wall
+run 3000000
 
 
-#fix extra_gravity slurry addforce 0.0 0.0 -8
-run 300000
-fix move_surface moving_surface move linear ${surface_speed} 0.0 0.0
-print ${run_length}
-run ${run_length}
+variable g equal 9.8/100
+fix add_gravity slurry gravity ${g} vector 0 0 -1  # Acceleration is micrometers/(microseconds)^2
 
-unfix push_piston
-
-delete_atoms group piston_wall
-delete_atoms group hopper
-write_data finished_coated.data
-
-# Run with piston stopped
-#run ${run_length}
-#run ${run_length}
+run 3000000

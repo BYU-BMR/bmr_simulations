@@ -100,6 +100,8 @@ dump_modify 	   dump_id sort 3
 
 #compute thermo_temp slurry temp
 #thermo_modify temp slurry
+fix 5 all dt/reset 10 1.0e-5  2.0 0.2 units box
+
 
 compute my_temp slurry temp/profile 1 1 1 xyz 5 5 5
 

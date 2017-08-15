@@ -4,7 +4,7 @@ newton             on
 units              micro
 read_data          slvnt_clmn.data
 
-variable		   h        equal 3
+variable		   h        equal 6
 variable           c     equal 100.0             # soundspeed for Tait's EOS
 variable           dt    equal 0.0001			 # size of timestep, microseconds
 variable		   visc  equal 1.65			 # viscosity in picogram / micrometer microsecond (equivilant to centipoise )
@@ -55,7 +55,7 @@ fix                integrate_slurry_fix slurry meso
 # time-integrate only internal energy and density of boundary particles
 fix                integrate_bc_fix bc meso/stationary
 
-dump               dump_id all custom 10000 slvntclmn_h3_grl_hwl2_vsc.lammpstrj id type mol xs ys zs
+dump               dump_id all custom 10000 6h.lammpstrj id type mol xs ys zs
 dump_modify        dump_id first yes
 dump_modify 	   dump_id sort 3
 

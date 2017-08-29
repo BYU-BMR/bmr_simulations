@@ -4,29 +4,29 @@ import numpy as np
 import random, math, copy
 
 class DatafileGenerator():
-    newFileName = "slvnt_clmn.data"
+    newFileName = "test.data"
     positionLines = []
 
    # data string containing atom ID, molecule ID, type, rho, e, cv, x, y, z 
-    cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
+    cbdStr = "%d %d %d 2.83 0.0 1.0 %f %f %f\n" #string for cbd particles
     solStr = "%d %d %d 1.028 0.0 1.0 %f %f %f\n" #string for solvent particles
-    actStr = "%d %d %d 4.79 0.0 1.0 %f %f %f\n" #string for active particles
-    wallStr = "%d %d %d 2.0 0.0 1.0 %f %f %f\n" #string for wall particles
+    actStr = "%d %d %d 2.4 0.0 1.0 %f %f %f\n" #string for active particles
+    wallStr = "%d %d %d 3 0.0 1.0 %f %f %f\n" #string for wall particles
     #cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
     #solStr = "%d %d %d %f %f %f\n" #string for solvent particles
     #actStr = "%d %d %d %f %f %f\n" #string for active particles
     #wallStr = "%d %d %d %f %f %f\n" #string for wall particles
 
-    m_cbd = 3.896
-    m_sol = 4.306
-    m_act = 20.064
-    m_wall = 8.378
+    m_cbd = 11.85
+    m_sol = 0.000538
+    m_act = 643.398
+    m_wall = 804.247
 
     dia = 2.0
     cbd_dia = 2.0
-    sol_dia = 2.0
     act_dia = 8.0
-    wall_dia = 2.0
+    sol_dia = 0.1
+    wall_dia = 8.0
 
     cbd_type,solvent_type,active_type,wall_type = 1,2,3,4
 
@@ -225,9 +225,9 @@ class DatafileGenerator():
         yh = max(y,y2)
         zl = min(z,z2)
         zh = max(z,z2)
-        for yi in np.arange(yl,yh,self.cbd_dia):
-            for zi in np.arange(zl,zh,self.cbd_dia):
-                for xi in np.arange(xl,xh,self.cbd_dia):
+        for yi in np.arange(yl,yh,self.sol_dia*15):
+            for zi in np.arange(zl,zh,self.sol_dia*15):
+                for xi in np.arange(xl,xh,self.sol_dia*15):
                     self.molID += 1
                     atom_type = self.solvent_type
                     self.appendLine(atom_type,xi,yi,zi)   

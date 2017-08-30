@@ -9,7 +9,7 @@ variable		   h        equal 3.0
 
 variable           hcbd     equal 3
 variable           hact     equal 3.0
-variable           hsol     equal 3
+variable           hsol     equal 5
 variable		   hwall    equal 3
 variable           hcbdsol  equal 3
 
@@ -105,9 +105,9 @@ neigh_modify       every 5 delay 0 check no
 variable           skin equal 0.3*${h}
 neighbor           ${skin} bin # set Verlet list skin distance
 
-fix make_rigid active rigid/nvt molecule temp 3000 3000 30
-fix cbd_sovent_temp cbd_solvent nvt temp 3000 3000 30
-#fix make_rigid active rigid molecule 
+#fix make_rigid active rigid/nvt molecule temp 3000 3000 30
+#fix cbd_sovent_temp cbd_solvent nvt temp 3000 3000 30
+fix make_rigid active rigid molecule 
 
 
 variable g equal 9.8/1000000

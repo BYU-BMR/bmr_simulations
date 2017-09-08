@@ -23,8 +23,8 @@ group 			   bc type 4
 pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater/morris
 #pair_style         hybrid sph/taitwater/morris
 
-pair_coeff         * * sph/taitwater/morris 1.028 ${c} ${visc} ${h}
-pair_coeff         4 * sph/taitwater/morris 1.028 ${c} ${visc} ${hwall}
+pair_coeff         * * sph/taitwater/morris 1.028 ${c} ${visc} ${hwall}
+pair_coeff         4 * sph/taitwater/morris 1.028 ${c} ${visc} 3.0
 #pair_coeff         5 * sph/taitwater/morris 1.028 ${c} ${visc} 2.0
 #pair_coeff         3 3 sph/taitwater/morris 4.79 ${c} ${visc} 2.4
 #pair_coeff		   4 4 sph/taitwater/morris 2.0 ${c} ${visc} 2.4
@@ -37,7 +37,7 @@ pair_coeff         4 * sph/taitwater/morris 1.028 ${c} ${visc} ${hwall}
 #pair_coeff		   3 4 sph/taitwater/morris 3.395 ${c} ${visc} 2.4
 
 pair_coeff         * * sph/rhosum ${h}
-pair_coeff         4 * sph/rhosum ${hwall}
+pair_coeff         4 * sph/rhosum 2
 #pair_coeff         5 * sph/rhosum 2
 #pair_coeff         3 3 sph/rhosum 4.8
 #pair_coeff		   4 4 sph/rhosum 1.2

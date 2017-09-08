@@ -7,6 +7,9 @@ read_data          slvnt_clmn.data
 variable		   h        equal 3
 variable		   hwall    equal 6 
 
+variable		   h1        equal ${h}/2
+variable		   hwall1    equal ${hwall}/2 
+
 variable           c     equal 100.0             # soundspeed for Tait's EOS
 variable           dt    equal 0.0001			 # size of timestep, microseconds
 variable		   visc  equal 1.65			 # viscosity in picogram / micrometer microsecond (equivilant to centipoise )

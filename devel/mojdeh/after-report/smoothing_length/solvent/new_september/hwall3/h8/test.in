@@ -2,10 +2,11 @@ atom_style         meso-molecular
 dimension          3
 newton             on
 units              micro
+#boundary 		   p p f
 read_data          slvnt_clmn.data
 
-variable		   h        equal 3
-variable		   hwall    equal 6 
+variable		   h        equal 8
+variable		   hwall    equal 3 
 
 variable           c     equal 100.0             # soundspeed for Tait's EOS
 variable           dt    equal 0.0001			 # size of timestep, microseconds
@@ -66,7 +67,7 @@ dump_modify 	   dump_id sort 3
 uncompute thermo_temp
 compute thermo_temp slurry temp
 thermo             1000
-thermo_style       custom step time temp press density lx ly lz
+thermo_style       custom step time dt temp press density lx ly lz
 thermo_modify      norm no
 
 neigh_modify       every 5 delay 0 check no
@@ -82,11 +83,11 @@ fix add_gravity all gravity ${g} vector 0 0 -1
 
 #fix cool slurry langevin 3000 3000 10 234
 
-run 300000
+
 #unfix move_wall
 #fix move_wall topwall move linear 0 0 1
 
-run 30000000
+run 50000000
 #unfix move_wall
 
 write_data write.data1

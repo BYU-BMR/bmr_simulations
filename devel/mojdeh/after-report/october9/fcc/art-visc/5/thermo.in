@@ -24,7 +24,7 @@ group 			   bc type 4
 pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater/morris
 #pair_style         hybrid sph/taitwater/morris
 
-pair_coeff         * * sph/taitwater/morris 1.028 ${c} 0.2 ${h}
+pair_coeff         * * sph/taitwater/morris 1.028 ${c} 5.0 ${h}
 #pair_coeff         4 * sph/taitwater/morris 1.028 ${c} ${visc} ${hwallinteract}
 #pair_coeff         5 * sph/taitwater/morris 1.028 ${c} ${visc} 2.0
 #pair_coeff         3 3 sph/taitwater/morris 4.79 ${c} ${visc} 2.4
@@ -87,7 +87,7 @@ neighbor           ${skin} bin # set Verlet list skin distance
 #unfix move_wall
 #fix move_wall topwall move linear 0 0 1
 
-fix 3 solvent temp/rescale 1 15000000 15000000 0.05 1.0
+fix 3 all temp/rescale 1 15000000 15000000 0.05 1.0
 
 run 50000000
 #unfix move_wall

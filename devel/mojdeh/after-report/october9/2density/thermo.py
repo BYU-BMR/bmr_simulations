@@ -9,7 +9,7 @@ positionLines = []
 # data string containing molecule ID, type, dia, rho, x, y, z, 0 0 0 
 cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
 actStr = "%d %d %d 4.79 0.0 1.0 %f %f %f\n" #string for active particles
-solStr = "%d %d %d 5 0.0 1.0 %f %f %f\n" #string for solvent particles
+solStr = "%d %d %d 1.028 0.0 1.0 %f %f %f\n" #string for solvent particles
 wallStr = "%d %d %d 5.0 0.0 1.0 %f %f %f\n" #string for wall particles
 #cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
 #solStr = "%d %d %d %f %f %f\n" #string for solvent particles
@@ -18,13 +18,13 @@ wallStr = "%d %d %d 5.0 0.0 1.0 %f %f %f\n" #string for wall particles
 
 m_cbd = 3.896
 #m_act = 20.064 #me before:     1284.11 
-m_sol = 5      
+m_sol = 4.31      
 #m_wall = 28.378    #me before: 2.61
 
 dia = 2.0
 #cbd_dia = 2.0
 #act_dia = 6.0 #????is it correct?
-sol_dia = 1.25
+sol_dia = 2.0
 #wall_dia = 3.0
 
 #cbd_type,active_type,solvent_type,wall_type = 1,2,3,4
@@ -50,9 +50,9 @@ z1 = int(10.0*dia_cbd)
 ID = 0
 
 # Add Solvent particles to grid
-for x in np.arange(x0+2.5*dia_cbd,x1-1,sol_dia):
-    for y in np.arange(y0+1,y1-1,sol_dia):
-        for z in np.arange(z0+1,z1-1,sol_dia):
+for x in np.arange(x0+2.5*dia_cbd,x1-1,1.6*sol_dia):
+    for y in np.arange(y0+1,y1-1,1.6*sol_dia):
+        for z in np.arange(z0+1,z1-1,1.6*sol_dia):
             xc = x + random.randrange(-100,100)/100
             yc = y + random.randrange(-100,100)/100
             zc = z + random.randrange(-100,100)/100

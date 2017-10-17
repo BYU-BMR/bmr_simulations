@@ -24,7 +24,7 @@ m_sol = 5
 dia = 2.0
 #cbd_dia = 2.0
 #act_dia = 6.0 #????is it correct?
-sol_dia = 1.25
+sol_dia = 2.0
 #wall_dia = 3.0
 
 #cbd_type,active_type,solvent_type,wall_type = 1,2,3,4

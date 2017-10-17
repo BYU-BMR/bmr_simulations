@@ -50,9 +50,9 @@ z1 = int(10.0*dia_cbd)
 ID = 0
 
 # Add Solvent particles to grid
-for x in np.arange(x0+2.5*dia_cbd,x1-1,sol_dia):
-    for y in np.arange(y0+1,y1-1,sol_dia):
-        for z in np.arange(z0+1,z1-1,sol_dia):
+for x in np.arange(x0+8,x1-8,sol_dia):
+    for y in np.arange(y0+8,y1-8,sol_dia):
+        for z in np.arange(z0+2,z1-9,sol_dia):
             xc = x + random.randrange(-100,100)/100
             yc = y + random.randrange(-100,100)/100
             zc = z + random.randrange(-100,100)/100

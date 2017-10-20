@@ -48,4 +48,4 @@ module load python/3/4
 #mpirun -np 16 lammps -in in.granular
 #lammps -in in.granular
 # mpirun -np $SLURM_NTASKS /fslgroup/fslg_bmr_wheeler/lammps-30Jul16/src/lmp_mpi -in in.drop
-time python slurry.py && mpirun -np $SLURM_NTASKS lammps -in slurry.in
+time python wall.py && mpirun -np $SLURM_NTASKS lammps -in thermo.in

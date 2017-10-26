@@ -5,21 +5,22 @@ units              micro
 boundary 		   f f f
 read_data          slurry.data
 
-variable		   hwallinteract    equal (${h}+${hwall})/2 
+
 variable           c     equal 10.0             # soundspeed for Tait's EOS
 variable           dt    equal 0.0001			 # size of timestep, microseconds
 #Svariable		   visc  equal 1.65			 # viscosity in picogram / micrometer microsecond (equivilant to centipoise )
 
 
 
-variable		   h        equal 2.83
 
-variable           hcbd     equal 3.44
-variable           hact     equal 2
-variable           hsol     equal 4.5
+variable		   h        equal 3.16
+
+variable           hcbd     equal 3
+variable           hact     equal 2.5
+variable           hsol     equal 4
 variable		   hwall    equal 2
 
-
+variable		   hwallinteract    equal (${h}+${hwall})/2 
 
 
 
@@ -114,7 +115,7 @@ fix make_rigid active rigid molecule
 
 
 
-fix 1 all temp/rescale 100 15000000 10000000 10 0.05
+fix 1 all temp/rescale 100 1500000 1000000 10 0.05
 
 #variable g equal 9.807/1000000
 #fix add_gravity all gravity ${g} vector 0 0 -1
@@ -123,47 +124,47 @@ run 10000000
 
 unfix 1
 
-fix 2 all temp/rescale 100 10000000 5000000 10 1.0
+fix 2 all temp/rescale 100 1000000 500000 10 1.0
 
 run 10000000
 unfix 2
 
-fix 3 all temp/rescale 100 5000000 1000000 10 1.0
+fix 3 all temp/rescale 100 500000 100000 10 1.0
 
 run 10000000
 unfix 3
 
-fix 4 all temp/rescale 100 1000000 500000 10 1.0
+fix 4 all temp/rescale 100 100000 50000 10 1.0
 
 run 10000000
 unfix 4
 
-fix 5 all temp/rescale 100 500000 100000  10 1.0
+fix 5 all temp/rescale 100 50000 10000  10 1.0
 
 run 10000000
 unfix 5
 
-fix 6 all temp/rescale 100 100000 50000  10 1.0
+fix 6 all temp/rescale 100 10000 5000  10 1.0
 
 run 10000000
 unfix 6
 
-fix 7 all temp/rescale 100 50000 10000  10 1.0
+fix 7 all temp/rescale 100 5000 1000  10 1.0
 
 run 10000000
 unfix 7
 
-fix 8 all temp/rescale 100 10000 5000 10 1.0
+fix 8 all temp/rescale 100 1000 500 10 1.0
 
 run 10000000
 unfix 8
 
-fix 9 all temp/rescale 100 5000 1000  10 1.0
+fix 9 all temp/rescale 100 500 100  10 1.0
 
 run 10000000
 unfix 9
 
-fix 10 all temp/rescale 100 1000 500  10 1.0
+fix 10 all temp/rescale 100 100 50  10 1.0
 
 run 10000000
 unfix 10

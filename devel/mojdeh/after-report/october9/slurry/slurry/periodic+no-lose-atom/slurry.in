@@ -2,13 +2,14 @@ atom_style         meso-molecular
 dimension          3
 newton             on
 units              micro
-boundary 		   f f f
+boundary 		   p p f
 read_data          slurry.data
 
-variable		   hwallinteract    equal (${h}+${hwall})/2 
+
 variable           c     equal 10.0             # soundspeed for Tait's EOS
 variable           dt    equal 0.0001			 # size of timestep, microseconds
 #Svariable		   visc  equal 1.65			 # viscosity in picogram / micrometer microsecond (equivilant to centipoise )
+
 
 
 
@@ -19,7 +20,7 @@ variable           hact     equal 2
 variable           hsol     equal 4.5
 variable		   hwall    equal 2
 
-
+variable		   hwallinteract    equal (${h}+${hwall})/2 
 
 
 
@@ -93,7 +94,7 @@ uncompute thermo_temp
 compute thermo_temp slurry temp
 thermo             1000
 thermo_style       custom step time dt temp press density lx ly lz
-thermo_modify      lost ignore
+thermo_modify      norm no #lost ignore
 
 neigh_modify       every 5 delay 0 check no
 variable           skin equal 0.3*${h}

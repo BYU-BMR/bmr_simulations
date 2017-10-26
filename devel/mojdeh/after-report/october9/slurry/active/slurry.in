@@ -19,7 +19,7 @@ variable           hact     equal 2
 variable           hsol     equal 4.5
 variable		   hwall    equal 2
 
-
+variable		   hwallinteract    equal (${h}+${hwall})/2 
 
 
 

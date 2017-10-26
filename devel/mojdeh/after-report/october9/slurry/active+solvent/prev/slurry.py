@@ -9,7 +9,7 @@ class DatafileGenerator():
 
    # data string containing molecule ID, type, dia, rho, x, y, z, 0 0 0 
 	cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
-	actStr = "%d %d %d 2 0.0 1.0 %f %f %f\n" #string for active particles
+	actStr = "%d %d %d 4.79 0.0 1.0 %f %f %f\n" #string for active particles
 	solStr = "%d %d %d 1.028 0.0 1.0 %f %f %f\n" #string for solvent particles
 	wallStr = "%d %d %d 2.0 0.0 1.0 %f %f %f\n" #string for wall particles
 	#cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
@@ -19,14 +19,14 @@ class DatafileGenerator():
 
 	m_cbd = 3.896
 	m_sol = 4.31
-	m_act = 8.3 #20.064 #me before:     1284.11       
+	m_act = 20.064 #me before:     1284.11       
 	m_wall = 28.378    #me before: 2.61
 
 	dia = 2.0
 	radius = 1.0
 
 	cbd_dia = 2.0
-	act_dia = 2 #????is it correct?
+	act_dia = 8.0 #????is it correct?
 	sol_dia = 2.0
 	wall_dia = 3.0
 
@@ -90,7 +90,7 @@ class DatafileGenerator():
 		yh = max(y,y2)
 		zl = min(z,z2)
 		zh = max(z,z2)
-		radius = self.act_dia*2
+		radius = self.act_dia/2
 		for yi in np.arange(yl+self.dia*3,yh-self.dia,self.dia):
 			for zi in np.arange(zl+self.dia*5,zh-self.dia*7,self.dia):
 				for xi in np.arange(xl+self.dia*3,xh-self.dia*2,self.dia):

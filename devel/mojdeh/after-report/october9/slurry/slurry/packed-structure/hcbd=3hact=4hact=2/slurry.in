@@ -5,21 +5,22 @@ units              micro
 boundary 		   f f f
 read_data          slurry.data
 
-variable		   hwallinteract    equal (${h}+${hwall})/2 
+
 variable           c     equal 10.0             # soundspeed for Tait's EOS
 variable           dt    equal 0.0001			 # size of timestep, microseconds
 #Svariable		   visc  equal 1.65			 # viscosity in picogram / micrometer microsecond (equivilant to centipoise )
 
 
 
-variable		   h        equal 2.83
 
-variable           hcbd     equal 3.44
+variable		   h        equal 3
+
+variable           hcbd     equal 3
 variable           hact     equal 2
-variable           hsol     equal 4.5
+variable           hsol     equal 4
 variable		   hwall    equal 2
 
-
+variable		   hwallinteract    equal (${h}+${hwall})/2 
 
 
 

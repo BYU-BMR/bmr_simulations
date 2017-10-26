@@ -19,7 +19,7 @@ variable           hact     equal 2
 variable           hsol     equal 4.5
 variable		   hwall    equal 2
 
-
+variable		   hwallinteract    equal (${h}+${hwall})/2 
 
 
 
@@ -100,7 +100,7 @@ variable           skin equal 0.3*${h}
 neighbor           ${skin} bin # set Verlet list skin distance
 
 #fix move_wall topwall move linear 0 0 -1
-fix make_rigid active rigid molecule
+#fix make_rigid active rigid molecule
 
 #variable g equal 9.807/1000000
 

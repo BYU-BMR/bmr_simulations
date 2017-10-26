@@ -99,15 +99,15 @@ class DatafileGenerator():
 						self.activecount += 1
 						self.drawRaspberry(xi,yi,zi,radius)
 						
-					#elif val >= 1 and val < 40:
-						#self.cbdcount += 1
-						#atom_type = self.cbd_type
+					elif val >= 1 and val < 40:
+						self.cbdcount += 1
+						atom_type = self.cbd_type
 						#self.FccVertexes(self,vertex1,vertex4,yhi,atomType)
-						#self.appendLine(atom_type,xi+self.dia*5/2,yi+self.dia/2,zi+self.dia/2)
-					elif val >= 40 and val < 151:
-						self.solventcount += 1
-						atom_type = self.solvent_type
-						self.appendLine(atom_type,xi+self.dia*1/2,yi+self.dia/2,zi+self.dia/2)
+						self.appendLine(atom_type,xi+self.dia*5/2,yi+self.dia/2,zi+self.dia/2)
+					#elif val >= 40 and val < 151:
+						#self.solventcount += 1
+						#atom_type = self.solvent_type
+						#self.appendLine(atom_type,xi+self.dia*1/2,yi+self.dia/2,zi+self.dia/2)
 															
 
 

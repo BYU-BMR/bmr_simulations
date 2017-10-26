@@ -2,13 +2,14 @@ atom_style         meso-molecular
 dimension          3
 newton             on
 units              micro
-boundary 		   f f f
+boundary 		   p p f
 read_data          slurry.data
 
-variable		   hwallinteract    equal (${h}+${hwall})/2 
+
 variable           c     equal 10.0             # soundspeed for Tait's EOS
 variable           dt    equal 0.0001			 # size of timestep, microseconds
 #Svariable		   visc  equal 1.65			 # viscosity in picogram / micrometer microsecond (equivilant to centipoise )
+
 
 
 
@@ -19,7 +20,7 @@ variable           hact     equal 2
 variable           hsol     equal 4.5
 variable		   hwall    equal 2
 
-
+variable		   hwallinteract    equal (${h}+${hwall})/2 
 
 
 

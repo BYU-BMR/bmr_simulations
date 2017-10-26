@@ -67,18 +67,18 @@ class DatafileGenerator():
 
 	
 
-		vertex1 = (0,0)
+		vertex1 = (0.2*xlen,ylen*0.2,zlen*0.2)
 		vertex2 = (0.8*xlen,zlen*0.7)
-		vertex4 = (xlen,zlen*0.97)
+		vertex4 = (0.8*xlen,ylen*0.8,zlen*0.8)
 		
 
 		self.fillCubeWithRandomMixVtxs(vertex1,vertex4)
 	   
 
 	def fillCubeWithRandomMixVtxs(self,v1,v2):
-		(x1,z1) = v1
-		(x2,z2) = v2
-		self.fillCubeWithRandomMix(x1,self.y0,z1,x2,self.y1,z2)
+		(x1,y1,z1) = v1
+		(x2,y2,z2) = v2
+		self.fillCubeWithRandomMix(x1,y1,z1,x2,y2,z2)
 	   
 
 		 
@@ -91,23 +91,31 @@ class DatafileGenerator():
 		zl = min(z,z2)
 		zh = max(z,z2)
 		radius = self.act_dia*2
-		for yi in np.arange(yl+self.dia*3,yh-self.dia,self.dia):
-			for zi in np.arange(zl+self.dia*5,zh-self.dia*7,self.dia):
-				for xi in np.arange(xl+self.dia*3,xh-self.dia*2,self.dia):
-					val = random.randint(0,150)
-					if val == 0:
-						self.activecount += 1
-						self.drawRaspberry(xi,yi,zi,radius)
-						
-					#elif val >= 1 and val < 40:
-						#self.cbdcount += 1
-						#atom_type = self.cbd_type
-						#self.FccVertexes(self,vertex1,vertex4,yhi,atomType)
-						#self.appendLine(atom_type,xi+self.dia*5/2,yi+self.dia/2,zi+self.dia/2)
-					elif val >= 40 and val < 151:
-						self.solventcount += 1
-						atom_type = self.solvent_type
-						self.appendLine(atom_type,xi+self.dia*1/2,yi+self.dia/2,zi+self.dia/2)
+		for k in np.arange(zl-zh,5*zh,self.dia*0.5):
+			for j in np.arange(yl-yh,5*yh,self.dia*0.5):
+				for i in np.arange(xl-xh,5*xh,self.dia*0.5):
+					xi = (2*i + (( j + k )%2))
+					yi = (np.sqrt(3)*( j + (1/3)*(k%2)))
+					zi = ((2*np.sqrt(6)/3)*k)
+					if zi > zh or xi > xh or yi > yh:
+						break
+					if zi > zl:
+						if xi > xl:
+							if yi > yl:
+								val = random.randint(0,150)
+								if val == 0:
+									self.activecount += 1
+									self.drawRaspberry(xi,yi,zi,radius)
+									
+								elif val >= 1 and val < 40:
+									self.cbdcount += 1
+									atom_type = self.cbd_type
+									#self.FccVertexes(self,vertex1,vertex4,yhi,atomType)
+									self.appendLine(atom_type,xi+self.dia*5/2,yi+self.dia/2,zi+self.dia/2)
+								elif val >= 40 and val < 151:
+									self.solventcount += 1
+									atom_type = self.solvent_type
+									self.appendLine(atom_type,xi+self.dia*1/2,yi+self.dia/2,zi+self.dia/2)
 															
 
 
@@ -122,32 +130,6 @@ class DatafileGenerator():
 		else:
 			self.positionLines.append(self.wallStr % (self.ID, self.molID, atomType, x, y, z))
 
-	def FccVertexes(self,vertexa,vertexb,yhi,atomType):
-			xlo = vertexa[0]
-			xhi = vertexb[0]
-			zlo = vertexa[1]
-			zhi = vertexb[1]
-			ylo = self.ylo
-
-			print ("FccVertexes is working")
-
-			self.FCC(xlo,xhi,ylo,yhi,zlo,zhi,atomType)
-
-
-	def FCC(self,xlo,xhi,ylo,yhi,zlo,zhi,atomType=cbd_type):
-
-		for k in np.arange(zlo-zhi,5*zhi,self.dia/2):
-			for j in np.arange(ylo-yhi,5*yhi,self.dia/2):
-				for i in np.arange(xlo-xhi,5*xhi,self.dia/2):
-					x = (2*i + (( j + k )%2))
-					y = (np.sqrt(3)*( j + (1/3)*(k%2)))
-					z = ((2*np.sqrt(6)/3)*k)
-					if z > zhi or x > xhi or y > yhi:
-						break
-					if z > zlo:
-						if x > xlo:
-							if y > ylo:
-								self.appendLine(atomType,x,y,z)
 	
 
 	def drawRaspberry(self,x,y,z,radius):

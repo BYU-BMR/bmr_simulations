@@ -8,14 +8,14 @@ class DatafileGenerator():
 	positionLines = []
 
    # data string containing molecule ID, type, dia, rho, x, y, z, 0 0 0 
-	cbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
-	actStr = "%d %d %d 2 0.0 1.0 %f %f %f\n" #string for active particles
-	solStr = "%d %d %d 1.028 0.0 1.0 %f %f %f\n" #string for solvent particles
-	wallStr = "%d %d %d 2.0 0.0 1.0 %f %f %f\n" #string for wall particles
-	#cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
-	#solStr = "%d %d %d %f %f %f\n" #string for solvent particles
-	#actStr = "%d %d %d %f %f %f\n" #string for active particles
-	#wallStr = "%d %d %d %f %f %f\n" #string for wall particles
+	#scbdStr = "%d %d %d 0.93 0.0 1.0 %f %f %f\n" #string for cbd particles
+	#actStr = "%d %d %d 2 0.0 1.0 %f %f %f\n" #string for active particles
+	#solStr = "%d %d %d 1.028 0.0 1.0 %f %f %f\n" #string for solvent particles
+	#wallStr = "%d %d %d 2.0 0.0 1.0 %f %f %f\n" #string for wall particles
+	cbdStr = "%d %d %d %f %f %f\n" #string for cbd particles
+	solStr = "%d %d %d %f %f %f\n" #string for solvent particles
+	actStr = "%d %d %d %f %f %f\n" #string for active particles
+	wallStr = "%d %d %d %f %f %f\n" #string for wall particles
 
 	m_cbd = 3.896
 	m_sol = 4.31
@@ -99,11 +99,11 @@ class DatafileGenerator():
 						self.activecount += 1
 						self.drawRaspberry(xi,yi,zi,radius)
 						
-					#elif val >= 1 and val < 40:
-						#self.cbdcount += 1
-						#atom_type = self.cbd_type
+					elif val >= 1 and val < 40:
+						self.cbdcount += 1
+						atom_type = self.cbd_type
 						#self.FccVertexes(self,vertex1,vertex4,yhi,atomType)
-						#self.appendLine(atom_type,xi+self.dia*5/2,yi+self.dia/2,zi+self.dia/2)
+						self.appendLine(atom_type,xi+self.dia*5/2,yi+self.dia/2,zi+self.dia/2)
 					elif val >= 40 and val < 151:
 						self.solventcount += 1
 						atom_type = self.solvent_type

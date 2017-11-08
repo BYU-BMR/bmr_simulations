@@ -1,0 +1,151 @@
+
+# Muller-Plathe via fix viscosity
+atom_style         meso-molecular
+dimension          3
+newton             on
+units              micro
+read_data          fcc_packed.data
+
+
+variable           c     equal 100             # soundspeed for Tait's EOS
+variable           dt    equal 0.0001			 # size of timestep, microseconds
+variable		   visc  equal 100		 # viscosity in picogram / micrometer microsecond (equivilant to centipoise )
+
+# settings
+
+
+variable		   T        equal 300
+
+variable		   h        equal 5
+
+#variable           hcbd     equal 3
+#variable           hact     equal 2.5
+#variable           hsol     equal 4
+#variable		   hwall    equal 2
+
+#variable		   hwallinteract    equal (${h}+${hwall})/2 
+
+
+
+#variable           hcbdact  equal ((${hcbd}+${hact})/2)
+#variable 		   hcbdwall	equal ((${hcbd}+${hwall})/2)
+#variable           hsolact  equal ((${hsol}+${hact})/2)
+#variable		   hsolwall equal ((${hsol}+${hwall})/2)
+#variable		   hactwall equal ((${hact}+${hwall})/2)
+#variable           hcbdsol  equal ((${hsol}+${hcbd})/2)
+
+#group              cbd type 1 
+#group  			   active type 2
+group			   solvent type 1
+#group  			   cbd_solvent type 1 3
+#group			   wall type 4
+#group			   slurry type 1 2 3 
+#group 			   bc type 5
+
+###########################
+
+
+
+variable        t equal 300.0
+
+
+# problem setup
+
+
+
+pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater/morris
+
+pair_coeff         * * sph/taitwater/morris 1.03 ${c} ${visc} ${h}
+
+#pair_coeff         1 1 sph/taitwater/morris 0.93 ${c} ${visc} ${hcbd}
+#pair_coeff         2 2 sph/taitwater/morris 2 ${c} ${visc} ${hact}
+#pair_coeff         3 3 sph/taitwater/morris 1.028 ${c} ${visc} ${hsol}
+
+#pair_coeff		   4 4 sph/taitwater/morris 1 ${c} 0 ${hwall}
+
+#pair_coeff		   1 2 sph/taitwater/morris 1.5 ${c} ${visc} ${hcbdact}
+#pair_coeff         1 3 sph/taitwater/morris 0.979 ${c} ${visc} ${hcbdsol}
+#pair_coeff		   1 4 sph/taitwater/morris 1 ${c} 0 ${hcbdwall}
+#pair_coeff         2 3 sph/taitwater/morris 2.909 ${c} ${visc} ${hsolact}
+#pair_coeff		   2 4 sph/taitwater/morris 1 ${c} 0 ${hactwall}
+#pair_coeff         3 4 sph/taitwater/morris 1 ${c} 0 ${hsolwall}
+
+
+pair_coeff         * * sph/rhosum ${h}
+
+#pair_coeff         1 1 sph/rhosum ${hcbd}
+#pair_coeff         2 2 sph/rhosum ${hact}
+#pair_coeff         3 3 sph/rhosum ${hsol}
+#pair_coeff		   4 4 sph/rhosum ${hwall}
+
+#pair_coeff         1 2 sph/rhosum ${hcbdact}
+#pair_coeff         1 3 sph/rhosum ${hcbdsol}
+#pair_coeff         1 4 sph/rhosum ${hcbdwall}
+#pair_coeff         2 3 sph/rhosum ${hsolact}
+#pair_coeff		   2 4 sph/rhosum ${hactwall}
+#pair_coeff         3 4 sph/rhosum ${hsolwall}
+
+timestep    ${dt}
+#######################################
+
+#mass            * 1.0
+print lx
+#velocity        all create 0.001*lx 97287
+
+fix             1 all nve
+fix	        2 all langevin $t $t 0.1 498094
+#fix	        3 all enforce2d
+
+# equilibration run
+
+thermo          1000
+run	        5000
+
+unfix		2
+
+# turn on Muller-Plathe driving force and equilibrate some more
+
+velocity	all scale $t
+
+fix		4 all viscosity 100 x y 20
+
+compute         layers all chunk/atom bin/1d y center 0.05 units reduced
+fix		5 all ave/chunk 20 50 1000 layers vx file profile.mp.2d
+
+# equilibration run
+
+variable	dVx equal f_5[11][3]-f_5[1][3]
+
+thermo          1000
+thermo_style	custom step temp epair etotal press f_4 v_dVx lx ly lz
+run		20000
+
+# data gathering run
+# reset fix viscosity to zero flux accumulation
+
+unfix		4
+fix		4 all viscosity 100 x y 20
+
+variable	visc equal -(f_4/(2*(step*0.005-125)*lx+1.0e-10))/(v_dVx/(ly/2))
+fix		vave all ave/time 1000 1 1000 v_visc ave running start 26000
+
+thermo_style	custom step temp time dt f_4 v_dVx v_visc f_vave
+
+
+neigh_modify       every 5 delay 0 check no
+variable           skin equal 0.3*${h}
+neighbor           ${skin} bin # set Verlet list skin
+# only need to run for 10000 steps to make a good 100-frame movie
+
+
+dump               dump_id all custom 10000 new2.lammpstrj id type mol xs ys zs 
+dump_modify        dump_id first yes
+dump_modify 	   dump_id sort 3
+
+
+#dump	        1 all custom 100 dump.mp.2d id type x y z vx
+
+#dump		2 all image 100 image.*.jpg vx type zoom 1.6 adiam 1.2
+#dump_modify	2 pad 5 amap -0.7 0.7 ca 0.0 2 min blue max red
+
+run	        50000

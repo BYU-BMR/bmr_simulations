@@ -1,0 +1,74 @@
+atom_style         meso
+dimension          3
+newton             on
+units              micro
+read_data          fcc_packed.data
+
+#the shape of the box changed
+change_box		   all triclinic 
+
+variable           h         equal 5
+variable           c     equal 1552.8             # soundspeed for Tait's EOS
+variable           dt    equal 0.0001
+variable		   visc  equal 0.00165  #we want to verifty that our code returns the same value for viscosity as the one that we passed in
+
+group			   solvent type 1
+
+variable			T equal 300.0
+
+pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater/morris
+pair_coeff         * * sph/taitwater/morris 1.03 ${c} ${visc} ${h}
+pair_coeff         * * sph/rhosum ${h}
+
+
+timestep    ${dt}
+
+### Dump the position
+
+dump               dump_id all custom 10000 visc.lammpstrj xs ys zs # we don't need type and id they are all the same
+dump_modify        dump_id first yes
+
+
+### Thermo
+
+thermo             1000
+thermo_style       custom step time temp press density lx ly lz
+thermo_modify      norm no
+
+
+
+
+
+
+# it's better to let the system equlibrate so that it's done with all the wierd behaviors
+
+# run few times- thermostat 
+fix npt_method all npt temp $T $T 100.0 iso 100.0 100.0 1000.0 tloop 20
+
+
+timestep	${dt}
+thermo        1000
+
+run 50000
+
+unfix npt_method  # we are going to use another fix command
+
+##########################
+
+variable	xyrate equal 0.001     # 1000 s-1 
+variable	srate equal ${xyrate}*lx
+
+fix		1 all nvt/sllod temp $T $T 100
+fix		2 all deform 1 xy erate ${xyrate} remap v
+
+
+variable	visc equal -pxy/(v_srate/ly)
+variable     pressure equal press
+fix		vave all ave/time 10 100 1000 v_visc ave running start 1000
+fix		pave all ave/time 10 100 1000 v_pressure ave running start 1000
+
+thermo  		1000
+thermo_style	custom step temp  press pxy  v_visc f_vave f_pave v_xyrate pe ke etotal
+#thermo_modify	temp tilt
+
+run 10000000

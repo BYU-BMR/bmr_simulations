@@ -1,0 +1,114 @@
+atom_style         meso-molecular
+dimension          3
+newton             on
+units              micro
+read_data          fcc_packed.data
+
+#the shape of the box changed
+change_box		   all triclinic 
+
+variable           c     equal 100.0             # soundspeed for Tait's EOS
+variable           dt    equal 0.0001
+variable		   visc  equal 10 #we want to verifty that our code returns the same value for viscosity as the one that we passed in
+
+variable			T equal 3000.0
+
+variable		   h        equal 4.5
+
+
+
+
+
+
+group              cbd type 1 
+group  			   active type 2
+group			   solvent type 3
+group  			   cbd_solvent type 1 3
+group			   wall type 4
+group			   slurry type 1 2 3 
+group 			   bc type 5
+
+pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater/morris
+
+pair_coeff         * * sph/taitwater/morris 1.03 ${c} ${visc} ${h}
+
+#pair_coeff         1 1 sph/taitwater/morris 0.93 ${c} ${visc} ${hcbd}
+#pair_coeff         2 2 sph/taitwater/morris 2 ${c} ${visc} ${hact}
+#pair_coeff         3 3 sph/taitwater/morris 1.028 ${c} ${visc} ${hsol}
+
+#pair_coeff		   4 4 sph/taitwater/morris 1 ${c} 0 ${hwall}
+
+#pair_coeff		   1 2 sph/taitwater/morris 1.5 ${c} ${visc} ${hcbdact}
+#pair_coeff         1 3 sph/taitwater/morris 0.979 ${c} ${visc} ${hcbdsol}
+#pair_coeff		   1 4 sph/taitwater/morris 1 ${c} 0 ${hcbdwall}
+#pair_coeff         2 3 sph/taitwater/morris 2.909 ${c} ${visc} ${hsolact}
+#pair_coeff		   2 4 sph/taitwater/morris 1 ${c} 0 ${hactwall}
+#pair_coeff         3 4 sph/taitwater/morris 1 ${c} 0 ${hsolwall}
+
+
+pair_coeff         * * sph/rhosum ${h}
+
+#pair_coeff         1 1 sph/rhosum ${hcbd}
+#pair_coeff         2 2 sph/rhosum ${hact}
+#pair_coeff         3 3 sph/rhosum ${hsol}
+#pair_coeff		   4 4 sph/rhosum ${hwall}
+
+#pair_coeff         1 2 sph/rhosum ${hcbdact}
+#pair_coeff         1 3 sph/rhosum ${hcbdsol}
+#pair_coeff         1 4 sph/rhosum ${hcbdwall}
+#pair_coeff         2 3 sph/rhosum ${hsolact}
+#pair_coeff		   2 4 sph/rhosum ${hactwall}
+#pair_coeff         3 4 sph/rhosum ${hsolwall}
+
+timestep    ${dt}
+
+### Dump the position
+
+dump               dump_id all custom 10000 visc.lammpstrj xs ys zs # we don't need type and id they are all the same
+dump_modify        dump_id first yes
+
+
+### Thermo
+
+thermo             1000
+thermo_style       custom step time temp press density lx ly lz
+thermo_modify      norm no
+
+#fix make_rigid active rigid molecule
+
+
+
+
+
+# it's better to let the system equlibrate so that it's done with all the wierd behaviors
+
+# run few times- thermostat 
+fix npt_method all npt temp $T $T 100.0 iso 100.0 100.0 1000.0 tloop 20
+
+
+timestep	${dt}
+thermo        1000
+
+run 50000
+
+unfix npt_method  # we are going to use another fix command
+
+##########################
+
+variable	xyrate equal 0.001     # 1000 s-1 
+variable	srate equal ${xyrate}*lx
+
+fix		1 all nvt/sllod temp $T $T 100
+fix		2 all deform 1 xy erate ${xyrate} remap v
+
+
+variable	visc equal -pxy/(v_srate/ly)
+variable     pressure equal press
+fix		vave all ave/time 10 100 1000 v_visc ave running start 1000
+fix		pave all ave/time 10 100 1000 v_pressure ave running start 1000
+
+thermo  		1000
+thermo_style	custom step temp  press pxy  v_visc f_vave f_pave v_xyrate pe ke etotal
+#thermo_modify	temp tilt
+
+run 10000000

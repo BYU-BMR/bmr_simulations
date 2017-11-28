@@ -1,0 +1,49 @@
+atom_style         meso-molecular
+dimension          3
+newton             on
+units              micro
+boundary 		   f f f
+read_data          fcc_packed.data
+
+variable		   h        equal 3.16
+variable		   hwall    equal 2 
+variable		   hwallinteract    equal (${h}+${hwall})/2 
+variable           c     equal 10.0             
+variable           dt    equal 0.0001		
+
+variable			visc  equal 1.65		
+
+
+group			   solvent type 1
+
+
+pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater/morris
+pair_coeff         * * sph/taitwater/morris 1.028 ${c} ${visc} ${h}
+
+pair_coeff         * * sph/rhosum ${h}
+
+timestep    ${dt}
+
+# time-integrate position, velocities, internal energy and density of cbd particles
+fix                integrate_slurry_fix solvent meso
+# time-integrate only internal energy and density of boundary particles
+#fix                integrate_bc_fix bc meso/stationary
+
+dump               dump_id all custom 10000 solvent.lammpstrj id type mol xs ys zs
+dump_modify        dump_id first yes
+dump_modify 	   dump_id sort 3
+
+#compute thermo_temp slurry temp
+#thermo_modify temp slurry
+uncompute thermo_temp
+compute thermo_temp all temp
+thermo             1000
+thermo_style       custom step time dt temp press density lx ly lz
+thermo_modify      lost ignore
+
+neigh_modify       every 5 delay 0 check no
+variable           skin equal 0.3*${h}
+neighbor           ${skin} bin # set Verlet list skin distance
+
+
+run 100000000

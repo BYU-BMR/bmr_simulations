@@ -1,0 +1,56 @@
+processors         * 1 1 # manually assign processors to spatial regions
+atom_style         meso
+dimension          3
+newton             on
+boundary           p p p
+units              micro
+read_data          slurry_FCC.data
+
+variable           h equal 4
+variable           c equal 1500 # m/s # "ADJUSTED" soundspeed for Tait's EOS
+variable           dt equal 0.1*${h}/${c} # upper limit of timestep based on CFL-like criterion
+variable		   visc equal 16.5 #  kg/ms # Dynamic Visocity of CBD_Solvent Slurry
+variable           nrun equal ceil(200.0/${dt}) # roughly estimate number of timesteps needed for 7.5 seconds
+
+group              bc   	type 3
+group			   cbd		type 2
+group              nmp 		type 1 
+group			   slurry	type 1 2
+
+# use hybrid pairstyle which does density summation with cutoff ${h} every timestep (1)
+pair_style         hybrid/overlay sph/rhosum 1 sph/taitwater/morris
+#pair_style         sph/taitwater/morris
+pair_coeff         * * sph/taitwater/morris 1.00 ${c} ${visc} ${h} # use target density of 1000, soundspeed ${c} for Tait's EOS
+pair_coeff         1 2 sph/taitwater/morris 1.50 ${c} ${visc} ${h}
+pair_coeff         2 2 sph/taitwater/morris 2.00 ${c} ${visc} ${h}
+pair_coeff         1 1 sph/rhosum ${h}
+pair_coeff         1 2 sph/rhosum ${h}
+pair_coeff         2 2 sph/rhosum ${h}
+
+#fix                gfix slurry gravity -9.81 vector 0 0 1 # add gravity. This fix also computes potential energy of mass in gravity field.
+
+compute            rho_peratom all meso/rho/atom
+#compute            my_temp water temp/profile 1 1 1 xyz 2 2 2 out tensor
+
+# adjust nevery | min. allowed dt | max. allowed dt | max. travel distance per dt # // ${dt} ~= CFL criterion 0.1*h/c
+fix                dtfix all dt/reset 1 NULL ${dt} 0.0005 units box # use a variable timestep
+
+# time-integrate position, velocities, internal energy and density of water particles
+fix                integrate_slurry_fix slurry meso
+# time-integrate only internal energy and density of boundary particles
+fix                integrate_bc_fix bc meso/stationary
+
+#fix 			   temp_rescale water temp/rescale 1 3000 3000 50 1.0
+
+dump               dump_id all custom 100 slurry_FCC_Visc_16.5_tdens_mix_soldens_1.03_grav_off.lammpstrj id type xs ys zs
+dump_modify        dump_id first yes
+
+thermo             10
+thermo_style       custom step temp press density time f_dtfix
+#thermo_modify      lost ignore
+
+neigh_modify       every 5 delay 0 check no
+variable           skin equal 0.3*${h}
+neighbor           ${skin} bin # set Verlet list skin distance
+
+run                ${nrun}
